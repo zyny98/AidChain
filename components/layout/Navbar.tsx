@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Sparkles, User, Sun, Moon, Globe } from 'lucide-react';
+import { ShieldCheck, Cpu, User, Sun, Moon, Globe } from 'lucide-react';
 import { useApp } from '../../lib/AppContext';
 
 export default function Navbar() {
@@ -50,7 +50,7 @@ export default function Navbar() {
             href="/#ai-oracle"
             className="px-3 py-2 rounded-lg hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5"
           >
-            <Sparkles className="w-4 h-4 text-indigo-500" />
+            <Cpu className="w-4 h-4 text-indigo-500" />
             {t('navAiOracle')}
           </Link>
           <Link

@@ -5,16 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAppStore } from "@/lib/store/app-store";
 import {
-  Heart,
-  Building2,
-  ShieldCheck,
-  Truck,
   ArrowRight,
-  Sparkles,
   RotateCcw,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import {
+  IconRoute,
+  IconWallet,
+  IconFileCheck,
+  IconCpu,
+  IconTruckDelivery,
+} from "@tabler/icons-react";
 
 export function ScenarioFlow() {
   const pathname = usePathname();
@@ -29,14 +31,14 @@ export function ScenarioFlow() {
       path: "/app/donor",
       title: "Взнос в эскроу",
       desc: "Деньги блокируются в смарт-контракте, а не у фонда",
-      icon: Heart,
+      icon: IconWallet,
     },
     {
       role: "Фонд",
       path: "/app/foundation",
       title: "Смета и чек",
       desc: "Закупка товаров, SHA-256 хэширование чека",
-      icon: Building2,
+      icon: IconFileCheck,
     },
     {
       role: "AI / Админ",
@@ -44,14 +46,14 @@ export function ScenarioFlow() {
       title: "Верификация оракулом",
       desc: "OCR сверка со сметой или ручной HITL-арбитраж",
       badge: pendingHitlCount > 0 ? `${pendingHitlCount} на проверке` : null,
-      icon: ShieldCheck,
+      icon: IconCpu,
     },
     {
       role: "Поставщик",
       path: "/app/vendor",
       title: "Прямая выплата",
       desc: "Транш переводится из эскроу напрямую поставщику",
-      icon: Truck,
+      icon: IconTruckDelivery,
     },
   ];
 
@@ -59,8 +61,8 @@ export function ScenarioFlow() {
     <div className="mb-6 rounded-2xl border border-white/[0.08] bg-[#121827] p-3.5 sm:p-4 shadow-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/20">
-            <Sparkles className="h-3.5 w-3.5" />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <IconRoute className="h-4 w-4" stroke={1.8} />
           </div>
           <div>
             <h3 className="text-xs sm:text-sm font-semibold text-white font-sans tracking-[0.005em]">

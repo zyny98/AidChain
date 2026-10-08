@@ -9,7 +9,7 @@ import { AuditTrailTable } from "@/components/app/AuditTrailTable";
 import {
   Truck,
   CheckCircle2,
-  Sparkles,
+  Wallet,
   Store,
   Loader2,
 } from "lucide-react";
@@ -242,7 +242,7 @@ export default function VendorPage() {
                           </>
                         ) : (
                           <>
-                            <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                            <Wallet className="h-3.5 w-3.5 text-emerald-600" />
                             <span>Получить выплату из эскроу</span>
                           </>
                         )}

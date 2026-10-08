@@ -16,14 +16,16 @@ import {
 import { useAppStore } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import {
-  Heart,
-  Building2,
-  Truck,
-  ShieldCheck,
   RotateCcw,
   ExternalLink,
   Wallet,
 } from "lucide-react";
+import {
+  IconWallet,
+  IconBuildingBank,
+  IconTruckDelivery,
+  IconShieldCheck,
+} from "@tabler/icons-react";
 
 function BrandMark() {
   const { collapsed } = useSidebar();
@@ -105,25 +107,25 @@ export function AppSidebar() {
       id: "donor",
       label: "Донор",
       href: "/app/donor",
-      icon: Heart,
+      icon: IconWallet,
     },
     {
       id: "foundation",
       label: "Фонд",
       href: "/app/foundation",
-      icon: Building2,
+      icon: IconBuildingBank,
     },
     {
       id: "vendor",
       label: "Поставщик",
       href: "/app/vendor",
-      icon: Truck,
+      icon: IconTruckDelivery,
     },
     {
       id: "admin",
       label: "Администратор",
       href: "/app/admin",
-      icon: ShieldCheck,
+      icon: IconShieldCheck,
       badge: pendingHitlCount > 0 ? `${pendingHitlCount}` : undefined,
     },
   ];

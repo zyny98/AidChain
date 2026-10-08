@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import {
   Upload,
-  Sparkles,
+  Cpu,
   CheckCircle2,
   XCircle,
   AlertTriangle,
@@ -79,7 +79,7 @@ export default function AIProofUploader() {
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0">
-              <Sparkles className="w-5 h-5" />
+              <Cpu className="w-5 h-5" />
             </div>
             <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white tracking-tight truncate">
               {t('aiCardTitle')}

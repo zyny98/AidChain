@@ -8,7 +8,7 @@ import { useSolanaMemo } from "@/hooks/useSolanaMemo";
 import { TransactionStatusToast } from "@/components/app/TransactionStatusToast";
 import { AuditTrailTable } from "@/components/app/AuditTrailTable";
 import {
-  Heart,
+  Wallet,
   ShieldCheck,
   RotateCcw,
   ExternalLink,
@@ -489,7 +489,7 @@ export default function DonorPage() {
                     onClick={() => handleOpenDonateModal(campaign)}
                     className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 active:scale-[0.98] py-2.5 px-4 text-xs font-bold transition shadow-sm"
                   >
-                    <Heart className="h-3.5 w-3.5 fill-slate-950" />
+                    <Wallet className="h-3.5 w-3.5" />
                     <span>Пожертвовать в эскроу</span>
                   </button>
                 </div>
@@ -704,7 +704,7 @@ export default function DonorPage() {
                   </>
                 ) : (
                   <>
-                    <Heart className="h-4 w-4 fill-slate-950" />
+                    <Wallet className="h-4 w-4" />
                     <span>Внести {currentDonateValue > 0 ? currentDonateValue.toFixed(2) : "0.00"} SOL в эскроу</span>
                   </>
                 )}
