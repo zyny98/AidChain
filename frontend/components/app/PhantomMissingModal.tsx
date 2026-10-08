@@ -2,6 +2,7 @@
 
 import React from "react";
 import { AlertCircle, ExternalLink, X } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 interface PhantomMissingModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface PhantomMissingModalProps {
 }
 
 export function PhantomMissingModal({ isOpen, onClose }: PhantomMissingModalProps) {
+  const { language, t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -27,21 +29,23 @@ export function PhantomMissingModal({ isOpen, onClose }: PhantomMissingModalProp
           </div>
           <div>
             <h3 className="text-base font-bold text-white font-display">
-              Кошелёк Phantom не найден
+              {t("walletMissingTitle")}
             </h3>
             <p className="text-xs text-slate-400">Solana Web3</p>
           </div>
         </div>
 
-        {/* ТОЧНОЕ ТРЕБОВАНИЕ ИЗ ТЗ */}
+        {/* Требование из ТЗ */}
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.08] p-4 mb-4">
           <p className="text-xs sm:text-sm font-medium text-slate-200 leading-relaxed">
-            Откройте приложение в отдельной вкладке с установленным Phantom
+            {t("walletMissingDesc")}
           </p>
         </div>
 
         <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-          Для подтверждения пожертвований, создания сборов и фиксации аудита в блокчейне Solana необходимо браузерное расширение Phantom.
+          {language === "ru"
+            ? "Для подтверждения пожертвований, создания сборов и фиксации аудита в блокчейне Solana необходимо браузерное расширение Phantom."
+            : "To sign donations, create campaigns and record audit logs on the Solana blockchain, the Phantom browser extension is required."}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -51,14 +55,14 @@ export function PhantomMissingModal({ isOpen, onClose }: PhantomMissingModalProp
             rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white py-2.5 px-4 text-xs font-bold active:scale-[0.98] transition shadow-sm"
           >
-            Установить Phantom
+            {t("walletMissingInstall")}
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
           <button
             onClick={onClose}
             className="rounded-xl border border-white/[0.08] bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-300 hover:bg-white/[0.08] hover:text-white transition"
           >
-            Понятно
+            {language === "ru" ? "Понятно" : "Got it"}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import {
   Wallet,
   Eye,
@@ -41,6 +42,7 @@ export function WalletWindow({
   disconnect,
   roleName = "AidChain Donor",
 }: WalletWindowProps) {
+  const { language, t } = useLanguage();
   const [isBalanceHidden, setIsBalanceHidden] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -125,7 +127,7 @@ export function WalletWindow({
               type="button"
               onClick={copyAddress}
               className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition"
-              title="Скопировать полный адрес"
+              title={language === "ru" ? "Скопировать полный адрес" : "Copy full address"}
             >
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
@@ -134,12 +136,12 @@ export function WalletWindow({
           {/* Владелец карты */}
           <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-400">
             <div>
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-mono">Владелец</span>
+              <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-mono">{t("walletCardholder")}</span>
               <span className="text-white font-medium truncate block max-w-[170px]">{roleName}</span>
             </div>
             <div className="text-right">
-              <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-mono">Статус</span>
-              <span className="text-emerald-400 font-medium">Verified ✓</span>
+              <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-mono">{t("walletStatus")}</span>
+              <span className="text-emerald-400 font-medium">{t("walletVerified")}</span>
             </div>
           </div>
         </div>
@@ -147,12 +149,12 @@ export function WalletWindow({
         {/* 3. TOTAL BALANCE Секция с неоновым графиком-волной */}
         <div className="relative z-10 mt-4 text-center">
           <div className="flex items-center justify-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            <span>TOTAL BALANCE</span>
+            <span>{t("walletTotalBalance")}</span>
             <button
               type="button"
               onClick={() => setIsBalanceHidden(!isBalanceHidden)}
               className="p-1 hover:text-slate-900 dark:hover:text-white transition"
-              title={isBalanceHidden ? "Показать баланс" : "Скрыть баланс"}
+              title={isBalanceHidden ? (language === "ru" ? "Показать баланс" : "Show balance") : (language === "ru" ? "Скрыть баланс" : "Hide balance")}
             >
               {isBalanceHidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
             </button>
@@ -221,7 +223,7 @@ export function WalletWindow({
             className="flex items-center gap-2 rounded-xl p-2 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200/70 dark:border-white/5 transition"
           >
             {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5 text-slate-400" />}
-            <span className="truncate">{copied ? "Скопировано!" : "Копировать адрес"}</span>
+            <span className="truncate">{copied ? t("walletCopied") : t("walletCopyAddress")}</span>
           </button>
 
           <button
@@ -232,7 +234,7 @@ export function WalletWindow({
           >
             <div className="flex items-center gap-2 min-w-0">
               <RefreshCw className={`h-3.5 w-3.5 shrink-0 ${isRefreshing ? "animate-spin text-cyan-500" : "text-slate-400"}`} />
-              <span className="truncate">{isRefreshing ? "Обновление..." : "Обновить баланс"}</span>
+              <span className="truncate">{isRefreshing ? t("walletRefreshing") : t("walletRefresh")}</span>
             </div>
             {refreshSuccess && <span className="text-[9px] font-mono text-emerald-500 font-bold">OK</span>}
           </button>
@@ -244,7 +246,7 @@ export function WalletWindow({
             className="flex items-center gap-2 rounded-xl p-2 bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/25 text-emerald-600 dark:text-emerald-400 transition"
           >
             <Droplets className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">Тестовый кран (Faucet)</span>
+            <span className="truncate">{t("walletFaucet")}</span>
           </a>
 
           <a
@@ -254,7 +256,7 @@ export function WalletWindow({
             className="flex items-center gap-2 rounded-xl p-2 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200/70 dark:border-white/5 transition"
           >
             <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-            <span className="truncate">Solana Explorer</span>
+            <span className="truncate">{t("walletExplorer")}</span>
           </a>
         </div>
 
@@ -269,7 +271,7 @@ export function WalletWindow({
             className="w-full flex items-center justify-center gap-2 rounded-xl py-2 px-3 bg-rose-50 hover:bg-rose-100 border border-rose-200 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 dark:border-rose-500/25 text-rose-600 dark:text-rose-400 text-xs font-semibold transition active:scale-[0.98]"
           >
             <LogOut className="h-3.5 w-3.5" />
-            <span>Отключить кошелёк Phantom</span>
+            <span>{t("walletDisconnect")}</span>
           </button>
         </div>
       </motion.div>

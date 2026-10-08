@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { PhantomMissingModal } from "@/components/app/PhantomMissingModal";
 import { WalletWindow } from "@/components/app/WalletWindow";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import {
   Wallet,
   ChevronDown,
   Menu,
+  Globe,
 } from "lucide-react";
 
 interface StudioHeaderProps {
@@ -17,6 +19,7 @@ interface StudioHeaderProps {
 
 export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
   const pathname = usePathname();
+  const { language, toggleLanguage, t } = useLanguage();
   const {
     isConnected,
     isConnecting,
@@ -61,41 +64,41 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
   };
 
   const getRoleName = () => {
-    if (pathname.includes("/foundation")) return "БФ «Чистое Сердце»";
-    if (pathname.includes("/vendor")) return "ТОО «МедСнаб Трейд»";
-    if (pathname.includes("/admin")) return "HITL Валидатор";
+    if (pathname.includes("/foundation")) return language === "ru" ? "БФ «Чистое Сердце»" : "Pure Heart Foundation";
+    if (pathname.includes("/vendor")) return language === "ru" ? "ТОО «МедСнаб Трейд»" : "MedSnab Trade LLC";
+    if (pathname.includes("/admin")) return language === "ru" ? "HITL Валидатор" : "HITL Validator";
     if (pathname.includes("/history")) return "Solana Explorer";
-    return "AidChain Donor";
+    return language === "ru" ? "AidChain Донор" : "AidChain Donor";
   };
 
   const getPageInfo = () => {
     if (pathname.includes("/foundation")) {
       return {
-        title: "Кабинет Фонда",
-        subtitle: "Управление целевыми сборами, сметами и загрузка фискальных чеков",
+        title: t("foundationOfficeTitle"),
+        subtitle: t("foundationOfficeSub"),
       };
     }
     if (pathname.includes("/vendor")) {
       return {
-        title: "Кабинет Перевозчика",
-        subtitle: "Прямые расчеты из эскроу-контракта без риска задержек",
+        title: t("vendorOfficeTitle"),
+        subtitle: t("vendorOfficeSub"),
       };
     }
     if (pathname.includes("/admin")) {
       return {
-        title: "Панель Администратора",
-        subtitle: "HITL арбитраж спорных чеков и аккредитация поставщиков",
+        title: t("adminOfficeTitle"),
+        subtitle: t("adminOfficeSub"),
       };
     }
     if (pathname.includes("/history")) {
       return {
-        title: "История транзакций",
-        subtitle: "Неизменяемый блокчейн-реестр транзакций в сети Solana Network",
+        title: t("historyOfficeTitle"),
+        subtitle: t("historyOfficeSub"),
       };
     }
     return {
-      title: "Кабинет Донора",
-      subtitle: "Прозрачные пожертвования и контроль целевого расходования",
+      title: t("donorOfficeTitle"),
+      subtitle: t("donorOfficeSub"),
     };
   };
 
@@ -128,8 +131,19 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
           </div>
         </div>
 
-        {/* Правая часть: Phantom Wallet */}
+        {/* Правая часть: Переключатель языков + Phantom Wallet */}
         <div className="flex items-center gap-2.5 self-end sm:self-auto shrink-0">
+          {/* Кнопка смены языка */}
+          <button
+            type="button"
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 rounded-xl border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-xs transition active:scale-95"
+            title={language === "ru" ? "Switch to English" : "Переключить на русский"}
+          >
+            <Globe className="h-3.5 w-3.5 text-blue-500" />
+            <span className="font-mono text-[11px] uppercase tracking-wider">{language === "ru" ? "EN" : "RU"}</span>
+          </button>
+
           {!isConnected ? (
             <button
               onClick={handleConnectClick}
@@ -137,7 +151,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_16px_rgba(37,99,235,0.3)] px-3.5 py-1.5 text-xs font-semibold shadow-sm active:scale-[0.98] transition-all disabled:opacity-50"
             >
               <Wallet className="h-3.5 w-3.5" />
-              <span>{isConnecting ? "Подключение..." : "Подключить Phantom"}</span>
+              <span>{isConnecting ? t("walletConnecting") : t("walletConnectPhantom")}</span>
             </button>
           ) : (
             <div className="relative" ref={dropdownRef}>

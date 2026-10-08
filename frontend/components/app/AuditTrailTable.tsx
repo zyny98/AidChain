@@ -2,10 +2,35 @@
 
 import React, { useState } from "react";
 import { useAppStore } from "@/lib/store/app-store";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import { ExternalLink, ShieldCheck, Clock, Search } from "lucide-react";
+
+function localizeMemoText(text: string, lang: string): string {
+  if (lang !== "en") return text;
+  if (text.includes("Протокол AidChain активирован")) {
+    return "[GENESIS] AidChain Protocol activated on Solana Network";
+  }
+  if (text.includes("Кампания #1 «Ремонт детской площадки»")) {
+    return "[ESCROW CREATED] Campaign #1 «Playground Renovation»: target escrow smart contract locked for 15 SOL";
+  }
+  if (text.includes("Выплата аванса 20% (3.00 SOL)")) {
+    return "[ADVANCE RELEASED] Advance payout 20% (3.00 SOL) confirmed by escrow smart contract";
+  }
+  if (text.includes("[AIDCHAIN DONATION]") && text.includes("Медикаменты для детского")) {
+    return text.replace("Медикаменты для детского реабилитационного центра", "Pediatric Rehabilitation Center Medications");
+  }
+  if (text.includes("[AIDCHAIN DONATION]") && text.includes("Ремонт инклюзивной")) {
+    return text.replace("Ремонт инклюзивной детской площадки", "Inclusive Children's Playground Renovation");
+  }
+  if (text.includes("Транш") && text.includes("разблокирован для этапа")) {
+    return text.replace("Транш", "Tranche").replace("разблокирован для этапа", "unlocked for milestone");
+  }
+  return text;
+}
 
 export function AuditTrailTable() {
   const { auditRecords } = useAppStore();
+  const { language } = useLanguage();
   const [filterRole, setFilterRole] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -24,11 +49,15 @@ export function AuditTrailTable() {
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
             <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans tracking-tight">
-              Неизменяемый блокчейн-реестр (Audit Trail)
+              {language === "ru"
+                ? "Неизменяемый блокчейн-реестр (Audit Trail)"
+                : "Immutable Blockchain Ledger (Audit Trail)"}
             </h3>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Публичные транзакции SPL Memo в сети Solana Network
+            {language === "ru"
+              ? "Публичные транзакции SPL Memo в сети Solana Network"
+              : "Public SPL Memo transactions on Solana Network"}
           </p>
         </div>
 
@@ -40,7 +69,7 @@ export function AuditTrailTable() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск по записи..."
+              placeholder={language === "ru" ? "Поиск по записи..." : "Search ledger..."}
               className="rounded-full border border-white/70 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-lg pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors shadow-xs"
             />
           </div>
@@ -51,41 +80,45 @@ export function AuditTrailTable() {
             onChange={(e) => setFilterRole(e.target.value)}
             className="rounded-full border border-white/70 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-lg px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors shadow-xs cursor-pointer"
           >
-            <option value="all">Все роли</option>
-            <option value="donor">Доноры</option>
-            <option value="foundation">Фонды</option>
-            <option value="vendor">Поставщики</option>
-            <option value="admin">Администраторы</option>
+            <option value="all">{language === "ru" ? "Все роли" : "All Roles"}</option>
+            <option value="donor">{language === "ru" ? "Доноры" : "Donors"}</option>
+            <option value="foundation">{language === "ru" ? "Фонды" : "Foundations"}</option>
+            <option value="vendor">{language === "ru" ? "Поставщики" : "Vendors"}</option>
+            <option value="admin">{language === "ru" ? "Администраторы" : "Administrators"}</option>
           </select>
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="py-12 text-center text-slate-500 dark:text-[var(--color-text-muted)] text-xs">
-          Нет записей, соответствующих критериям поиска.
+        <div className="py-12 text-center text-slate-500 dark:text-slate-400 text-xs">
+          {language === "ru"
+            ? "Нет записей, соответствующих критериям поиска."
+            : "No records match search criteria."}
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-[var(--color-border)] text-slate-500 dark:text-[var(--color-text-muted)] uppercase tracking-wider font-mono">
-                <th className="pb-3 pl-2">Событие / Текст Memo</th>
-                <th className="pb-3 px-3">Роль</th>
-                <th className="pb-3 px-3">Время (UTC)</th>
-                <th className="pb-3 px-3">Статус</th>
+              <tr className="border-b border-slate-200 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">
+                <th className="pb-3 pl-2">{language === "ru" ? "Событие / Текст Memo" : "Event / Memo Content"}</th>
+                <th className="pb-3 px-3">{language === "ru" ? "Роль" : "Role"}</th>
+                <th className="pb-3 px-3">{language === "ru" ? "Время" : "Timestamp"}</th>
+                <th className="pb-3 px-3">{language === "ru" ? "Статус" : "Status"}</th>
                 <th className="pb-3 pr-2 text-right">Solana Explorer</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-[var(--color-border)]">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
               {filtered.map((record) => (
                 <tr
                   key={record.id}
-                  className="group hover:bg-slate-50 dark:hover:bg-[var(--color-surface-hover)] transition-colors"
+                  className="group hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors"
                 >
-                  <td className="py-3 pl-2 font-mono text-[var(--color-text)] max-w-md break-words">
-                    <span className="font-sans text-xs text-[var(--color-text)]">{record.text}</span>
+                  <td className="py-3 pl-2 font-mono text-slate-900 dark:text-white max-w-md break-words">
+                    <span className="font-sans text-xs text-slate-900 dark:text-white">
+                      {localizeMemoText(record.text, language)}
+                    </span>
                     {record.signature && (
-                      <div className="text-[10px] text-[var(--color-text-muted)] font-mono mt-0.5 truncate max-w-xs">
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 truncate max-w-xs">
                         Tx: {record.signature}
                       </div>
                     )}
@@ -103,24 +136,26 @@ export function AuditTrailTable() {
                       }`}
                     >
                       {record.role === "donor"
-                        ? "Донор"
+                        ? (language === "ru" ? "Донор" : "Donor")
                         : record.role === "foundation"
-                        ? "Фонд"
+                        ? (language === "ru" ? "Фонд" : "Foundation")
                         : record.role === "vendor"
-                        ? "Поставщик"
-                        : "Админ"}
+                        ? (language === "ru" ? "Поставщик" : "Vendor")
+                        : (language === "ru" ? "Админ" : "Admin")}
                     </span>
                   </td>
-                  <td className="py-3 px-3 whitespace-nowrap text-[var(--color-text-muted)]">
+                  <td className="py-3 px-3 whitespace-nowrap text-slate-500 dark:text-slate-400">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-3 w-3 text-[var(--color-text-subtle)]" />
+                      <Clock className="h-3 w-3 text-slate-400" />
                       {record.timestamp}
                     </div>
                   </td>
                   <td className="py-3 px-3 whitespace-nowrap">
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      {record.status === "confirmed" ? "Подтверждено" : "Обработано"}
+                      {record.status === "confirmed"
+                        ? (language === "ru" ? "Подтверждено" : "Confirmed")
+                        : (language === "ru" ? "Обработано" : "Processed")}
                     </span>
                   </td>
                   <td className="py-3 pr-2 text-right whitespace-nowrap">
@@ -131,12 +166,12 @@ export function AuditTrailTable() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-[11px] text-blue-600 dark:text-blue-400 hover:underline font-mono"
                       >
-                        <span>Просмотр в Explorer</span>
+                        <span>{language === "ru" ? "Просмотр в Explorer" : "View in Explorer"}</span>
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     ) : (
-                      <span className="text-[11px] text-[var(--color-text-subtle)] font-mono">
-                        симуляция
+                      <span className="text-[11px] text-slate-400 font-mono">
+                        {language === "ru" ? "симуляция" : "simulation"}
                       </span>
                     )}
                   </td>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { AppStoreProvider } from "@/lib/store/app-store";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { FloatingDock } from "@/components/app/FloatingDock";
 import { StudioSidebar } from "@/components/app/StudioSidebar";
 import { StudioHeader } from "@/components/app/StudioHeader";
@@ -69,7 +70,8 @@ export default function AppLayout({
 
   return (
     <ThemeProvider>
-      <AppStoreProvider>
+      <LanguageProvider>
+        <AppStoreProvider>
         {/* Внешний холст: строго фиксированный fixed inset-0 с мягким атмосферным градиентом */}
         <div className="fixed inset-0 h-screen w-screen overflow-hidden overscroll-none select-none bg-gradient-to-br from-[#e1e6ef] via-[#d6dde8] to-[#e4e9f2] dark:from-[#060912] dark:via-[#090e1c] dark:to-[#05070e] text-slate-900 dark:text-slate-100 p-2 sm:p-3 lg:p-4 flex items-center justify-center transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-300 font-sans">
           {/* Рассеянные сферы света для реалистичного преломления матового стекла (Apple VisionOS эффект) */}
@@ -119,6 +121,7 @@ export default function AppLayout({
           </div>
         </div>
       </AppStoreProvider>
-    </ThemeProvider>
+    </LanguageProvider>
+  </ThemeProvider>
   );
 }

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAppStore } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import {
   IconHeartHandshake,
   IconTruckDelivery,
@@ -24,6 +25,7 @@ interface StudioSidebarProps {
 
 export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
   const pathname = usePathname();
+  const { language, t } = useLanguage();
   const { hitlQueue, campaigns, auditRecords } = useAppStore();
   const { formattedAddress, isConnected } = usePhantomWallet();
 
@@ -32,30 +34,30 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
   const getRoleProfile = () => {
     if (pathname === "/app/vendor") {
       return {
-        name: "ТОО «МедСнаб Трейд»",
-        label: isConnected && formattedAddress ? formattedAddress : "Поставщик (B2B)",
+        name: language === "ru" ? "ТОО «МедСнаб Трейд»" : "MedSnab Trade LLC",
+        label: isConnected && formattedAddress ? formattedAddress : (language === "ru" ? "Поставщик (B2B)" : "Supplier (B2B)"),
       };
     }
     if (pathname === "/app/foundation") {
       return {
-        name: "БФ «Чистое Сердце»",
-        label: isConnected && formattedAddress ? formattedAddress : "Организатор сборов",
+        name: language === "ru" ? "БФ «Чистое Сердце»" : "Pure Heart Foundation",
+        label: isConnected && formattedAddress ? formattedAddress : (language === "ru" ? "Организатор сборов" : "Campaign Organizer"),
       };
     }
     if (pathname === "/app/admin") {
       return {
-        name: "HITL Валидатор",
-        label: isConnected && formattedAddress ? formattedAddress : "Администратор Solana",
+        name: language === "ru" ? "HITL Валидатор" : "HITL Validator",
+        label: isConnected && formattedAddress ? formattedAddress : (language === "ru" ? "Администратор Solana" : "Solana Validator"),
       };
     }
     if (pathname === "/app/history") {
       return {
         name: "Solana Explorer",
-        label: "Блокчейн-реестр",
+        label: language === "ru" ? "Блокчейн-реестр" : "Blockchain Ledger",
       };
     }
     return {
-      name: isConnected ? "AidChain Donor" : "Nikita Z.",
+      name: isConnected ? (language === "ru" ? "AidChain Донор" : "AidChain Donor") : "Nikita Z.",
       label: isConnected && formattedAddress ? formattedAddress : "donor@aidchain.sol",
     };
   };
@@ -146,14 +148,14 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
           {/* Секция: Кабинеты (Строго 4 профиля в едином порядке) */}
           <div>
             <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
-              Кабинеты
+              {t("sidebarWorkspaces")}
             </span>
             <nav className="space-y-1">
               {/* 1. Донор */}
               <Link href="/app/donor" className={getNavClass("/app/donor")}>
                 <div className="flex items-center gap-2.5 min-w-0">
                   <IconHeartHandshake className={getIconClass("/app/donor")} stroke={1.9} />
-                  <span className="truncate">Донор</span>
+                  <span className="truncate">{t("sidebarDonor")}</span>
                 </div>
               </Link>
 
@@ -161,7 +163,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
               <Link href="/app/vendor" className={getNavClass("/app/vendor")}>
                 <div className="flex items-center gap-2.5 min-w-0">
                   <IconTruckDelivery className={getIconClass("/app/vendor")} stroke={1.9} />
-                  <span className="truncate">Перевозчик</span>
+                  <span className="truncate">{t("sidebarVendor")}</span>
                 </div>
               </Link>
 
@@ -169,7 +171,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
               <Link href="/app/foundation" className={getNavClass("/app/foundation")}>
                 <div className="flex items-center gap-2.5 min-w-0">
                   <IconBuildingBank className={getIconClass("/app/foundation")} stroke={1.9} />
-                  <span className="truncate">Фонд</span>
+                  <span className="truncate">{t("sidebarFoundation")}</span>
                 </div>
                 <span className="rounded-full bg-slate-200/70 dark:bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-slate-600 dark:text-slate-300">
                   {campaigns.length}
@@ -180,7 +182,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
               <Link href="/app/admin" className={getNavClass("/app/admin")}>
                 <div className="flex items-center gap-2.5 min-w-0">
                   <IconShieldCheck className={getIconClass("/app/admin")} stroke={1.9} />
-                  <span className="truncate">Админ</span>
+                  <span className="truncate">{t("sidebarAdmin")}</span>
                 </div>
                 {pendingHitlCount > 0 && (
                   <span className="rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 px-1.5 py-0.2 text-[10px] font-mono font-bold">
@@ -194,13 +196,13 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
           {/* Секция: Блокчейн (История транзакций со всеми блокчейн-записями) */}
           <div>
             <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
-              Блокчейн
+              {t("sidebarBlockchain")}
             </span>
             <div className="space-y-1">
               <Link href="/app/history" className={getNavClass("/app/history")}>
                 <div className="flex items-center gap-2.5 min-w-0">
                   <IconClock className={getIconClass("/app/history")} stroke={1.8} />
-                  <span className="truncate">История транзакций</span>
+                  <span className="truncate">{t("sidebarHistory")}</span>
                 </div>
                 <span className="rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.2 text-[10px] font-mono font-bold">
                   {auditRecords.length}
@@ -215,14 +217,14 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
           <Link
             href="/"
             className="group flex items-center justify-between rounded-xl px-2.5 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
-            title="Вернуться на главный сайт"
+            title={language === "ru" ? "Вернуться на главный сайт" : "Back to Landing Page"}
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <IconArrowLeft
                 className="h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:-translate-x-0.5 transition-transform"
                 stroke={1.8}
               />
-              <span className="truncate text-xs font-medium">Вернуться в лендинг</span>
+              <span className="truncate text-xs font-medium">{t("sidebarReturnLanding")}</span>
             </div>
             <IconExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-60 transition-opacity text-slate-400" stroke={1.8} />
           </Link>

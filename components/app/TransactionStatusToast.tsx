@@ -2,6 +2,7 @@
 
 import React from "react";
 import { CheckCircle2, Loader2, AlertCircle, ExternalLink, X } from "lucide-react";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 interface TransactionStatusToastProps {
   status: "idle" | "writing" | "success" | "error";
@@ -20,6 +21,7 @@ export function TransactionStatusToast({
   error,
   onClose,
 }: TransactionStatusToastProps) {
+  const { language, t } = useLanguage();
   if (status === "idle") return null;
 
   return (
@@ -56,22 +58,24 @@ export function TransactionStatusToast({
             <div className="space-y-1">
               <h4 className="text-sm font-semibold font-display tracking-tight text-white">
                 {status === "writing"
-                  ? "Записываем в блокчейн..."
+                  ? (language === "ru" ? "Записываем в блокчейн..." : "Writing to blockchain...")
                   : status === "success"
-                  ? "Записано в блокчейн"
-                  : "Ошибка транзакции"}
+                  ? (language === "ru" ? "Записано в блокчейн" : "Recorded on blockchain")
+                  : t("toastTxError")}
               </h4>
 
               {status === "writing" && (
                 <p className="text-xs text-slate-400">
-                  Ожидаем подтверждения инструкций Memo в сети Solana...
+                  {language === "ru"
+                    ? "Ожидаем подтверждения инструкций Memo в сети Solana..."
+                    : "Awaiting confirmation of Memo instructions on Solana Network..."}
                 </p>
               )}
 
               {status === "success" && (
                 <div>
                   <p className="text-xs text-slate-300">
-                    Транзакция успешно зафиксирована в блокчейне.
+                    {t("toastTxSuccess")}
                   </p>
                   {explorerUrl && (
                     <a
@@ -80,7 +84,7 @@ export function TransactionStatusToast({
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-emerald-400 hover:underline"
                     >
-                      Посмотреть запись
+                      {language === "ru" ? "Посмотреть запись" : "View transaction"}
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
@@ -89,7 +93,7 @@ export function TransactionStatusToast({
 
               {status === "error" && (
                 <p className="text-xs text-rose-300 leading-relaxed">
-                  {error || statusMessage || "Операция отклонена."}
+                  {error || statusMessage || (language === "ru" ? "Операция отклонена." : "Operation cancelled.")}
                 </p>
               )}
             </div>
