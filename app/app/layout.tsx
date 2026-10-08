@@ -88,7 +88,7 @@ export default function AppLayout({
             {/* 2. Основное окно приложения в стиле Apple VisionOS Liquid Glass */}
             <div className="glass-window relative flex-1 h-full rounded-[24px] sm:rounded-[30px] lg:rounded-[34px] overflow-hidden flex flex-row transition-colors duration-200">
               {/* Левая панель навигации окна (Studio Sidebar с macOS traffic lights и 4 профилями) */}
-              <div className="hidden lg:block h-full shrink-0">
+              <div className="hidden lg:flex h-full shrink-0">
                 <StudioSidebar isCollapsed={isSidebarCollapsed} />
               </div>
 

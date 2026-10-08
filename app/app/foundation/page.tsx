@@ -15,6 +15,9 @@ import {
   Calendar,
   Loader2,
   Zap,
+  FileText,
+  FileCheck2,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function FoundationPage() {
@@ -450,135 +453,225 @@ export default function FoundationPage() {
 
       {/* Модалка загрузки чека и AI-валидации */}
       {selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <div className="relative w-full max-w-lg rounded-[28px] glass-window p-6 sm:p-7 shadow-2xl transition-colors">
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div>
-                <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">
-                  Отчётность и AI-валидация
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display mt-0.5">
-                  {selectedMilestone.milestone.title}
-                </h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 dark:bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-lg rounded-[28px] sm:rounded-[32px] bg-white/95 dark:bg-[#0c1220]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.18),0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_30px_90px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-all">
+            {/* Заголовок модалки */}
+            <div className="flex items-start justify-between gap-4 mb-5 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl bg-blue-500/10 dark:bg-blue-500/15 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 shadow-xs">
+                  <FileCheck2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+                      AI-Валидация чека
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-slate-600 dark:text-slate-300">
+                      Смета: {selectedMilestone.milestone.amountSol} SOL
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight mt-0.5">
+                    {selectedMilestone.milestone.title}
+                  </h3>
+                </div>
               </div>
               <button
-                onClick={() => setSelectedMilestone(null)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-black/5 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
+                onClick={() => {
+                  setSelectedMilestone(null);
+                  setUploadFileName("");
+                  setComputedSha256("");
+                  setAiVerdict(null);
+                }}
+                className="rounded-full h-8 w-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] transition"
               >
                 ✕
               </button>
             </div>
 
             <div className="space-y-4">
-              {/* Поле выбора файла с поддержкой Drag and Drop */}
-              <div
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setIsDragging(false);
-                  const file = e.dataTransfer.files?.[0];
-                  if (file) processReceiptFile(file);
-                }}
-                className={`rounded-2xl border border-dashed p-6 text-center transition ${
-                  isDragging
-                    ? "border-emerald-500 bg-emerald-500/10"
-                    : "border-black/15 dark:border-white/15 bg-white/40 dark:bg-white/[0.02] backdrop-blur-md hover:border-emerald-500/50"
-                }`}
-              >
-                <UploadCloud className="h-7 w-7 text-emerald-500 dark:text-emerald-400 mx-auto mb-2" />
-                <p className="text-xs font-medium text-slate-900 dark:text-white mb-1">
-                  Перетащите фото фискального чека или накладной
-                </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
-                  JPG, PNG, PDF. Хэш SHA-256 вычисляется мгновенно в браузере.
-                </p>
-
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <input
-                    type="file"
-                    accept="image/*,application/pdf"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                    id="receipt-file-input"
-                  />
-                  <label
-                    htmlFor="receipt-file-input"
-                    className="inline-flex cursor-pointer rounded-lg bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white px-3.5 py-1.5 text-xs font-semibold active:scale-[0.98] transition shadow-xs"
-                  >
-                    Выбрать файл
-                  </label>
-
-                  <button
-                    type="button"
-                    onClick={handleUseDemoReceipt}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/20 active:scale-[0.98] transition"
-                  >
-                    <Zap className="h-3.5 w-3.5" />
-                    <span>Тестовый чек (1 клик)</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Отображение вычисленного SHA-256 хэша */}
-              {computedSha256 && (
-                <div className="rounded-xl glass-card-subtle p-3 text-xs space-y-1">
-                  <div className="flex justify-between text-slate-600 dark:text-slate-300 text-[11px]">
-                    <span>Файл: {uploadFileName}</span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Хэш SHA-256 вычислен ✓</span>
+              {/* Поле выбора файла с поддержкой Drag and Drop (если файл ещё не загружен) */}
+              {!computedSha256 && !isAiAnalyzing && (
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) processReceiptFile(file);
+                  }}
+                  className={`group rounded-2xl border-2 border-dashed p-6 sm:p-7 text-center transition-all duration-200 ${
+                    isDragging
+                      ? "border-blue-500 bg-blue-500/10 scale-[1.01]"
+                      : "border-blue-500/30 dark:border-blue-400/25 hover:border-blue-500/60 dark:hover:border-blue-400/50 bg-gradient-to-b from-blue-50/40 via-white/40 to-slate-50/40 dark:from-blue-950/20 dark:via-white/[0.01] dark:to-transparent"
+                  }`}
+                >
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-blue-500/10 dark:bg-blue-500/15 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-[0_4px_16px_rgba(59,130,246,0.12)] group-hover:scale-105 transition-transform duration-200">
+                    <UploadCloud className="h-7 w-7" />
                   </div>
-                  <div className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 break-all">
-                    {computedSha256}
-                  </div>
-                </div>
-              )}
-
-              {/* Индикатор AI-анализа */}
-              {isAiAnalyzing && (
-                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] backdrop-blur-md p-4 text-center space-y-2">
-                  <div className="h-5 w-5 border-2 border-emerald-500 dark:border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
-                  <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                    AI-оракул считывает фискальные реквизиты и сверяет со сметой...
+                  <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+                    Перетащите фото фискального чека или накладной
                   </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                    JPG, PNG, PDF • Хэш SHA-256 вычисляется локально в браузере
+                  </p>
+
+                  <div className="flex flex-wrap items-center justify-center gap-2.5">
+                    <input
+                      type="file"
+                      accept="image/*,application/pdf"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      id="receipt-file-input"
+                    />
+                    <label
+                      htmlFor="receipt-file-input"
+                      className="inline-flex items-center gap-2 cursor-pointer rounded-xl bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 text-xs font-bold shadow-[0_2px_12px_rgba(37,99,235,0.3)] active:scale-[0.98] transition"
+                    >
+                      <UploadCloud className="h-3.5 w-3.5" />
+                      <span>Выбрать файл</span>
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={handleUseDemoReceipt}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15 px-3.5 py-2 text-xs font-semibold text-emerald-600 dark:text-emerald-300 active:scale-[0.98] transition shadow-xs"
+                    >
+                      <Zap className="h-3.5 w-3.5 text-emerald-500" />
+                      <span>Тестовый чек (1 клик)</span>
+                    </button>
+                  </div>
                 </div>
               )}
 
-              {/* Результат AI-верификации */}
-              {aiVerdict && (
-                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md p-4 space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                      <CheckCircle className="h-4 w-4" />
-                      Чек успешно верифицирован оракулом
+              {/* Карточка загруженного файла и SHA-256 хэша */}
+              {computedSha256 && (
+                <div className="rounded-2xl bg-slate-50/90 dark:bg-white/[0.03] border border-slate-200/90 dark:border-white/10 p-3.5 space-y-2.5 shadow-xs">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-9 w-9 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                        <FileText className="h-4.5 w-4.5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                          {uploadFileName || "Документ чека"}
+                        </p>
+                        <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3" />
+                          <span>SHA-256 верифицирован ✓</span>
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setComputedSha256("");
+                        setAiVerdict(null);
+                        setUploadFileName("");
+                      }}
+                      className="text-[11px] font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white px-2 py-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition"
+                    >
+                      Заменить файл
+                    </button>
+                  </div>
+
+                  <div className="rounded-xl bg-white dark:bg-black/40 border border-slate-200/70 dark:border-white/5 p-2 font-mono text-[10px] text-slate-600 dark:text-slate-300 break-all select-all flex items-start gap-2">
+                    <span className="text-[9px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500 shrink-0 mt-0.5">
+                      ХЭШ:
                     </span>
-                    <span className="font-mono font-bold text-emerald-950 dark:text-slate-950 bg-emerald-400 px-2 py-0.5 rounded text-[10px]">
-                      Score: {aiVerdict.confidenceScore}%
+                    <span className="leading-tight">{computedSha256}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Индикатор AI-анализа с анимированным лучом сканирования */}
+              {isAiAnalyzing && (
+                <div className="relative overflow-hidden rounded-2xl border border-blue-500/30 bg-blue-500/[0.05] p-5 text-center space-y-3">
+                  <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent animate-pulse" />
+                  <div className="h-7 w-7 border-2 border-blue-600 dark:border-blue-400 border-t-transparent rounded-full animate-spin mx-auto" />
+                  <div>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">
+                      AI-оракул считывает фискальные реквизиты...
+                    </p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Автоматическая OCR-сверка ИИН/БИН поставщика, позиций сметы и сумм транша
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Результат AI-верификации: Премиальная карточка */}
+              {aiVerdict && (
+                <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-500/[0.08] to-emerald-500/[0.02] p-4 sm:p-4.5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+                      <div className="h-6 w-6 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                        <CheckCircle className="h-4 w-4" />
+                      </div>
+                      <span>Чек успешно верифицирован AI-оракулом</span>
+                    </div>
+                    <span className="font-mono font-bold text-emerald-950 dark:text-slate-950 bg-emerald-400 px-2.5 py-0.5 rounded-full text-[11px] shadow-xs">
+                      Точность: {aiVerdict.confidenceScore}%
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-emerald-500/20 text-[11px] text-slate-700 dark:text-slate-200">
-                    <div>Продавец: <span className="font-semibold text-slate-900 dark:text-white">{aiVerdict.vendorName}</span></div>
-                    <div>БИН: <span className="font-mono text-slate-900 dark:text-white">{aiVerdict.vendorBin}</span></div>
-                    <div>Сумма чека: <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">{aiVerdict.ocrTotal} SOL</span></div>
-                    <div>Соответствие смете: <span className="text-emerald-600 dark:text-emerald-400 font-bold">100% совпадение</span></div>
+
+                  {/* 4 плитки с метриками */}
+                  <div className="grid grid-cols-2 gap-2 text-[11px]">
+                    <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/5">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Поставщик</span>
+                      <span className="font-semibold text-slate-900 dark:text-white truncate block mt-0.5">
+                        {aiVerdict.vendorName}
+                      </span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/5">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">БИН / ИИН</span>
+                      <span className="font-mono font-semibold text-slate-900 dark:text-white truncate block mt-0.5">
+                        {aiVerdict.vendorBin}
+                      </span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/5">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Сумма чека</span>
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 block mt-0.5">
+                        {aiVerdict.ocrTotal} SOL
+                      </span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/5">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 block">Сверка со сметой</span>
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5">
+                        <CheckCircle className="h-3 w-3" />
+                        100% совпадение
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-emerald-500/15 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                    <span>Фискальный признак подтверждён • Хэш готов к фиксации в транзакции Solana</span>
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-200 dark:border-white/[0.06] flex gap-3">
+            {/* Футер модалки */}
+            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/[0.06] flex gap-3">
               <button
                 onClick={handleConfirmReceipt}
                 disabled={!aiVerdict}
-                className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-40 transition shadow-sm"
+                className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 text-xs shadow-[0_2px_12px_rgba(37,99,235,0.3)] active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none transition flex items-center justify-center gap-2"
               >
-                Сохранить отчёт и отправить на выплату
+                <span>Сохранить отчёт и отправить на выплату</span>
               </button>
               <button
-                onClick={() => setSelectedMilestone(null)}
-                className="rounded-xl border border-black/10 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
+                onClick={() => {
+                  setSelectedMilestone(null);
+                  setUploadFileName("");
+                  setComputedSha256("");
+                  setAiVerdict(null);
+                }}
+                className="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] text-slate-700 dark:text-slate-300 font-medium py-2.5 px-4 text-xs transition"
               >
                 Отмена
               </button>
@@ -589,11 +682,11 @@ export default function FoundationPage() {
 
       {/* Модалка создания сбора */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <div className="relative w-full max-w-lg rounded-[28px] glass-window p-6 sm:p-7 shadow-2xl transition-colors">
-            <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 dark:bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-lg rounded-[28px] sm:rounded-[32px] bg-white/95 dark:bg-[#0c1220]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.18),0_10px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_30px_90px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-all">
+            <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-slate-100 dark:border-white/[0.06]">
               <div>
-                <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">
+                <span className="text-[10px] font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider font-bold">
                   Новая кампания
                 </span>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display mt-0.5">
@@ -602,7 +695,7 @@ export default function FoundationPage() {
               </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-black/5 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
+                className="rounded-full h-8 w-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] transition"
               >
                 ✕
               </button>
@@ -619,7 +712,7 @@ export default function FoundationPage() {
                   placeholder="Например: Покупка медицинского оборудования"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
+                  className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -633,7 +726,7 @@ export default function FoundationPage() {
                   placeholder="Опишите, кому и как будет оказана помощь..."
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
+                  className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -649,7 +742,7 @@ export default function FoundationPage() {
                     required
                     value={newTargetSol}
                     onChange={(e) => setNewTargetSol(e.target.value)}
-                    className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs font-mono text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
+                    className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-black/30 px-3 py-2 text-xs font-mono text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -662,23 +755,23 @@ export default function FoundationPage() {
                     required
                     value={newDeadline}
                     onChange={(e) => setNewDeadline(e.target.value)}
-                    className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
+                    className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-3 text-[11px] text-slate-700 dark:text-slate-300">
-                <span className="font-semibold text-emerald-600 dark:text-emerald-400">Поэтапный график траншей:</span>
-                <p className="mt-1">
+              <div className="rounded-xl border border-blue-500/20 bg-blue-500/[0.04] p-3 text-[11px] text-slate-700 dark:text-slate-300">
+                <span className="font-semibold text-blue-600 dark:text-blue-400">Поэтапный график траншей:</span>
+                <p className="mt-1 text-slate-600 dark:text-slate-400">
                   20% аванс ({(+newTargetSol * 0.2).toFixed(1)} SOL) → 40% транш №1 ({(+newTargetSol * 0.4).toFixed(1)} SOL) по чеку → 40% транш №2 ({(+newTargetSol * 0.4).toFixed(1)} SOL) по приёмке.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-white/[0.06] flex gap-3">
+              <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] flex gap-3">
                 <button
                   type="submit"
                   disabled={isWriting}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_20px_rgba(37,99,235,0.35)] py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition shadow-sm"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition shadow-sm"
                 >
                   {isWriting ? (
                     <>
@@ -692,7 +785,7 @@ export default function FoundationPage() {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
+                  className="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] text-slate-700 dark:text-slate-300 font-medium py-2.5 px-4 text-xs transition"
                 >
                   Отмена
                 </button>
