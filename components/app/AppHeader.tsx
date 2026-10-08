@@ -99,7 +99,7 @@ export function AppHeader() {
               <button
                 onClick={handleConnectClick}
                 disabled={isConnecting}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-500/20 hover:from-blue-500 hover:via-indigo-500 hover:to-violet-500 transition-all active:scale-[0.98] disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#2563eb] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-[#3b82f6] active:bg-[#1d4ed8] transition-all active:scale-[0.98] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#60a5fa] focus-visible:ring-offset-2 focus-visible:ring-offset-[#090d16]"
               >
                 <Wallet className="h-3.5 w-3.5 text-white" />
                 <span>
