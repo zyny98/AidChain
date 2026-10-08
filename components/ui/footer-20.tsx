@@ -146,10 +146,10 @@ export default function Footer20({
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                 </span>
-                Devnet Active (1.18)
+                Solana Network (1.18)
               </div>
               <p className="text-[12px] text-paper/40 leading-relaxed font-sans">
-                Смарт-контракты эскроу и SPL Memo оракула развернуты в сети Solana Devnet.
+                Смарт-контракты эскроу и SPL Memo оракула развернуты в сети Solana.
               </p>
             </motion.div>
           </div>

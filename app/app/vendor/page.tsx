@@ -60,7 +60,7 @@ export default function VendorPage() {
       />
 
       {/* Верхний баннер кабинета Поставщика: чистый светлый / обсидиановый стиль */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 sm:p-8 shadow-sm dark:shadow-md transition-colors">
+      <div className="relative overflow-hidden rounded-[26px] glass-card p-6 sm:p-8 transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
@@ -76,7 +76,7 @@ export default function VendorPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0">
-            <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/70 dark:bg-[#090d16] p-4 text-center transition-colors">
+            <div className="rounded-2xl glass-card-subtle p-4 text-center transition-colors">
               <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
                 Получено выплат
               </span>
@@ -88,7 +88,7 @@ export default function VendorPage() {
               </span>
             </div>
 
-            <div className="rounded-xl border border-emerald-500/20 bg-slate-50/70 dark:bg-[#090d16] p-4 text-center transition-colors">
+            <div className="rounded-2xl glass-card-subtle border border-emerald-500/20 p-4 text-center transition-colors">
               <span className="text-[11px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400/80 font-mono">
                 Статус Whitelist
               </span>
@@ -105,8 +105,8 @@ export default function VendorPage() {
       </div>
 
       {/* Выбор профиля компании поставщика */}
-      <div className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 space-y-4 shadow-sm dark:shadow-md transition-colors">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/70 dark:border-white/[0.06]">
+      <div className="rounded-[24px] glass-card p-6 space-y-4 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-black/5 dark:border-white/[0.06]">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
               <Store className="h-5 w-5" />
@@ -132,7 +132,7 @@ export default function VendorPage() {
             <select
               value={selectedVendorId}
               onChange={(e) => setSelectedVendorId(e.target.value)}
-              className="rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-[#080b11] px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none transition-colors"
+              className="rounded-xl border border-black/10 dark:border-white/[0.12] bg-white/80 dark:bg-[#080b11] px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none transition-colors"
             >
               {vendors.map((v) => (
                 <option key={v.id} value={v.id}>
@@ -144,19 +144,19 @@ export default function VendorPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-          <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-3 text-xs transition-colors">
+          <div className="rounded-xl glass-card-subtle p-3 text-xs transition-colors">
             <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Кошелёк для прямых выплат:</span>
             <span className="font-mono text-emerald-600 dark:text-emerald-400 truncate block mt-1">
               {currentVendor.walletAddress}
             </span>
           </div>
-          <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-3 text-xs transition-colors">
+          <div className="rounded-xl glass-card-subtle p-3 text-xs transition-colors">
             <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Успешных поставок:</span>
             <span className="text-slate-900 dark:text-white font-semibold block mt-1">
               {currentVendor.completedOrdersCount} закрытых накладных
             </span>
           </div>
-          <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-3 text-xs transition-colors">
+          <div className="rounded-xl glass-card-subtle p-3 text-xs transition-colors">
             <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Комиссия за транш:</span>
             <span className="text-emerald-600 dark:text-emerald-400 font-semibold block mt-1">
               0% (Оплачивает смарт-контракт)
@@ -193,7 +193,7 @@ export default function VendorPage() {
               return (
                 <div
                   key={inv.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#0e131f]/80 p-5 shadow-sm hover:border-slate-300 dark:hover:border-white/[0.15] transition"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl glass-card-subtle p-5 hover:bg-white/80 dark:hover:bg-white/[0.06] transition"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">

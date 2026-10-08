@@ -28,7 +28,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
 
   return (
     <div
-      className={`flex flex-col h-full select-none border-r border-slate-200/80 dark:border-white/10 bg-[#eef1f5]/90 dark:bg-[#0f1422]/90 backdrop-blur-md transition-all duration-300 ${
+      className={`flex flex-col h-full select-none border-r border-white/50 dark:border-white/10 bg-white/35 dark:bg-black/25 backdrop-blur-2xl transition-all duration-300 ${
         isCollapsed ? "w-0 p-0 overflow-hidden opacity-0 pointer-events-none" : "w-[260px] p-3.5"
       }`}
     >

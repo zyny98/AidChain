@@ -176,7 +176,7 @@ export default function FoundationPage() {
         description: newDesc,
         category: newCategory,
         organizer: "Благотворительный фонд",
-        organizerAddress: formattedAddress || "7xKX...Devnet",
+        organizerAddress: formattedAddress || "7xKX...AidChain",
         targetAmountSol: target,
         deadline: newDeadline,
         coverImage: "/images/hero-bg.jpg",
@@ -231,7 +231,7 @@ export default function FoundationPage() {
       />
 
       {/* Верхний баннер кабинета Фонда: чистый светлый / обсидиановый стиль */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 sm:p-8 shadow-sm dark:shadow-md transition-colors">
+      <div className="relative overflow-hidden rounded-[26px] glass-card p-6 sm:p-8 transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
@@ -271,7 +271,7 @@ export default function FoundationPage() {
           {campaigns.map((camp) => (
             <div
               key={camp.id}
-              className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 space-y-6 shadow-sm dark:shadow-md transition-colors"
+              className="rounded-[24px] glass-card p-6 space-y-6 transition-colors"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/70 dark:border-white/[0.06]">
                 <div>
@@ -299,7 +299,7 @@ export default function FoundationPage() {
                 {camp.milestones.map((m) => (
                   <div
                     key={m.id}
-                    className="flex flex-col justify-between rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-4 text-xs space-y-3 transition-colors"
+                    className="flex flex-col justify-between rounded-2xl glass-card-subtle p-4 text-xs space-y-3 transition-colors"
                   >
                     <div>
                       <div className="flex items-center justify-between">
@@ -333,7 +333,7 @@ export default function FoundationPage() {
                       </p>
 
                       {/* Смета */}
-                      <div className="mt-3 rounded-lg bg-white dark:bg-black/40 p-2.5 space-y-1 border border-slate-200/80 dark:border-white/[0.04] shadow-xs">
+                      <div className="mt-3 rounded-xl bg-black/[0.02] dark:bg-black/30 p-2.5 space-y-1 border border-black/5 dark:border-white/5">
                         <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono">
                           Плановые позиции:
                         </div>
@@ -368,7 +368,7 @@ export default function FoundationPage() {
                       {m.status === "pending" && (
                         <button
                           onClick={() => setSelectedMilestone({ campaignId: camp.id, milestone: m })}
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.04] py-2 px-3 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.08] active:scale-[0.98] transition shadow-xs"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.05] backdrop-blur-md py-2 px-3 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-white dark:hover:bg-white/[0.1] active:scale-[0.98] transition shadow-xs"
                         >
                           <UploadCloud className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                           <span>Загрузить чек (AI)</span>
@@ -422,8 +422,8 @@ export default function FoundationPage() {
 
       {/* Модалка загрузки чека и AI-валидации */}
       {selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#0e131f]/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl transition-colors">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+          <div className="relative w-full max-w-lg rounded-[28px] glass-window p-6 sm:p-7 shadow-2xl transition-colors">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">
@@ -435,7 +435,7 @@ export default function FoundationPage() {
               </div>
               <button
                 onClick={() => setSelectedMilestone(null)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-black/5 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
               >
                 ✕
               </button>
@@ -455,10 +455,10 @@ export default function FoundationPage() {
                   const file = e.dataTransfer.files?.[0];
                   if (file) processReceiptFile(file);
                 }}
-                className={`rounded-xl border border-dashed p-6 text-center transition ${
+                className={`rounded-2xl border border-dashed p-6 text-center transition ${
                   isDragging
                     ? "border-emerald-500 bg-emerald-500/10"
-                    : "border-slate-300 dark:border-white/[0.15] bg-slate-50/70 dark:bg-white/[0.02] hover:border-emerald-500/50"
+                    : "border-black/15 dark:border-white/15 bg-white/40 dark:bg-white/[0.02] backdrop-blur-md hover:border-emerald-500/50"
                 }`}
               >
                 <UploadCloud className="h-7 w-7 text-emerald-500 dark:text-emerald-400 mx-auto mb-2" />
@@ -497,7 +497,7 @@ export default function FoundationPage() {
 
               {/* Отображение вычисленного SHA-256 хэша */}
               {computedSha256 && (
-                <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.03] p-3 text-xs space-y-1">
+                <div className="rounded-xl glass-card-subtle p-3 text-xs space-y-1">
                   <div className="flex justify-between text-slate-600 dark:text-slate-300 text-[11px]">
                     <span>Файл: {uploadFileName}</span>
                     <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Хэш SHA-256 вычислен ✓</span>
@@ -510,7 +510,7 @@ export default function FoundationPage() {
 
               {/* Индикатор AI-анализа */}
               {isAiAnalyzing && (
-                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 text-center space-y-2">
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] backdrop-blur-md p-4 text-center space-y-2">
                   <div className="h-5 w-5 border-2 border-emerald-500 dark:border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
                   <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                     AI-оракул считывает фискальные реквизиты и сверяет со сметой...
@@ -520,7 +520,7 @@ export default function FoundationPage() {
 
               {/* Результат AI-верификации */}
               {aiVerdict && (
-                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 text-xs">
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md p-4 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
                       <CheckCircle className="h-4 w-4" />
@@ -550,7 +550,7 @@ export default function FoundationPage() {
               </button>
               <button
                 onClick={() => setSelectedMilestone(null)}
-                className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
+                className="rounded-xl border border-black/10 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
               >
                 Отмена
               </button>
@@ -561,8 +561,8 @@ export default function FoundationPage() {
 
       {/* Модалка создания сбора */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#0e131f]/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl transition-colors">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+          <div className="relative w-full max-w-lg rounded-[28px] glass-window p-6 sm:p-7 shadow-2xl transition-colors">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">
@@ -574,7 +574,7 @@ export default function FoundationPage() {
               </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-black/5 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
               >
                 ✕
               </button>
@@ -591,7 +591,7 @@ export default function FoundationPage() {
                   placeholder="Например: Покупка медицинского оборудования"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
+                  className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -605,14 +605,14 @@ export default function FoundationPage() {
                   placeholder="Опишите, кому и как будет оказана помощь..."
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
+                  className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-                    Сумма цели (SOL Devnet):
+                    Сумма цели (SOL):
                   </label>
                   <input
                     type="number"
@@ -621,7 +621,7 @@ export default function FoundationPage() {
                     required
                     value={newTargetSol}
                     onChange={(e) => setNewTargetSol(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs font-mono text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
+                    className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs font-mono text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -634,7 +634,7 @@ export default function FoundationPage() {
                     required
                     value={newDeadline}
                     onChange={(e) => setNewDeadline(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
+                    className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
                   />
                 </div>
               </div>

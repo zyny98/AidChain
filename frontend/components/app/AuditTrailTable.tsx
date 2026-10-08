@@ -18,30 +18,30 @@ export function AuditTrailTable() {
   });
 
   return (
-    <div className="rounded-[22px] border border-white/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl p-5 md:p-6 shadow-sm font-sans transition-colors duration-200">
+    <div className="glass-card relative overflow-hidden rounded-[26px] p-6 shadow-sm font-sans transition-all">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
-            <h3 className="text-base font-bold text-[var(--color-text)] font-display tracking-tight">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans tracking-tight">
               Неизменяемый блокчейн-реестр (Audit Trail)
             </h3>
           </div>
-          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
-            Публичные транзакции SPL Memo в сети Solana Devnet
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Публичные транзакции SPL Memo в сети Solana Network
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Поиск */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-[var(--color-text-subtle)]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Поиск по записи..."
-              className="rounded-xl border border-slate-300 dark:border-[var(--color-border)] bg-white dark:bg-[var(--color-surface-elevated)] pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-[var(--color-text)] placeholder-slate-400 dark:placeholder-[var(--color-text-subtle)] focus:border-blue-500 focus:outline-none transition-colors shadow-xs"
+              className="rounded-full border border-white/70 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-lg pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors shadow-xs"
             />
           </div>
 
@@ -49,7 +49,7 @@ export function AuditTrailTable() {
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            className="rounded-xl border border-slate-300 dark:border-[var(--color-border)] bg-white dark:bg-[var(--color-surface-elevated)] px-3 py-1.5 text-xs text-slate-900 dark:text-[var(--color-text)] focus:border-blue-500 focus:outline-none transition-colors shadow-xs"
+            className="rounded-full border border-white/70 dark:border-white/10 bg-white/60 dark:bg-white/[0.04] backdrop-blur-lg px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors shadow-xs cursor-pointer"
           >
             <option value="all">Все роли</option>
             <option value="donor">Доноры</option>

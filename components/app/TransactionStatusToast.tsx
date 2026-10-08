@@ -64,7 +64,7 @@ export function TransactionStatusToast({
 
               {status === "writing" && (
                 <p className="text-xs text-slate-400">
-                  Ожидаем подтверждения инструкций Memo в сети Solana Devnet...
+                  Ожидаем подтверждения инструкций Memo в сети Solana...
                 </p>
               )}
 

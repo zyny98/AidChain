@@ -97,7 +97,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
     if (pathname.includes("/history")) {
       return {
         title: "История транзакций",
-        subtitle: "Неизменяемый блокчейн-реестр транзакций в сети Solana Devnet",
+        subtitle: "Неизменяемый блокчейн-реестр транзакций в сети Solana Network",
       };
     }
     return {
@@ -128,10 +128,6 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
               <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white font-sans tracking-tight">
                 {pageInfo.title}
               </h1>
-              <span className="inline-flex items-center gap-1 rounded-full border border-blue-500/25 bg-blue-500/10 px-2 py-0.2 text-[10px] font-mono text-blue-600 dark:text-blue-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Devnet
-              </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {pageInfo.subtitle}
@@ -163,7 +159,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
                 </span>
                 <div className="h-3 w-px bg-slate-200 dark:bg-white/10" />
                 <span className="font-mono text-[11px]">
-                  {balanceSol !== null ? `${balanceSol.toFixed(3)} SOL` : "devnet"}
+                  {balanceSol !== null ? `${balanceSol.toFixed(3)} SOL` : "0.00 SOL"}
                 </span>
                 <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
               </button>
@@ -173,7 +169,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
                 <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#121724] p-2 shadow-2xl z-50">
                   <div className="px-3 py-2 border-b border-slate-100 dark:border-white/10">
                     <p className="text-[10px] text-slate-400 uppercase font-mono tracking-wider">
-                      Solana Devnet
+                      Solana Network
                     </p>
                     <p className="text-xs font-mono text-emerald-600 dark:text-emerald-400 truncate mt-0.5 select-all font-medium">
                       {walletAddress}

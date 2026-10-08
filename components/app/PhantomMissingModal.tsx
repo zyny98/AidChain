@@ -29,7 +29,7 @@ export function PhantomMissingModal({ isOpen, onClose }: PhantomMissingModalProp
             <h3 className="text-base font-bold text-white font-display">
               Кошелёк Phantom не найден
             </h3>
-            <p className="text-xs text-slate-400">Solana Devnet Web3</p>
+            <p className="text-xs text-slate-400">Solana Web3</p>
           </div>
         </div>
 
@@ -41,7 +41,7 @@ export function PhantomMissingModal({ isOpen, onClose }: PhantomMissingModalProp
         </div>
 
         <p className="text-xs text-slate-400 mb-6 leading-relaxed">
-          Для подтверждения пожертвований, создания сборов и фиксации аудита в блокчейне Solana Devnet необходимо браузерное расширение Phantom.
+          Для подтверждения пожертвований, создания сборов и фиксации аудита в блокчейне Solana необходимо браузерное расширение Phantom.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3">

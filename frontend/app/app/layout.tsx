@@ -70,18 +70,23 @@ export default function AppLayout({
   return (
     <ThemeProvider>
       <AppStoreProvider>
-        {/* Внешний холст: строго фиксированный fixed inset-0 без возможности скролла холста */}
-        <div className="fixed inset-0 h-screen w-screen overflow-hidden overscroll-none select-none bg-[#d6dbe2] dark:bg-[#070b12] text-slate-900 dark:text-slate-100 p-2 sm:p-3 lg:p-4 flex items-center justify-center transition-colors duration-200 selection:bg-emerald-500/20 selection:text-emerald-300 font-sans">
+        {/* Внешний холст: строго фиксированный fixed inset-0 с мягким атмосферным градиентом */}
+        <div className="fixed inset-0 h-screen w-screen overflow-hidden overscroll-none select-none bg-gradient-to-br from-[#e1e6ef] via-[#d6dde8] to-[#e4e9f2] dark:from-[#060912] dark:via-[#090e1c] dark:to-[#05070e] text-slate-900 dark:text-slate-100 p-2 sm:p-3 lg:p-4 flex items-center justify-center transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-300 font-sans">
+          {/* Рассеянные сферы света для реалистичного преломления матового стекла (Apple VisionOS эффект) */}
+          <div className="absolute -top-20 left-10 w-[600px] h-[500px] rounded-full bg-blue-500/10 dark:bg-blue-600/15 blur-[140px] pointer-events-none" />
+          <div className="absolute -bottom-20 right-10 w-[650px] h-[550px] rounded-full bg-emerald-500/10 dark:bg-emerald-600/12 blur-[150px] pointer-events-none" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] rounded-full bg-indigo-500/6 dark:bg-indigo-500/10 blur-[130px] pointer-events-none" />
+
           {/* Главный контейнер рабочей области */}
-          <div className="w-full max-w-[1560px] h-full max-h-[1040px] flex items-stretch gap-3 lg:gap-3.5 overflow-hidden">
+          <div className="relative z-10 w-full max-w-[1560px] h-full max-h-[1040px] flex items-stretch gap-3 lg:gap-3.5 overflow-hidden">
             {/* 1. Левая плавающая островная колонка (Floating Dock) */}
             <FloatingDock
               onToggleSidebar={() => setIsSidebarCollapsed((prev) => !prev)}
               isSidebarOpen={!isSidebarCollapsed}
             />
 
-            {/* 2. Основное окно macOS-приложения (Floating Studio Window) */}
-            <div className="relative flex-1 h-full rounded-[24px] sm:rounded-[30px] lg:rounded-[34px] bg-[#f0f2f5] dark:bg-[#0d1320] border border-white/80 dark:border-white/10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.18),0_10px_25px_-5px_rgba(0,0,0,0.1),inset_0_1px_1px_rgba(255,255,255,0.9)] overflow-hidden flex flex-row transition-colors duration-200">
+            {/* 2. Основное окно приложения в стиле Apple VisionOS Liquid Glass */}
+            <div className="glass-window relative flex-1 h-full rounded-[24px] sm:rounded-[30px] lg:rounded-[34px] overflow-hidden flex flex-row transition-colors duration-200">
               {/* Левая панель навигации окна (Studio Sidebar с macOS traffic lights и 4 профилями) */}
               <div className="hidden lg:block h-full shrink-0">
                 <StudioSidebar isCollapsed={isSidebarCollapsed} />

@@ -148,13 +148,13 @@ export default function DonorDashboardPage() {
       {/* ─── 1. Сигнатурная карточка Executions в точности как на референсе ─── */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Карточка 1: Точно как в референсе (Executions 340 ↑204% + See Report →) */}
-        <div className="relative overflow-hidden rounded-[22px] border border-white/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl p-5 sm:p-6 shadow-[0_8px_24px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col justify-between transition-all">
+        <div className="glass-card relative overflow-hidden rounded-[26px] p-6 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01]">
           <div>
             <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 block font-sans">
               Executions
             </span>
 
-            <div className="flex items-center gap-3 my-2">
+            <div className="flex items-center gap-3 my-2.5">
               <span className="text-4xl sm:text-5xl font-light tracking-tight text-slate-800 dark:text-white font-sans">
                 340
               </span>
@@ -176,7 +176,7 @@ export default function DonorDashboardPage() {
         </div>
 
         {/* Карточка 2: Защищено в смарт-контракте эскроу */}
-        <div className="relative overflow-hidden rounded-[22px] border border-white/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl p-5 sm:p-6 shadow-[0_8px_24px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col justify-between transition-all">
+        <div className="glass-card relative overflow-hidden rounded-[26px] p-6 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01]">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 font-sans">
@@ -188,28 +188,28 @@ export default function DonorDashboardPage() {
               </span>
             </div>
 
-            <div className="flex items-baseline gap-2 my-2">
+            <div className="flex items-baseline gap-2 my-2.5">
               <span className="text-3xl sm:text-4xl font-light tracking-tight text-slate-800 dark:text-white font-mono">
                 {activeProtectedSol > 0 ? `${activeProtectedSol.toFixed(2)}` : "10.00"}
               </span>
-              <span className="text-sm font-mono text-slate-500">SOL Devnet</span>
+              <span className="text-sm font-mono text-slate-500">SOL</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-2 text-xs">
-            <span className="text-slate-500">Возврат при отказе AI</span>
+            <span className="text-slate-500 dark:text-slate-400">Возврат при отказе AI</span>
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">100% Гарантия</span>
           </div>
         </div>
 
         {/* Карточка 3: Мои взносы & Solana статус */}
-        <div className="relative overflow-hidden rounded-[22px] border border-white/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl p-5 sm:p-6 shadow-[0_8px_24px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col justify-between transition-all">
+        <div className="glass-card relative overflow-hidden rounded-[26px] p-6 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01]">
           <div>
             <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 block font-sans">
               Мои пожертвования
             </span>
 
-            <div className="flex items-baseline gap-2 my-2">
+            <div className="flex items-baseline gap-2 my-2.5">
               <span className="text-3xl sm:text-4xl font-light tracking-tight text-emerald-600 dark:text-emerald-400 font-mono font-medium">
                 {totalDonatedSol > 0 ? `${totalDonatedSol.toFixed(2)}` : "0.00"}
               </span>
@@ -218,10 +218,10 @@ export default function DonorDashboardPage() {
           </div>
 
           <div className="flex items-center justify-between pt-2 text-xs">
-            <span className="text-slate-500">Статус сети:</span>
+            <span className="text-slate-500 dark:text-slate-400">Статус сети:</span>
             <span className="inline-flex items-center gap-1 font-mono text-emerald-600 dark:text-emerald-400 font-medium">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Devnet Verified
+              Подтверждено в сети
             </span>
           </div>
         </div>
@@ -240,62 +240,41 @@ export default function DonorDashboardPage() {
           {/* Табы Workflows | Permissions | Executions + Search pill */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Набор вкладок */}
-            <div className="inline-flex items-center gap-1 border-b border-slate-200/80 dark:border-white/10 pb-0.5">
+            <div className="inline-flex items-center p-1 rounded-2xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-white/65 dark:border-white/10 shadow-xs">
               <button
                 type="button"
                 onClick={() => setActiveTab("workflows")}
-                className={`relative px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`relative px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === "workflows"
-                    ? "text-slate-900 dark:text-white"
-                    : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    ? "bg-white/90 dark:bg-white/15 text-slate-900 dark:text-white shadow-sm border border-white/80 dark:border-white/20"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Workflows
-                {activeTab === "workflows" && (
-                  <motion.div
-                    layoutId="tab-underline"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 dark:bg-white rounded-full"
-                    transition={{ type: "spring", stiffness: 450, damping: 30 }}
-                  />
-                )}
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab("permissions")}
-                className={`relative px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`relative px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === "permissions"
-                    ? "text-slate-900 dark:text-white"
-                    : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    ? "bg-white/90 dark:bg-white/15 text-slate-900 dark:text-white shadow-sm border border-white/80 dark:border-white/20"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Permissions
-                {activeTab === "permissions" && (
-                  <motion.div
-                    layoutId="tab-underline"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 dark:bg-white rounded-full"
-                    transition={{ type: "spring", stiffness: 450, damping: 30 }}
-                  />
-                )}
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab("executions")}
-                className={`relative px-3 py-1.5 text-xs font-semibold transition-colors ${
+                className={`relative px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === "executions"
-                    ? "text-slate-900 dark:text-white"
-                    : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    ? "bg-white/90 dark:bg-white/15 text-slate-900 dark:text-white shadow-sm border border-white/80 dark:border-white/20"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 Executions
-                {activeTab === "executions" && (
-                  <motion.div
-                    layoutId="tab-underline"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-900 dark:bg-white rounded-full"
-                    transition={{ type: "spring", stiffness: 450, damping: 30 }}
-                  />
-                )}
               </button>
             </div>
 
@@ -307,7 +286,7 @@ export default function DonorDashboardPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search"
-                className="w-48 sm:w-56 rounded-full bg-white/70 dark:bg-white/5 border border-slate-200 dark:border-white/10 pl-8 pr-3 py-1 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 transition"
+                className="w-48 sm:w-56 rounded-full bg-white/55 dark:bg-white/[0.04] backdrop-blur-xl border border-white/70 dark:border-white/10 pl-8 pr-3.5 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 transition shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
               />
             </div>
           </div>
@@ -333,7 +312,7 @@ export default function DonorDashboardPage() {
                     return (
                       <div
                         key={don.id}
-                        className="rounded-2xl border border-white/80 dark:border-white/10 bg-white/75 dark:bg-white/[0.03] p-4 shadow-sm space-y-3 backdrop-blur-md"
+                        className="glass-card relative overflow-hidden rounded-[24px] p-5 shadow-sm space-y-3 transition-all hover:scale-[1.005]"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
@@ -349,7 +328,7 @@ export default function DonorDashboardPage() {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100 dark:border-white/5">
+                        <div className="flex items-center justify-between text-xs pt-1 border-t border-white/60 dark:border-white/5">
                           <span className="text-slate-500">Статус:</span>
                           {don.status === "refunded" ? (
                             <span className="font-semibold text-rose-500 flex items-center gap-1">
@@ -393,12 +372,12 @@ export default function DonorDashboardPage() {
                   return (
                     <div
                       key={camp.id}
-                      className="rounded-[22px] border border-white/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.03] backdrop-blur-xl p-5 shadow-sm space-y-4 transition-all"
+                      className="glass-card relative overflow-hidden rounded-[28px] p-6 space-y-4 transition-all hover:scale-[1.005]"
                     >
                       {/* Шапка карточки кампании */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <span className="inline-block rounded-full bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10 px-2.5 py-0.5 text-[10px] font-mono text-slate-600 dark:text-slate-300">
+                          <span className="inline-block rounded-full bg-white/60 dark:bg-white/10 border border-white/70 dark:border-white/10 px-2.5 py-0.5 text-[10px] font-mono text-slate-700 dark:text-slate-300">
                             {camp.category}
                           </span>
                           <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans">
@@ -418,7 +397,7 @@ export default function DonorDashboardPage() {
 
                       {/* Прогресс-бар сбора */}
                       <div className="space-y-1.5">
-                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-white/10 overflow-hidden">
+                        <div className="h-2 w-full rounded-full bg-black/5 dark:bg-white/10 overflow-hidden">
                           <div
                             className="h-full rounded-full bg-emerald-500 transition-all duration-500"
                             style={{ width: `${percentCollected}%` }}
@@ -427,8 +406,8 @@ export default function DonorDashboardPage() {
                       </div>
 
                       {/* Этапы и транши */}
-                      <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/5">
-                        <div className="flex items-center justify-between text-xs text-slate-500">
+                      <div className="space-y-2 pt-2 border-t border-white/60 dark:border-white/5">
+                        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                           <span>График траншей (Non-custodial эскроу):</span>
                           <span>{camp.milestones.length} этапа</span>
                         </div>
@@ -437,7 +416,7 @@ export default function DonorDashboardPage() {
                           {camp.milestones.map((m) => (
                             <div
                               key={m.id}
-                              className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.02] p-2 text-center"
+                              className="glass-card-subtle rounded-2xl p-2.5 text-center transition-all"
                             >
                               <span className="font-mono text-slate-500 block text-[10px]">
                                 Этап #{m.order}
@@ -503,18 +482,18 @@ export default function DonorDashboardPage() {
 
         {/* ─── Вкладка 2: Permissions (Архитектура эскроу и верификации) ─── */}
         {activeTab === "permissions" && (
-          <div className="rounded-[22px] border border-white/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.03] backdrop-blur-xl p-6 shadow-sm space-y-6">
+          <div className="glass-card relative overflow-hidden rounded-[28px] p-6 space-y-6">
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 Архитектура прав и смарт-контракта (Non-Custodial Escrow)
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Прямые криптографические гарантии исполнения в блокчейне Solana Devnet
+                Прямые криптографические гарантии исполнения в блокчейне Solana Network
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-              <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2">
+              <div className="glass-card-subtle rounded-2xl p-4.5 space-y-2">
                 <span className="font-semibold text-slate-800 dark:text-white block">
                   1. Роль Донора (Non-custodial)
                 </span>
@@ -526,7 +505,7 @@ export default function DonorDashboardPage() {
                 </span>
               </div>
 
-              <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2">
+              <div className="glass-card-subtle rounded-2xl p-4.5 space-y-2">
                 <span className="font-semibold text-slate-800 dark:text-white block">
                   2. AI-Оракул (OCR + SHA-256)
                 </span>
@@ -538,7 +517,7 @@ export default function DonorDashboardPage() {
                 </span>
               </div>
 
-              <div className="rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2">
+              <div className="glass-card-subtle rounded-2xl p-4.5 space-y-2">
                 <span className="font-semibold text-slate-800 dark:text-white block">
                   3. Multi-Sig HITL Арбитраж
                 </span>
@@ -555,7 +534,7 @@ export default function DonorDashboardPage() {
 
         {/* ─── Вкладка 3: Executions ─── */}
         {activeTab === "executions" && (
-          <div className="rounded-[22px] border border-white/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.03] backdrop-blur-xl p-6 shadow-sm space-y-4">
+          <div className="glass-card relative overflow-hidden rounded-[28px] p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -580,7 +559,7 @@ export default function DonorDashboardPage() {
       {/* ─── Модалка внесения пожертвования в эскроу ─── */}
       {selectedCampaign && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-[28px] border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0e1422] p-6 shadow-2xl backdrop-blur-2xl transition-colors">
+          <div className="relative w-full max-w-md rounded-[32px] border border-white/80 dark:border-white/15 bg-white/95 dark:bg-[#0c1222]/95 backdrop-blur-3xl p-7 shadow-2xl transition-colors">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">

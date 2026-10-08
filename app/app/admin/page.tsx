@@ -90,7 +90,7 @@ export default function AdminPage() {
       />
 
       {/* Верхний баннер Администратора: чистый светлый / обсидиановый стиль */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 sm:p-8 shadow-sm dark:shadow-md transition-colors">
+      <div className="relative overflow-hidden rounded-[26px] glass-card p-6 sm:p-8 transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-600 dark:text-amber-300">
@@ -106,7 +106,7 @@ export default function AdminPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 shrink-0">
-            <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.03] p-4 text-center transition-colors">
+            <div className="rounded-2xl glass-card-subtle p-4 text-center transition-colors">
               <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
                 Очередь HITL
               </span>
@@ -117,7 +117,7 @@ export default function AdminPage() {
                 Требуют решения
               </span>
             </div>
-            <div className="rounded-xl border border-emerald-500/20 bg-slate-50/70 dark:bg-emerald-500/[0.05] p-4 text-center transition-colors">
+            <div className="rounded-2xl glass-card-subtle border border-emerald-500/20 p-4 text-center transition-colors">
               <span className="text-[11px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400/80 font-mono">
                 Точность AI
               </span>
@@ -143,12 +143,12 @@ export default function AdminPage() {
           </div>
 
           {/* Вкладки: Требуют внимания / Решенные */}
-          <div className="flex items-center rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-100/70 dark:bg-white/[0.03] p-1 text-xs">
+          <div className="flex items-center rounded-xl glass-card-subtle p-1 text-xs">
             <button
               onClick={() => setActiveTab("pending")}
               className={`rounded-lg px-3 py-1.5 font-medium transition ${
                 activeTab === "pending"
-                  ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-xs dark:bg-white/[0.1] dark:text-white dark:border-white/[0.12]"
+                  ? "bg-white text-slate-900 font-bold border border-black/5 shadow-xs dark:bg-white/[0.1] dark:text-white dark:border-white/[0.12]"
                   : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
@@ -158,7 +158,7 @@ export default function AdminPage() {
               onClick={() => setActiveTab("resolved")}
               className={`rounded-lg px-3 py-1.5 font-medium transition ${
                 activeTab === "resolved"
-                  ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-xs dark:bg-white/[0.1] dark:text-white dark:border-white/[0.12]"
+                  ? "bg-white text-slate-900 font-bold border border-black/5 shadow-xs dark:bg-white/[0.1] dark:text-white dark:border-white/[0.12]"
                   : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
@@ -169,7 +169,7 @@ export default function AdminPage() {
 
         {activeTab === "pending" ? (
           pendingHitlItems.length === 0 ? (
-            <div className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#0e131f]/50 p-10 text-center space-y-2 shadow-sm">
+            <div className="rounded-2xl glass-card p-10 text-center space-y-2">
               <ShieldCheck className="h-9 w-9 text-emerald-500 dark:text-emerald-400 mx-auto opacity-70" />
               <h4 className="text-sm font-bold text-slate-900 dark:text-white">Очередь HITL пуста</h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
@@ -184,9 +184,9 @@ export default function AdminPage() {
                 return (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-amber-500/30 bg-white dark:bg-[#121827] p-6 space-y-5 shadow-sm dark:shadow-md transition-colors"
+                    className="rounded-[24px] glass-card border border-amber-500/30 p-6 space-y-5 transition-colors"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/70 dark:border-white/[0.06]">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-black/5 dark:border-white/[0.06]">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="rounded bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-mono text-amber-600 dark:text-amber-300 font-semibold">
@@ -214,7 +214,7 @@ export default function AdminPage() {
                     </div>
 
                     {/* Флаги предупреждений антифрода */}
-                    <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-4 space-y-2">
+                    <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.06] backdrop-blur-md p-4 space-y-2">
                       <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-300">
                         <AlertTriangle className="h-4 w-4 shrink-0" />
                         <span>Флаги антифрод-системы:</span>
@@ -228,7 +228,7 @@ export default function AdminPage() {
 
                     {/* Распознанные позиции vs Документ */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                      <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2 transition-colors">
+                      <div className="rounded-xl glass-card-subtle p-4 space-y-2 transition-colors">
                         <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono block">
                           Реквизиты продавца:
                         </span>
@@ -240,7 +240,7 @@ export default function AdminPage() {
                         </div>
                       </div>
 
-                      <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2 transition-colors">
+                      <div className="rounded-xl glass-card-subtle p-4 space-y-2 transition-colors">
                         <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono block">
                           Товарные позиции в чеке:
                         </span>
@@ -297,7 +297,7 @@ export default function AdminPage() {
             {resolvedHitlItems.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#0e131f]/70 p-4 text-xs flex items-center justify-between gap-4 shadow-sm"
+                className="rounded-xl glass-card-subtle p-4 text-xs flex items-center justify-between gap-4"
               >
                 <div>
                   <div className="flex items-center gap-2">
@@ -339,10 +339,10 @@ export default function AdminPage() {
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-5 overflow-x-auto shadow-sm dark:shadow-md transition-colors">
+        <div className="rounded-[24px] glass-card p-5 overflow-x-auto transition-colors">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-200/70 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">
+              <tr className="border-b border-black/5 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">
                 <th className="pb-3 pl-2">Организация / Поставщик</th>
                 <th className="pb-3 px-3">БИН</th>
                 <th className="pb-3 px-3">Категория</th>
@@ -350,9 +350,9 @@ export default function AdminPage() {
                 <th className="pb-3 pr-2 text-right">Действие</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200/60 dark:divide-white/[0.04]">
+            <tbody className="divide-y divide-black/5 dark:divide-white/[0.04]">
               {vendors.map((vendor) => (
-                <tr key={vendor.id} className="hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                <tr key={vendor.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors">
                   <td className="py-3 pl-2 font-medium text-slate-900 dark:text-white">
                     {vendor.name}
                   </td>
@@ -367,7 +367,7 @@ export default function AdminPage() {
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold ${
                         vendor.status === "whitelisted"
                           ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
-                          : "bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400"
+                          : "bg-black/[0.04] dark:bg-white/[0.05] text-slate-600 dark:text-slate-400"
                       }`}
                     >
                       {vendor.status === "whitelisted" ? "Аккредитован ✓" : "На проверке"}
@@ -394,8 +394,8 @@ export default function AdminPage() {
 
       {/* Модалка отклонения отчета */}
       {showRejectModal && selectedHitl && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#0e131f]/95 p-6 shadow-2xl backdrop-blur-2xl transition-colors">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+          <div className="relative w-full max-w-md rounded-[28px] glass-window p-6 shadow-2xl transition-colors">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display mb-2">
               Отклонение отчёта по чеку
             </h3>
@@ -410,7 +410,7 @@ export default function AdminPage() {
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="Например: Несоответствие товарных позиций смете, нечитаемый QR-код ОФД..."
-                className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-rose-500 focus:outline-none transition-colors"
+                className="w-full rounded-xl border border-black/15 dark:border-white/[0.12] bg-white/80 dark:bg-black/30 px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-rose-500 focus:outline-none transition-colors"
               />
 
               <div className="flex gap-3">
@@ -431,7 +431,7 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setShowRejectModal(false)}
-                  className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] px-4 py-2.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
+                  className="rounded-xl border border-black/10 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.03] px-4 py-2.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
                 >
                   Отмена
                 </button>
