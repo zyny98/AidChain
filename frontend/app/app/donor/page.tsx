@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useAppStore, Campaign } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { useSolanaMemo } from "@/hooks/useSolanaMemo";
 import { TransactionStatusToast } from "@/components/app/TransactionStatusToast";
-import { AuditTrailTable } from "@/components/app/AuditTrailTable";
 import {
   Wallet,
   ShieldCheck,
@@ -553,10 +553,26 @@ export default function DonorDashboardPage() {
           </div>
         )}
 
-        {/* ─── Вкладка 3: Executions (Блокчейн-реестр Solana Audit Trail) ─── */}
+        {/* ─── Вкладка 3: Executions ─── */}
         {activeTab === "executions" && (
-          <div className="pt-1">
-            <AuditTrailTable />
+          <div className="rounded-[22px] border border-white/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.03] backdrop-blur-xl p-6 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  Исполнение и реестр транзакций
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Все подтвержденные транзакции смарт-контракта эскроу перенесены в единый раздел блокчейн-истории
+                </p>
+              </div>
+              <Link
+                href="/app/history"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-950 px-4 py-2 text-xs font-semibold shadow-sm hover:opacity-90 transition active:scale-95"
+              >
+                <span>Перейти в Историю транзакций</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         )}
       </section>

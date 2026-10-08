@@ -5,7 +5,6 @@ import { useAppStore } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { useSolanaMemo } from "@/hooks/useSolanaMemo";
 import { TransactionStatusToast } from "@/components/app/TransactionStatusToast";
-import { AuditTrailTable } from "@/components/app/AuditTrailTable";
 import {
   Truck,
   CheckCircle2,
@@ -259,11 +258,6 @@ export default function VendorPage() {
             })}
           </div>
         )}
-      </section>
-
-      {/* Audit Trail */}
-      <section className="pt-2">
-        <AuditTrailTable />
       </section>
     </div>
   );

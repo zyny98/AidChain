@@ -84,7 +84,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
     }
     if (pathname.includes("/vendor")) {
       return {
-        title: "Кабинет Поставщика",
+        title: "Кабинет Перевозчика",
         subtitle: "Прямые расчеты из эскроу-контракта без риска задержек",
       };
     }
@@ -94,8 +94,14 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
         subtitle: "HITL арбитраж спорных чеков и аккредитация поставщиков",
       };
     }
+    if (pathname.includes("/history")) {
+      return {
+        title: "История транзакций",
+        subtitle: "Неизменяемый блокчейн-реестр транзакций в сети Solana Devnet",
+      };
+    }
     return {
-      title: "Dashboard",
+      title: "Кабинет Донора",
       subtitle: "All Your Workflows And Permissions",
     };
   };
@@ -105,7 +111,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
   return (
     <>
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 pt-1 border-b border-slate-200/70 dark:border-white/10">
-        {/* Заголовок и подзаголовок в точности как на референсе */}
+        {/* Заголовок и подзаголовок */}
         <div className="flex items-center gap-3">
           {onToggleMobileMenu && (
             <button
@@ -133,9 +139,8 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
           </div>
         </div>
 
-        {/* Правая часть: Переключатель темы (Pill) и Phantom Wallet */}
+        {/* Правая часть: Phantom Wallet */}
         <div className="flex items-center gap-2.5 self-end sm:self-auto shrink-0">
-          <ThemeToggle />
 
           {!isConnected ? (
             <button
