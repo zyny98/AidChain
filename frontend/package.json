@@ -1,6 +1,8 @@
 {
-  "name": "aidchain-frontend-fallback",
+  "name": "aidchain-frontend-proxy",
   "version": "1.0.0",
   "private": true,
-  "description": "Fallback package.json in case custom prefix is set in deployment settings"
+  "scripts": {
+    "postinstall": "npm --prefix .. install"
+  }
 }
