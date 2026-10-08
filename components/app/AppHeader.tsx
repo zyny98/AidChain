@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { PhantomMissingModal } from "@/components/app/PhantomMissingModal";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import {
   Wallet,
   ArrowUpRight,
@@ -13,10 +14,13 @@ import {
   ChevronDown,
   CheckCircle2,
   Droplets,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export function AppHeader() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const {
     isConnected,
     isConnecting,
@@ -78,28 +82,53 @@ export function AppHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-[#090d16]/95 backdrop-blur-md">
+      <header className="sticky top-0 z-40 w-full border-b border-[var(--color-border)] bg-[var(--color-bg)]/90 backdrop-blur-md transition-colors duration-200">
         <div className="flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Левая часть: Лаконичный заголовок страницы и статус сети */}
           <div className="flex items-center gap-3">
             {pathname !== "/app/donor" && (
-              <h2 className="font-display font-medium text-sm sm:text-base text-white tracking-tight">
+              <h2 className="font-display font-medium text-sm sm:text-base text-[var(--color-text)] tracking-tight">
                 {getPageTitle()}
               </h2>
             )}
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-mono text-blue-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/25 bg-blue-500/10 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-mono text-blue-600 dark:text-blue-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Solana Devnet
             </span>
           </div>
 
-          {/* Правая часть: Только кошелёк Phantom без лишнего визуального шума */}
-          <div className="flex items-center gap-3">
+          {/* Правая часть: Переключатель темы и Phantom Wallet */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Кнопка переключения темы: Светлая / Тёмная */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Переключить на светлую тему" : "Переключить на тёмную тему"}
+              aria-label="Переключение темы оформления"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-text)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-hover)] transition-all active:scale-[0.98] shadow-sm cursor-pointer"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="h-4 w-4 text-amber-400" />
+                  <span className="hidden sm:inline text-[11px] font-medium text-[var(--color-text-muted)]">
+                    Светлая
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-4 w-4 text-indigo-600" />
+                  <span className="hidden sm:inline text-[11px] font-medium text-[var(--color-text-muted)]">
+                    Тёмная
+                  </span>
+                </>
+              )}
+            </button>
+
             {!isConnected ? (
               <button
                 onClick={handleConnectClick}
                 disabled={isConnecting}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#2563eb] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-[#3b82f6] active:bg-[#1d4ed8] transition-all active:scale-[0.98] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#60a5fa] focus-visible:ring-offset-2 focus-visible:ring-offset-[#090d16]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-primary)] px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
               >
                 <Wallet className="h-3.5 w-3.5 text-white" />
                 <span>
@@ -110,27 +139,27 @@ export function AppHeader() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 rounded-xl border border-white/[0.1] bg-[#121827] px-3 py-1.5 text-xs font-medium text-white hover:border-white/[0.2] transition-all active:scale-[0.98] shadow-sm"
+                  className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-xs font-medium text-[var(--color-text)] hover:border-[var(--color-border-hover)] transition-all active:scale-[0.98] shadow-sm"
                 >
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-mono text-emerald-400 font-medium text-[11px]">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="font-mono text-emerald-600 dark:text-emerald-400 font-medium text-[11px]">
                     {formattedAddress}
                   </span>
-                  <div className="h-3 w-px bg-white/20" />
-                  <span className="text-slate-200 font-mono text-[11px]">
+                  <div className="h-3 w-px bg-[var(--color-border)]" />
+                  <span className="text-[var(--color-text)] font-mono text-[11px]">
                     {balanceSol !== null ? `${balanceSol.toFixed(3)} SOL` : "devnet"}
                   </span>
-                  <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+                  <ChevronDown className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
                 </button>
 
                 {/* Dropdown меню кошелька */}
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/[0.1] bg-[#121827] p-2 shadow-2xl z-50">
-                    <div className="px-3 py-2 border-b border-white/[0.06]">
-                      <p className="text-[10px] text-slate-400 uppercase font-mono tracking-wider">
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-2 shadow-2xl z-50">
+                    <div className="px-3 py-2 border-b border-[var(--color-border)]">
+                      <p className="text-[10px] text-[var(--color-text-muted)] uppercase font-mono tracking-wider">
                         Solana Devnet Кошелёк
                       </p>
-                      <p className="text-xs font-mono text-emerald-400 truncate mt-0.5 select-all">
+                      <p className="text-xs font-mono text-emerald-600 dark:text-emerald-400 truncate mt-0.5 select-all font-medium">
                         {walletAddress}
                       </p>
                     </div>
@@ -138,12 +167,12 @@ export function AppHeader() {
                     <div className="py-1">
                       <button
                         onClick={copyToClipboard}
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/[0.06] hover:text-white transition"
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition"
                       >
                         {copied ? (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                         ) : (
-                          <Copy className="h-3.5 w-3.5 text-slate-400" />
+                          <Copy className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
                         )}
                         <span>{copied ? "Адрес скопирован!" : "Скопировать адрес"}</span>
                       </button>
@@ -151,12 +180,12 @@ export function AppHeader() {
                       <button
                         onClick={refreshBalance}
                         disabled={isRefreshing}
-                        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/[0.06] hover:text-white transition disabled:opacity-60"
+                        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition disabled:opacity-60"
                       >
                         <div className="flex items-center gap-2">
                           <RefreshCw
                             className={`h-3.5 w-3.5 transition-transform ${
-                              isRefreshing ? "animate-spin text-emerald-400" : "text-slate-400"
+                              isRefreshing ? "animate-spin text-emerald-500" : "text-[var(--color-text-muted)]"
                             }`}
                           />
                           <span>
@@ -164,7 +193,7 @@ export function AppHeader() {
                           </span>
                         </div>
                         {refreshSuccess && (
-                          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                          <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
                             Обновлено!
                           </span>
                         )}
@@ -174,7 +203,7 @@ export function AppHeader() {
                         href="https://faucet.solana.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-emerald-400 hover:bg-emerald-500/10 transition"
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition"
                       >
                         <Droplets className="h-3.5 w-3.5" />
                         <span>Получить SOL (Faucet)</span>
@@ -184,20 +213,20 @@ export function AppHeader() {
                         href={`https://explorer.solana.com/address/${walletAddress}?cluster=devnet`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/[0.06] hover:text-white transition"
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-[var(--color-text)] hover:bg-[var(--color-surface-hover)] transition"
                       >
-                        <ArrowUpRight className="h-3.5 w-3.5 text-slate-400" />
+                        <ArrowUpRight className="h-3.5 w-3.5 text-[var(--color-text-muted)]" />
                         <span>Solana Explorer</span>
                       </a>
                     </div>
 
-                    <div className="pt-1 border-t border-white/[0.06]">
+                    <div className="pt-1 border-t border-[var(--color-border)]">
                       <button
                         onClick={() => {
                           disconnect();
                           setIsDropdownOpen(false);
                         }}
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-rose-400 hover:bg-rose-500/10 transition"
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-rose-500 hover:bg-rose-500/10 transition"
                       >
                         <LogOut className="h-3.5 w-3.5" />
                         <span>Отключить кошелёк</span>

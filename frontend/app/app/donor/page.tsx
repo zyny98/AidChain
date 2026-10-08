@@ -657,8 +657,8 @@ export default function DonorPage() {
                     }}
                     className={`rounded-xl py-2.5 px-3 text-center font-mono text-xs font-bold transition-all active:scale-[0.98] ${
                       donateAmount === amt && !customAmount
-                        ? "bg-white text-slate-950 shadow-sm"
-                        : "bg-[#090d16] text-slate-300 hover:bg-white/[0.08] border border-white/[0.08]"
+                        ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-500/30"
+                        : "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-hover)] border border-[var(--color-border)]"
                     }`}
                   >
                     {amt.toFixed(2)} SOL

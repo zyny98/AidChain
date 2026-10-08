@@ -15,10 +15,13 @@ import {
 } from "@/components/ui/sidebar";
 import { useAppStore } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import {
   RotateCcw,
   ExternalLink,
   Wallet,
+  Sun,
+  Moon,
 } from "lucide-react";
 import {
   IconWallet,
@@ -39,7 +42,7 @@ function BrandMark() {
         className="h-7 w-auto select-none shrink-0"
       />
       {!collapsed && (
-        <span className="font-display font-medium text-sm tracking-tight text-white truncate">
+        <span className="font-display font-medium text-sm tracking-tight text-[var(--color-text)] truncate">
           AidChain
         </span>
       )}
@@ -63,10 +66,10 @@ function WalletFooter() {
       </div>
       {!collapsed && (
         <div className="min-w-0 flex-1 text-left">
-          <div className="text-[12px] font-mono font-medium text-white truncate">
+          <div className="text-[12px] font-mono font-medium text-[var(--color-text)] truncate">
             {formattedAddress}
           </div>
-          <div className="text-[11px] font-mono text-emerald-400">
+          <div className="text-[11px] font-mono text-emerald-500 dark:text-emerald-400">
             {balanceSol !== null ? `${balanceSol.toFixed(2)} SOL` : "devnet"}
           </div>
         </div>
@@ -80,6 +83,7 @@ const SIDEBAR_STORAGE_KEY = "aidchain_sidebar_collapsed";
 export function AppSidebar() {
   const pathname = usePathname();
   const { hitlQueue } = useAppStore();
+  const { theme, toggleTheme } = useTheme();
   const pendingHitlCount = hitlQueue.filter((h) => h.status === "pending").length;
 
   const [collapsed, setCollapsed] = React.useState<boolean>(false);
@@ -137,8 +141,9 @@ export function AppSidebar() {
       onCollapsedChange={handleCollapsedChange}
       width={230}
       collapsedWidth={64}
+      className="border-r border-[var(--color-border)] bg-[var(--color-bg)] transition-colors duration-200"
     >
-      <SidebarHeader className="border-b border-white/[0.08]">
+      <SidebarHeader className="border-b border-[var(--color-border)]">
         <BrandMark />
         <SidebarToggle className="ml-auto" />
       </SidebarHeader>
@@ -154,7 +159,7 @@ export function AppSidebar() {
                 icon={
                   <IconComp
                     className={`size-4 transition-colors ${
-                      isActive ? "text-blue-400" : "text-slate-400"
+                      isActive ? "text-blue-500 dark:text-blue-400" : "text-slate-400"
                     }`}
                   />
                 }
@@ -162,7 +167,7 @@ export function AppSidebar() {
                 href={r.href}
                 badge={
                   r.badge ? (
-                    <span className="rounded-full bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.2 text-[10px] font-bold text-amber-300">
+                    <span className="rounded-full bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.2 text-[10px] font-bold text-amber-500 dark:text-amber-300">
                       {r.badge}
                     </span>
                   ) : undefined
@@ -175,6 +180,18 @@ export function AppSidebar() {
         </SidebarSection>
 
         <SidebarSection label="Быстрые действия">
+          <SidebarItem
+            icon={
+              theme === "dark" ? (
+                <Sun className="size-4 text-amber-400" />
+              ) : (
+                <Moon className="size-4 text-indigo-500" />
+              )
+            }
+            onClick={toggleTheme}
+          >
+            {theme === "dark" ? "Светлая тема" : "Тёмная тема"}
+          </SidebarItem>
           <SidebarItem
             icon={<ExternalLink className="size-4 text-slate-400" />}
             href="/"
