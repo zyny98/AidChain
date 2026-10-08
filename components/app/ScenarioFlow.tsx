@@ -116,7 +116,7 @@ export function ScenarioFlow() {
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-105 ${
                     isActive
-                      ? "bg-emerald-500 text-slate-950 font-bold shadow-sm shadow-emerald-500/20"
+                      ? "bg-emerald-500 text-white font-bold shadow-sm shadow-emerald-500/20"
                       : "bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
                   }`}
                 >

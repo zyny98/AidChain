@@ -232,7 +232,7 @@ export default function VendorPage() {
                       <button
                         onClick={() => handleClaimPayout(inv.id, inv.invoiceNumber, inv.amountSol)}
                         disabled={isWriting}
-                        className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 px-4 py-2 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
+                        className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_20px_rgba(37,99,235,0.35)] px-4 py-2 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
                       >
                         {isProcessing ? (
                           <>
@@ -241,7 +241,7 @@ export default function VendorPage() {
                           </>
                         ) : (
                           <>
-                            <Wallet className="h-3.5 w-3.5 text-white dark:text-emerald-600" />
+                            <Wallet className="h-3.5 w-3.5 text-white" />
                             <span>Получить выплату из эскроу</span>
                           </>
                         )}

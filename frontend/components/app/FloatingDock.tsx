@@ -32,12 +32,12 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
     >
       {/* Верхний сегмент (Tall Capsule) */}
       <div className="w-[58px] flex flex-col items-center pt-2 pb-3.5 rounded-[28px] bg-white/45 dark:bg-black/35 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-colors duration-200">
-        {/* Тёмный инсетный трек с иконками */}
-        <div className="w-[44px] bg-[#161a23] rounded-[22px] py-2 px-1 flex flex-col items-center gap-2 shadow-[inset_0_2px_5px_rgba(0,0,0,0.6)] border border-white/5">
+        {/* Инсетный трек с иконками: светлый в светлой теме, глубокий обсидиановый в тёмной */}
+        <div className="w-[44px] bg-slate-200/70 dark:bg-[#161a23] rounded-[22px] py-2 px-1 flex flex-col items-center gap-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)] dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.6)] border border-slate-300/60 dark:border-white/5 transition-colors duration-200">
           {/* 1. Верхний логотип: Наш официальный логотип AidChain */}
           <Link
             href="/app/donor"
-            className="flex h-7 w-7 items-center justify-center text-slate-300 hover:text-white transition group rounded-lg overflow-hidden p-0.5"
+            className="flex h-7 w-7 items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition group rounded-lg overflow-hidden p-0.5"
             title="AidChain Protocol"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -53,8 +53,8 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
             href="/app/donor"
             className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
               pathname === "/app/donor"
-                ? "bg-white/15 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/10"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
+                ? "bg-white text-blue-600 shadow-sm border border-slate-300/70 dark:bg-white/15 dark:text-white dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] dark:border-white/10"
+                : "text-slate-500 hover:text-slate-900 hover:bg-black/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5"
             }`}
             title="1. Кабинет Донора"
           >
@@ -66,8 +66,8 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
             href="/app/vendor"
             className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
               pathname === "/app/vendor"
-                ? "bg-white/15 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/10"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
+                ? "bg-white text-blue-600 shadow-sm border border-slate-300/70 dark:bg-white/15 dark:text-white dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] dark:border-white/10"
+                : "text-slate-500 hover:text-slate-900 hover:bg-black/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5"
             }`}
             title="2. Кабинет Перевозчика / Поставщика"
           >
@@ -79,8 +79,8 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
             href="/app/foundation"
             className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
               pathname === "/app/foundation"
-                ? "bg-white/15 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/10"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
+                ? "bg-white text-blue-600 shadow-sm border border-slate-300/70 dark:bg-white/15 dark:text-white dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] dark:border-white/10"
+                : "text-slate-500 hover:text-slate-900 hover:bg-black/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5"
             }`}
             title="3. Кабинет Благотворительного Фонда"
           >
@@ -92,8 +92,8 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
             href="/app/admin"
             className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
               pathname === "/app/admin"
-                ? "bg-white/15 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/10"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
+                ? "bg-white text-blue-600 shadow-sm border border-slate-300/70 dark:bg-white/15 dark:text-white dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] dark:border-white/10"
+                : "text-slate-500 hover:text-slate-900 hover:bg-black/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5"
             }`}
             title="4. Панель Администратора & HITL"
           >
@@ -106,8 +106,8 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
             onClick={onToggleSidebar}
             className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
               isSidebarOpen === false
-                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-[inset_0_1px_2px_rgba(245,158,11,0.2)]"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
+                ? "bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30 shadow-xs"
+                : "text-slate-500 hover:text-slate-900 hover:bg-black/5 dark:text-slate-400 dark:hover:text-white dark:hover:bg-white/5"
             }`}
             title={isSidebarOpen === false ? "Развернуть боковое меню" : "Скрыть боковое меню"}
           >
@@ -117,7 +117,7 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
 
         {/* Вертикальный текст: AIDCHAIN NAV */}
         <div
-          className="mt-4 text-[8.5px] font-mono tracking-[0.24em] uppercase text-slate-400/90 dark:text-slate-500 select-none font-semibold"
+          className="mt-4 text-[8.5px] font-mono tracking-[0.24em] uppercase text-slate-500 dark:text-slate-400 select-none font-semibold"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
         >
           AIDCHAIN NAV
@@ -128,7 +128,7 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
       <div className="w-[58px] flex flex-col items-center pt-3 pb-2 rounded-[24px] bg-white/45 dark:bg-black/35 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-colors duration-200">
         {/* Вертикальный текст: СМЕНА ТЕМЫ */}
         <div
-          className="mb-3 text-[8px] font-mono tracking-[0.22em] uppercase text-slate-400/90 dark:text-slate-500 select-none font-semibold text-center"
+          className="mb-3 text-[8px] font-mono tracking-[0.22em] uppercase text-slate-500 dark:text-slate-400 select-none font-semibold text-center"
           style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
         >
           СМЕНА ТЕМЫ
@@ -138,7 +138,7 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
         <button
           type="button"
           onClick={toggleTheme}
-          className="group relative flex h-[38px] w-[38px] items-center justify-center rounded-[14px] bg-[#161a23] text-slate-300 hover:text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5 transition-all duration-200 active:scale-95"
+          className="group relative flex h-[38px] w-[38px] items-center justify-center rounded-[14px] bg-slate-200/70 dark:bg-[#161a23] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-slate-300/60 dark:border-white/5 transition-all duration-200 active:scale-95"
           title={isDark ? "Переключить на светлую тему" : "Переключить на тёмную тему"}
         >
           <AnimatePresence mode="wait" initial={false}>
@@ -160,7 +160,7 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
                 exit={{ scale: 0.5, rotate: -90, opacity: 0 }}
                 transition={{ duration: 0.18 }}
               >
-                <IconSun className="h-4 w-4 text-amber-400" stroke={2} />
+                <IconSun className="h-4 w-4 text-amber-500" stroke={2} />
               </motion.div>
             )}
           </AnimatePresence>

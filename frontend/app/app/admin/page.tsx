@@ -260,7 +260,7 @@ export default function AdminPage() {
                       <button
                         onClick={() => handleApproveHitl(item)}
                         disabled={isWriting}
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 hover:bg-emerald-700 dark:hover:bg-emerald-400 active:scale-[0.98] py-2.5 px-4 text-xs font-bold transition shadow-sm disabled:opacity-50"
+                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:text-white dark:shadow-[0_0_20px_rgba(5,150,105,0.35)] active:scale-[0.98] py-2.5 px-4 text-xs font-bold transition shadow-sm disabled:opacity-50"
                       >
                         {isProcessing ? (
                           <>

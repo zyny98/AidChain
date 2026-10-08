@@ -142,7 +142,7 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
             <button
               onClick={handleConnectClick}
               disabled={isConnecting}
-              className="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-950 px-3.5 py-1.5 text-xs font-semibold shadow-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_16px_rgba(37,99,235,0.3)] px-3.5 py-1.5 text-xs font-semibold shadow-sm active:scale-[0.98] transition-all disabled:opacity-50"
             >
               <Wallet className="h-3.5 w-3.5" />
               <span>{isConnecting ? "Подключение..." : "Подключить Phantom"}</span>

@@ -49,7 +49,7 @@ export function PhantomMissingModal({ isOpen, onClose }: PhantomMissingModalProp
             href="https://phantom.app"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 text-white hover:bg-blue-500 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 py-2.5 px-4 text-xs font-bold active:scale-[0.98] transition shadow-sm"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white py-2.5 px-4 text-xs font-bold active:scale-[0.98] transition shadow-sm"
           >
             Установить Phantom
             <ExternalLink className="h-3.5 w-3.5" />

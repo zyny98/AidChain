@@ -53,15 +53,15 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
 
       {/* 2. Профиль пользователя с аватаром */}
       <div className="flex items-center gap-3 px-1.5 py-2 mb-3 rounded-xl hover:bg-white/40 dark:hover:bg-white/5 transition cursor-pointer">
-        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1e232e] text-white overflow-hidden shadow-sm border border-slate-300 dark:border-white/10">
+        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-[#1e232e] text-slate-700 dark:text-white overflow-hidden shadow-xs border border-slate-300 dark:border-white/10">
           {/* Стилизованная иконка аватара с очками */}
-          <svg className="h-8 w-8 text-slate-200" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="16" r="8" fill="#e2e8f0" stroke="#0f172a" strokeWidth="1.5" />
-            <circle cx="17" cy="16" r="3" stroke="#0f172a" strokeWidth="1.5" fill="#ffffff" />
-            <circle cx="23" cy="16" r="3" stroke="#0f172a" strokeWidth="1.5" fill="#ffffff" />
-            <line x1="20" y1="16" x2="20" y2="16" stroke="#0f172a" strokeWidth="1.5" />
-            <path d="M12 14c2-5 12-6 16-2" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
-            <path d="M8 36c2-8 7-11 12-11s10 3 12 11" fill="#334155" />
+          <svg className="h-8 w-8 text-slate-700 dark:text-slate-200" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="16" r="8" fill="#cbd5e1" stroke="#334155" strokeWidth="1.5" />
+            <circle cx="17" cy="16" r="3" stroke="#334155" strokeWidth="1.5" fill="#ffffff" />
+            <circle cx="23" cy="16" r="3" stroke="#334155" strokeWidth="1.5" fill="#ffffff" />
+            <line x1="20" y1="16" x2="20" y2="16" stroke="#334155" strokeWidth="1.5" />
+            <path d="M12 14c2-5 12-6 16-2" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
+            <path d="M8 36c2-8 7-11 12-11s10 3 12 11" fill="#64748b" />
           </svg>
         </div>
 

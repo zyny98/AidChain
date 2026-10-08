@@ -248,7 +248,7 @@ export default function FoundationPage() {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 px-4 py-2.5 text-xs font-bold active:scale-[0.98] transition shadow-sm shrink-0"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_20px_rgba(37,99,235,0.35)] px-4 py-2.5 text-xs font-bold active:scale-[0.98] transition shadow-sm shrink-0"
           >
             <Plus className="h-4 w-4" />
             <span>Создать целевой сбор</span>
@@ -379,7 +379,7 @@ export default function FoundationPage() {
                         <button
                           onClick={() => handleRequestTrancheRelease(camp, m)}
                           disabled={isWriting && activeProcessingMilestoneId === m.id}
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 py-2 px-3 text-xs font-bold hover:bg-emerald-700 dark:hover:bg-emerald-400 active:scale-[0.98] transition shadow-sm disabled:opacity-50"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:text-white py-2 px-3 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
                         >
                           {isWriting && activeProcessingMilestoneId === m.id ? (
                             <>
@@ -479,7 +479,7 @@ export default function FoundationPage() {
                   />
                   <label
                     htmlFor="receipt-file-input"
-                    className="inline-flex cursor-pointer rounded-lg bg-slate-900 text-white dark:bg-white/[0.08] dark:text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-slate-800 dark:hover:bg-white/[0.15] active:scale-[0.98] transition shadow-xs"
+                    className="inline-flex cursor-pointer rounded-lg bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white px-3.5 py-1.5 text-xs font-semibold active:scale-[0.98] transition shadow-xs"
                   >
                     Выбрать файл
                   </label>
@@ -544,7 +544,7 @@ export default function FoundationPage() {
               <button
                 onClick={handleConfirmReceipt}
                 disabled={!aiVerdict}
-                className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-40 transition shadow-sm"
+                className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-40 transition shadow-sm"
               >
                 Сохранить отчёт и отправить на выплату
               </button>
@@ -650,7 +650,7 @@ export default function FoundationPage() {
                 <button
                   type="submit"
                   disabled={isWriting}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition shadow-sm"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_20px_rgba(37,99,235,0.35)] py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition shadow-sm"
                 >
                   {isWriting ? (
                     <>
