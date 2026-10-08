@@ -1,20 +1,46 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
     "strict": true,
+    "noEmit": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
-    "./hardhat.config.ts",
-    "./scripts/**/*.ts",
-    "./test/**/*.ts"
+    "next-env.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "hooks/**/*.ts",
+    "hooks/**/*.tsx",
+    "types/**/*.ts",
+    ".next/types/**/*.ts"
   ],
-  "files": [],
-  "exclude": ["node_modules", "artifacts", "cache", "dist"]
+  "exclude": [
+    "node_modules",
+    "contracts",
+    "scripts",
+    "test",
+    "backend",
+    "hardhat.config.ts",
+    "frontend"
+  ]
 }
