@@ -4,6 +4,7 @@ import '@fontsource-variable/unbounded';
 import '@fontsource-variable/onest';
 import '@fontsource-variable/jetbrains-mono';
 import './globals.css';
+import { PhantomWalletProvider } from '@/hooks/usePhantomWallet';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aidchain.io'),
@@ -51,7 +52,9 @@ export default function RootLayout({
   return (
     <html lang="ru" className="bg-ink text-paper">
       <body className="min-h-screen bg-ink font-sans text-paper antialiased overflow-x-hidden selection:bg-signal selection:text-ink">
-        {children}
+        <PhantomWalletProvider>
+          {children}
+        </PhantomWalletProvider>
       </body>
     </html>
   );

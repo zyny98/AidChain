@@ -40,14 +40,14 @@ export function getSolanaConnection(): Connection {
 /**
  * Получает баланс в SOL в сети Devnet
  */
-export async function getDevnetSolBalance(publicKey: PublicKey): Promise<number> {
+export async function getDevnetSolBalance(publicKey: PublicKey): Promise<number | null> {
   try {
     const connection = getSolanaConnection();
     const balanceInLamports = await connection.getBalance(publicKey, "confirmed");
     return balanceInLamports / LAMPORTS_PER_SOL;
   } catch (error) {
     console.warn("Ошибка получения баланса Devnet:", error);
-    return 0;
+    return null;
   }
 }
 

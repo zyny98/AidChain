@@ -9,6 +9,7 @@
  */
 
 import * as React from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useRender } from "@base-ui/react/use-render";
 import {
@@ -299,6 +300,16 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
 
     const [internalCollapsed, setInternalCollapsed] =
       React.useState(defaultCollapsed);
+
+    React.useEffect(() => {
+      try {
+        const saved = localStorage.getItem("aidchain_sidebar_collapsed");
+        if (saved !== null) {
+          setInternalCollapsed(saved === "true");
+        }
+      } catch (_) {}
+    }, []);
+
     const isControlled = controlledCollapsed !== undefined;
     const collapsed = isIconRail
       ? true
@@ -311,7 +322,12 @@ export const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     const toggleCollapsed = React.useCallback(() => {
       if (!isCollapsible) return;
       const next = !collapsed;
-      if (!isControlled) setInternalCollapsed(next);
+      if (!isControlled) {
+        setInternalCollapsed(next);
+        try {
+          localStorage.setItem("aidchain_sidebar_collapsed", String(next));
+        } catch (_) {}
+      }
       onCollapsedChange?.(next);
     }, [isCollapsible, collapsed, isControlled, onCollapsedChange]);
 
@@ -563,14 +579,19 @@ SidebarSection.displayName = "SidebarSection";
 function ActivePill({ navId }: { navId: string }) {
   const prefersReducedMotion = useReducedMotion();
   if (prefersReducedMotion) {
-    return <span aria-hidden="true" className={activePillClasses} />;
+    return (
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[var(--primitive-radius-item,0.625rem)] bg-blue-500/15 border border-blue-500/30"
+      />
+    );
   }
   return (
     <motion.span
       aria-hidden="true"
-      layoutId={`${navId}-active-pill`}
-      transition={{ type: "spring", stiffness: 520, damping: 42 }}
-      className={activePillClasses}
+      layoutId="sidebar-active-indicator"
+      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+      className="pointer-events-none absolute inset-0 rounded-[var(--primitive-radius-item,0.625rem)] bg-blue-500/15 border border-blue-500/30 shadow-[0_0_12px_rgba(59,130,246,0.15)]"
     />
   );
 }
@@ -659,7 +680,7 @@ export const SidebarItem = React.forwardRef<
 
     if (href) {
       return (
-        <a
+        <Link
           ref={ref as React.Ref<HTMLAnchorElement>}
           data-slot="sidebar-item"
           data-active={active ? "true" : undefined}
@@ -669,10 +690,10 @@ export const SidebarItem = React.forwardRef<
           rel={external ? "noopener noreferrer" : undefined}
           title={title}
           className={composedClassName}
-          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+          {...(props as any)}
         >
           {content}
-        </a>
+        </Link>
       );
     }
 

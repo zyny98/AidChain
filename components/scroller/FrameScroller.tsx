@@ -30,18 +30,25 @@ function padFrame(index: number): string {
   return String(index + 1).padStart(4, '0');
 }
 
+// Persistent global image cache across client navigations
+const GLOBAL_IMAGE_CACHE: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES).fill(null);
+let globalLoadedCount = 0;
+let globalPreloadStarted = false;
+
 export default function FrameScroller() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<(HTMLImageElement | null)[]>(new Array(TOTAL_FRAMES).fill(null));
+  const imagesRef = useRef<(HTMLImageElement | null)[]>(GLOBAL_IMAGE_CACHE);
   const currentFrameRef = useRef<number>(-1);
   const decodedRef = useRef<Set<number>>(new Set());
   const smoothFrameRef = useRef<number>(0);
   const smoothOpacityRef = useRef<number>(0);
   const pointsRef = useRef<{ scrollY: number; frame: number }[]>([]);
   const hudCounterRef = useRef<HTMLSpanElement>(null);
-  const [loadedCount, setLoadedCount] = useState<number>(0);
-  const [isInitialReady, setIsInitialReady] = useState<boolean>(false);
+  const [loadedCount, setLoadedCount] = useState<number>(globalLoadedCount);
+  const [isInitialReady, setIsInitialReady] = useState<boolean>(
+    GLOBAL_IMAGE_CACHE[0] !== null && Boolean(GLOBAL_IMAGE_CACHE[0]?.complete)
+  );
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
 
   useEffect(() => {
@@ -112,12 +119,30 @@ export default function FrameScroller() {
   // ─── Preload frames cleanly with async decoding ──────────────────
   useEffect(() => {
     let isCancelled = false;
-    let loaded = 0;
+
+    // If frame 0 is already loaded from previous page view, paint it immediately
+    const frame0 = GLOBAL_IMAGE_CACHE[0];
+    if (frame0 && frame0.complete && currentFrameRef.current === -1) {
+      paintFrameToCanvas(frame0, 0);
+      setIsInitialReady(true);
+    }
+
+    // If all frames already buffered in this session, nothing left to load
+    if (globalLoadedCount >= TOTAL_FRAMES) {
+      setLoadedCount(TOTAL_FRAMES);
+      setIsInitialReady(true);
+      return;
+    }
+
+    if (globalPreloadStarted) {
+      return;
+    }
+    globalPreloadStarted = true;
 
     const loadSingleFrame = (index: number): Promise<HTMLImageElement> => {
       return new Promise((resolve) => {
-        if (imagesRef.current[index]?.complete) {
-          resolve(imagesRef.current[index]!);
+        if (GLOBAL_IMAGE_CACHE[index]?.complete) {
+          resolve(GLOBAL_IMAGE_CACHE[index]!);
           return;
         }
 
@@ -126,9 +151,9 @@ export default function FrameScroller() {
         img.src = `${FRAME_PREFIX}${padFrame(index)}.jpg`;
         img.onload = () => {
           if (isCancelled) return;
-          imagesRef.current[index] = img;
-          loaded++;
-          setLoadedCount(loaded);
+          GLOBAL_IMAGE_CACHE[index] = img;
+          globalLoadedCount++;
+          setLoadedCount(globalLoadedCount);
 
           if (index === 0 && currentFrameRef.current === -1) {
             paintFrameToCanvas(img, 0);
@@ -147,7 +172,7 @@ export default function FrameScroller() {
       if (isCancelled) return;
 
       const queue = Array.from({ length: TOTAL_FRAMES - 1 }, (_, i) => i + 1);
-      const CONCURRENCY = 12;
+      const CONCURRENCY = 10;
 
       const runWorker = async () => {
         while (queue.length > 0 && !isCancelled) {

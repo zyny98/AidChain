@@ -24,6 +24,8 @@ export function AppHeader() {
     formattedAddress,
     walletAddress,
     balanceSol,
+    isRefreshing,
+    refreshSuccess,
     connect,
     disconnect,
     refreshBalance,
@@ -148,10 +150,24 @@ export function AppHeader() {
 
                       <button
                         onClick={refreshBalance}
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/[0.06] hover:text-white transition"
+                        disabled={isRefreshing}
+                        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs text-slate-300 hover:bg-white/[0.06] hover:text-white transition disabled:opacity-60"
                       >
-                        <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
-                        <span>Обновить баланс SOL</span>
+                        <div className="flex items-center gap-2">
+                          <RefreshCw
+                            className={`h-3.5 w-3.5 transition-transform ${
+                              isRefreshing ? "animate-spin text-emerald-400" : "text-slate-400"
+                            }`}
+                          />
+                          <span>
+                            {isRefreshing ? "Синхронизация..." : "Обновить баланс SOL"}
+                          </span>
+                        </div>
+                        {refreshSuccess && (
+                          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                            Обновлено!
+                          </span>
+                        )}
                       </button>
 
                       <a

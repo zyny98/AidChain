@@ -73,10 +73,32 @@ function WalletFooter() {
   );
 }
 
+const SIDEBAR_STORAGE_KEY = "aidchain_sidebar_collapsed";
+
 export function AppSidebar() {
   const pathname = usePathname();
   const { hitlQueue } = useAppStore();
   const pendingHitlCount = hitlQueue.filter((h) => h.status === "pending").length;
+
+  const [collapsed, setCollapsed] = React.useState<boolean>(false);
+  const [mounted, setMounted] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+    try {
+      const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
+      if (saved !== null) {
+        setCollapsed(saved === "true");
+      }
+    } catch (_) {}
+  }, []);
+
+  const handleCollapsedChange = React.useCallback((next: boolean) => {
+    setCollapsed(next);
+    try {
+      localStorage.setItem(SIDEBAR_STORAGE_KEY, String(next));
+    } catch (_) {}
+  }, []);
 
   const roles = [
     {
@@ -107,7 +129,13 @@ export function AppSidebar() {
   ];
 
   return (
-    <Sidebar variant="collapsible" defaultCollapsed={false} width={230} collapsedWidth={64}>
+    <Sidebar
+      variant="collapsible"
+      collapsed={mounted ? collapsed : false}
+      onCollapsedChange={handleCollapsedChange}
+      width={230}
+      collapsedWidth={64}
+    >
       <SidebarHeader className="border-b border-white/[0.08]">
         <BrandMark />
         <SidebarToggle className="ml-auto" />

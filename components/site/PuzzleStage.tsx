@@ -197,8 +197,8 @@ export const PUZZLE_STAGES: PuzzleStageData[] = [
 export function PuzzleStageBlock({ stage }: { stage: PuzzleStageData }) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
 
-  // In-view trigger: starts from scratch every time stage enters viewport
-  const isInView = useInView(sectionRef, { amount: 0.35, once: false });
+  // In-view trigger: smooth 3D assembly once reached
+  const isInView = useInView(sectionRef, { amount: 0.35, once: true });
 
   const isRight = stage.side === 'right';
 
