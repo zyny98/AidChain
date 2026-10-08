@@ -18,7 +18,7 @@ export function AuditTrailTable() {
   });
 
   return (
-    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:p-6 shadow-sm font-sans transition-colors duration-200">
+    <div className="rounded-[22px] border border-white/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl p-5 md:p-6 shadow-sm font-sans transition-colors duration-200">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2">
