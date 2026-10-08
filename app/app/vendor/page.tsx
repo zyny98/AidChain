@@ -11,6 +11,8 @@ import {
   Wallet,
   Store,
   Loader2,
+  Copy,
+  Check,
 } from "lucide-react";
 
 export default function VendorPage() {
@@ -28,6 +30,7 @@ export default function VendorPage() {
   } = useSolanaMemo();
 
   const [selectedVendorId, setSelectedVendorId] = useState<string>("v-1");
+  const [copied, setCopied] = useState(false);
   const [processingInvoiceId, setProcessingInvoiceId] = useState<string | null>(null);
 
   const currentVendor = vendors.find((v) => v.id === selectedVendorId) || vendors[0];
@@ -145,8 +148,23 @@ export default function VendorPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
           <div className="rounded-xl glass-card-subtle p-3 text-xs transition-colors">
-            <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Кошелёк для прямых выплат:</span>
-            <span className="font-mono text-emerald-600 dark:text-emerald-400 truncate block mt-1">
+            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px]">
+              <span>Кошелёк для прямых выплат:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(currentVendor.walletAddress);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="inline-flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+                title="Скопировать адрес"
+              >
+                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                <span>{copied ? "Скопировано!" : "Копировать"}</span>
+              </button>
+            </div>
+            <span className="font-mono text-emerald-600 dark:text-emerald-400 truncate block mt-1 select-all" title={currentVendor.walletAddress}>
               {currentVendor.walletAddress}
             </span>
           </div>
@@ -232,7 +250,7 @@ export default function VendorPage() {
                       <button
                         onClick={() => handleClaimPayout(inv.id, inv.invoiceNumber, inv.amountSol)}
                         disabled={isWriting}
-                        className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-white dark:shadow-[0_0_20px_rgba(37,99,235,0.35)] px-4 py-2 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:text-white dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] px-4 py-2 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
                       >
                         {isProcessing ? (
                           <>

@@ -26,6 +26,39 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
 
   const pendingHitlCount = hitlQueue.filter((h) => h.status === "pending").length;
 
+  const getRoleProfile = () => {
+    if (pathname === "/app/vendor") {
+      return {
+        name: "ТОО «МедСнаб Трейд»",
+        label: isConnected && formattedAddress ? formattedAddress : "Поставщик (B2B)",
+      };
+    }
+    if (pathname === "/app/foundation") {
+      return {
+        name: "БФ «Чистое Сердце»",
+        label: isConnected && formattedAddress ? formattedAddress : "Организатор сборов",
+      };
+    }
+    if (pathname === "/app/admin") {
+      return {
+        name: "HITL Валидатор",
+        label: isConnected && formattedAddress ? formattedAddress : "Администратор Solana",
+      };
+    }
+    if (pathname === "/app/history") {
+      return {
+        name: "Solana Explorer",
+        label: "Блокчейн-реестр",
+      };
+    }
+    return {
+      name: isConnected ? "AidChain Donor" : "Nikita Z.",
+      label: isConnected && formattedAddress ? formattedAddress : "donor@aidchain.sol",
+    };
+  };
+
+  const roleProfile = getRoleProfile();
+
   return (
     <div
       className={`flex flex-col h-full select-none border-r border-white/50 dark:border-white/10 bg-white/35 dark:bg-black/25 backdrop-blur-2xl transition-all duration-300 ${
@@ -68,22 +101,22 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1">
             <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
-              {isConnected ? "AidChain Donor" : "Nikita Z."}
+              {roleProfile.name}
             </span>
             <IconChevronDown className="h-3 w-3 text-slate-400 shrink-0" stroke={2} />
           </div>
           <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate block">
-            {isConnected ? formattedAddress : "donor@aidchain.sol"}
+            {roleProfile.label}
           </span>
         </div>
       </div>
 
       {/* Скроллируемая область навигации */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-4 pr-0.5 text-xs scrollbar-thin">
-        {/* Секция: Projects (Строго 4 профиля в едином порядке) */}
+        {/* Секция: Кабинеты (Строго 4 профиля в едином порядке) */}
         <div>
           <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
-            Projects
+            Кабинеты
           </span>
           <nav className="space-y-1">
             {/* 1. Донор */}
@@ -104,9 +137,6 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
                 />
                 <span className="truncate">Донор</span>
               </div>
-              <span className="rounded-full bg-slate-200/70 dark:bg-white/10 px-2 py-0.2 text-[10px] font-mono text-slate-600 dark:text-slate-300 font-medium">
-                0
-              </span>
             </Link>
 
             {/* 2. Перевозчик (Поставщик) */}
@@ -179,10 +209,10 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
           </nav>
         </div>
 
-        {/* Секция: Status (Только пункт History со всеми блокчейн-транзакциями) */}
+        {/* Секция: Блокчейн (Только пункт История транзакций со всеми блокчейн-записями) */}
         <div>
           <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
-            Status
+            Блокчейн
           </span>
           <div className="space-y-1">
             <Link
@@ -200,7 +230,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
                   }`}
                   stroke={1.8}
                 />
-                <span className="truncate">History</span>
+                <span className="truncate">История транзакций</span>
               </div>
               <span className="rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.2 text-[10px] font-mono font-bold">
                 {auditRecords.length}

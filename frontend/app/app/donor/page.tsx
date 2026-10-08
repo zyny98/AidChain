@@ -147,11 +147,11 @@ export default function DonorDashboardPage() {
 
       {/* ─── 1. Сигнатурная карточка Executions в точности как на референсе ─── */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Карточка 1: Точно как в референсе (Executions 340 ↑204% + See Report →) */}
+        {/* Карточка 1: Проверок AI-Оракулом */}
         <div className="glass-card relative overflow-hidden rounded-[26px] p-6 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01]">
           <div>
             <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 block font-sans">
-              Executions
+              Проверок AI-Оракулом
             </span>
 
             <div className="flex items-center gap-3 my-2.5">
@@ -160,7 +160,7 @@ export default function DonorDashboardPage() {
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                 <TrendingUp className="h-3 w-3" />
-                <span>↑ 204%</span>
+                <span>94.8% точность</span>
               </span>
             </div>
           </div>
@@ -170,7 +170,7 @@ export default function DonorDashboardPage() {
             onClick={() => setActiveTab("executions")}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:translate-x-0.5 transition-all pt-2 cursor-pointer w-fit"
           >
-            <span>See Report</span>
+            <span>Смотреть отчёт</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -221,17 +221,17 @@ export default function DonorDashboardPage() {
         </div>
       </section>
 
-      {/* ─── 2. Секция Executions с табами из референса ─── */}
+      {/* ─── 2. Секция Целевые сборы с табами ─── */}
       <section className="space-y-4">
-        {/* Заголовок блока: Executions */}
+        {/* Заголовок блока: Целевые сборы */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-white font-sans tracking-tight">
-              Executions
+              Целевые сборы
             </h2>
           </div>
 
-          {/* Табы Workflows | Permissions | Executions + Search pill */}
+          {/* Табы Кампании | Правила эскроу | Аудит транзакций + Поиск */}
           <div className="flex flex-wrap items-center gap-3">
             {/* Набор вкладок */}
             <div className="inline-flex items-center p-1 rounded-2xl bg-white/45 dark:bg-white/[0.04] backdrop-blur-xl border border-white/65 dark:border-white/10 shadow-xs">
@@ -244,7 +244,7 @@ export default function DonorDashboardPage() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                Workflows
+                Кампании
               </button>
 
               <button
@@ -256,7 +256,7 @@ export default function DonorDashboardPage() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                Permissions
+                Правила эскроу
               </button>
 
               <button
@@ -268,18 +268,18 @@ export default function DonorDashboardPage() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                Executions
+                Аудит транзакций
               </button>
             </div>
 
-            {/* Капсульный инпут поиска из референса */}
+            {/* Капсульный инпут поиска */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search"
+                placeholder="Поиск сборов..."
                 className="w-48 sm:w-56 rounded-full bg-white/55 dark:bg-white/[0.04] backdrop-blur-xl border border-white/70 dark:border-white/10 pl-8 pr-3.5 py-1.5 text-xs text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 transition shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
               />
             </div>
@@ -402,7 +402,7 @@ export default function DonorDashboardPage() {
                       {/* Этапы и транши */}
                       <div className="space-y-2 pt-2 border-t border-white/60 dark:border-white/5">
                         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                          <span>График траншей (Non-custodial эскроу):</span>
+                          <span>График траншей смарт-контракта эскроу:</span>
                           <span>{camp.milestones.length} этапа</span>
                         </div>
 

@@ -10,6 +10,7 @@ import {
   Plus,
   UploadCloud,
   CheckCircle,
+  AlertTriangle,
   Cpu,
   Calendar,
   Loader2,
@@ -349,14 +350,35 @@ export default function FoundationPage() {
 
                       {/* Информация о чеке */}
                       {m.receiptName && (
-                        <div className="mt-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] p-2 text-[10px] space-y-1">
+                        <div
+                          className={`mt-2.5 rounded-lg border p-2 text-[10px] space-y-1 ${
+                            (m.confidenceScore ?? 100) >= 80
+                              ? "border-emerald-500/20 bg-emerald-500/[0.06]"
+                              : "border-amber-500/20 bg-amber-500/[0.06]"
+                          }`}
+                        >
                           <div className="text-slate-700 dark:text-slate-300">
                             Чек: <span className="text-slate-900 dark:text-white font-mono font-medium">{m.receiptName}</span>
                           </div>
                           {m.confidenceScore && (
-                            <div className="text-emerald-600 dark:text-emerald-400 font-mono font-medium flex items-center gap-1">
-                              <CheckCircle className="h-3 w-3" />
-                              AI Confidence: {m.confidenceScore}% (Верифицирован)
+                            <div
+                              className={`font-mono font-medium flex items-center gap-1 ${
+                                m.confidenceScore >= 80
+                                  ? "text-emerald-600 dark:text-emerald-400"
+                                  : "text-amber-600 dark:text-amber-400"
+                              }`}
+                            >
+                              {m.confidenceScore >= 80 ? (
+                                <>
+                                  <CheckCircle className="h-3 w-3" />
+                                  <span>AI Confidence: {m.confidenceScore}% (Верифицирован)</span>
+                                </>
+                              ) : (
+                                <>
+                                  <AlertTriangle className="h-3 w-3" />
+                                  <span>AI Confidence: {m.confidenceScore}% (Требует проверки HITL)</span>
+                                </>
+                              )}
                             </div>
                           )}
                         </div>
@@ -376,23 +398,29 @@ export default function FoundationPage() {
                       )}
 
                       {m.status === "submitted" && (
-                        <button
-                          onClick={() => handleRequestTrancheRelease(camp, m)}
-                          disabled={isWriting && activeProcessingMilestoneId === m.id}
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:text-white py-2 px-3 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
-                        >
-                          {isWriting && activeProcessingMilestoneId === m.id ? (
-                            <>
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                              <span>Выплачиваем...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Cpu className="h-3.5 w-3.5" />
-                              <span>Запросить выплату транша</span>
-                            </>
-                          )}
-                        </button>
+                        m.confidenceScore && m.confidenceScore < 80 ? (
+                          <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-2 text-center text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                            <span>⚠️ Направлен на арбитраж администратора (HITL)</span>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => handleRequestTrancheRelease(camp, m)}
+                            disabled={isWriting && activeProcessingMilestoneId === m.id}
+                            className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:text-white py-2 px-3 text-xs font-bold active:scale-[0.98] transition shadow-sm disabled:opacity-50"
+                          >
+                            {isWriting && activeProcessingMilestoneId === m.id ? (
+                              <>
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                <span>Выплачиваем...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Cpu className="h-3.5 w-3.5" />
+                                <span>Запросить выплату транша</span>
+                              </>
+                            )}
+                          </button>
+                        )
                       )}
 
                       {m.status === "approved" && (

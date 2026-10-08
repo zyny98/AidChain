@@ -173,7 +173,7 @@ interface AppStoreContextType {
   resetToDefaults: () => void;
 }
 
-const STORAGE_KEY = "aidchain_app_store_v3";
+const STORAGE_KEY = "aidchain_app_store_v4";
 
 const initialCampaigns: Campaign[] = [
   {
@@ -340,7 +340,7 @@ const initialVendors: Vendor[] = [
         campaignTitle: "Ремонт инклюзивной детской площадки",
         milestoneId: "m-102",
         milestoneTitle: "Этап 2: Закупка резиновой крошки и связующего",
-        amountSol: 5.95,
+        amountSol: 6.0,
         status: "pending_verification",
         invoiceNumber: "КПС-482/2026",
         date: "2026-10-06",
@@ -372,14 +372,26 @@ const initialVendors: Vendor[] = [
   },
   {
     id: "v-3",
-    name: "ИП «Асылбеков Д.М.»",
-    bin: "890314350192",
-    category: "Монтажные и сварочные работы",
+    name: "ТОО «МедСнаб Трейд»",
+    bin: "180240039218",
+    category: "Медицинские изделия и ортопедия",
     walletAddress: "2bC3tK1oP6aM4dL7xY8rJ9sW0mN5tQ48vHqY7G4N5Z2",
     status: "pending",
-    completedOrdersCount: 2,
-    totalPaidSol: 4.5,
-    invoices: [],
+    completedOrdersCount: 1,
+    totalPaidSol: 0,
+    invoices: [
+      {
+        id: "inv-301",
+        campaignId: "camp-2",
+        campaignTitle: "Медикаменты для детского реабилитационного центра",
+        milestoneId: "m-202",
+        milestoneTitle: "Этап 2: Закупка индивидуальных ортопедических корсетов",
+        amountSol: 8.8,
+        status: "pending_verification",
+        invoiceNumber: "МСТ-9921",
+        date: "2026-10-07",
+      },
+    ],
   },
 ];
 
@@ -389,7 +401,7 @@ const initialDonations: UserDonation[] = [
     campaignId: "camp-1",
     campaignTitle: "Ремонт инклюзивной детской площадки",
     amountSol: 0.5,
-    timestamp: "2026-10-07 14:10",
+    timestamp: "07.10.2026, 14:10",
     signature: "5VERv8NMvzbJMEkV8xnrLkEaWrAxs9Jan...aidchain",
     explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
     status: "escrowed",
@@ -399,7 +411,7 @@ const initialDonations: UserDonation[] = [
     campaignId: "camp-2",
     campaignTitle: "Медикаменты для детского реабилитационного центра",
     amountSol: 1.0,
-    timestamp: "2026-10-06 19:35",
+    timestamp: "06.10.2026, 19:35",
     signature: "3jK8bV9xL2qY7aP4cM1oD5wR6tN8sE0u...aidchain",
     explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
     status: "escrowed",
@@ -410,7 +422,7 @@ const initialAuditRecords: AuditRecord[] = [
   {
     id: "rec-1",
     text: "[GENESIS] Протокол AidChain активирован в сети Solana",
-    timestamp: "2026-10-06 12:00:00",
+    timestamp: "06.10.2026, 12:00:00",
     signature: "5VERv8NMvzbJMEkV8xnrLkEaWrAxs9Jan...aidchain",
     explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
     status: "confirmed",
@@ -420,7 +432,7 @@ const initialAuditRecords: AuditRecord[] = [
   {
     id: "rec-2",
     text: "[ESCROW CREATED] Кампания #1 «Ремонт детской площадки»: целевой смарт-контракт эскроу заблокирован на 15 SOL",
-    timestamp: "2026-10-06 14:22:15",
+    timestamp: "06.10.2026, 14:22:15",
     signature: "3jK8bV9xL2qY7aP4cM1oD5wR6tN8sE0u...aidchain",
     explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
     status: "confirmed",
@@ -429,13 +441,33 @@ const initialAuditRecords: AuditRecord[] = [
   },
   {
     id: "rec-3",
-    text: "[ADVANCE RELEASED] Выплата аванса 20% (3 SOL) подтверждена смарт-контрактом",
-    timestamp: "2026-10-07 10:15:40",
+    text: "[AIDCHAIN DONATION] 1.00 SOL -> Медикаменты для детского реабилитационного центра",
+    timestamp: "06.10.2026, 19:35:00",
+    signature: "3jK8bV9xL2qY7aP4cM1oD5wR6tN8sE0u...aidchain",
+    explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
+    status: "confirmed",
+    role: "donor",
+    category: "Donation",
+  },
+  {
+    id: "rec-4",
+    text: "[ADVANCE RELEASED] Выплата аванса 20% (3.00 SOL) подтверждена смарт-контрактом",
+    timestamp: "07.10.2026, 10:15:40",
     signature: "4aP4cM1oD5wR6tN8sE0u3jK8bV9xL2qY...aidchain",
     explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
     status: "confirmed",
     role: "foundation",
     category: "Payout",
+  },
+  {
+    id: "rec-5",
+    text: "[AIDCHAIN DONATION] 0.50 SOL -> Ремонт инклюзивной детской площадки",
+    timestamp: "07.10.2026, 14:10:00",
+    signature: "5VERv8NMvzbJMEkV8xnrLkEaWrAxs9Jan...aidchain",
+    explorerUrl: "https://explorer.solana.com/address/MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr?cluster=devnet",
+    status: "confirmed",
+    role: "donor",
+    category: "Donation",
   },
 ];
 

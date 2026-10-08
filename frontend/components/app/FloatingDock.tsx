@@ -31,7 +31,7 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
       className="hidden lg:flex flex-col gap-3.5 select-none shrink-0 py-4 pl-4 pr-1 z-30"
     >
       {/* Верхний сегмент (Tall Capsule) */}
-      <div className="w-[58px] flex flex-col items-center pt-2 pb-3.5 rounded-[28px] bg-white/45 dark:bg-black/35 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-colors duration-200">
+      <div className="w-[58px] flex flex-col items-center p-1.5 rounded-[28px] bg-white/45 dark:bg-black/35 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-colors duration-200">
         {/* Инсетный трек с иконками: светлый в светлой теме, глубокий обсидиановый в тёмной */}
         <div className="w-[44px] bg-slate-200/70 dark:bg-[#161a23] rounded-[22px] py-2 px-1 flex flex-col items-center gap-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)] dark:shadow-[inset_0_2px_5px_rgba(0,0,0,0.6)] border border-slate-300/60 dark:border-white/5 transition-colors duration-200">
           {/* 1. Верхний логотип: Наш официальный логотип AidChain */}
@@ -114,26 +114,10 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
             <IconLayoutSidebar className="h-4 w-4" stroke={1.8} />
           </button>
         </div>
-
-        {/* Вертикальный текст: AIDCHAIN NAV */}
-        <div
-          className="mt-4 text-[8.5px] font-mono tracking-[0.24em] uppercase text-slate-500 dark:text-slate-400 select-none font-semibold"
-          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-        >
-          AIDCHAIN NAV
-        </div>
       </div>
 
       {/* Нижний сегмент (Theme Toggle Capsule) */}
-      <div className="w-[58px] flex flex-col items-center pt-3 pb-2 rounded-[24px] bg-white/45 dark:bg-black/35 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-colors duration-200">
-        {/* Вертикальный текст: СМЕНА ТЕМЫ */}
-        <div
-          className="mb-3 text-[8px] font-mono tracking-[0.22em] uppercase text-slate-500 dark:text-slate-400 select-none font-semibold text-center"
-          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-        >
-          СМЕНА ТЕМЫ
-        </div>
-
+      <div className="w-[58px] flex flex-col items-center p-2 rounded-[24px] bg-white/45 dark:bg-black/35 backdrop-blur-2xl border border-white/60 dark:border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-colors duration-200">
         {/* Кнопка-тумблер смены темы */}
         <button
           type="button"
