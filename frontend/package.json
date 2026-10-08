@@ -1,0 +1,6 @@
+{
+  "name": "aidchain-frontend-fallback",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fallback package.json in case custom prefix is set in deployment settings"
+}
