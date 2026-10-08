@@ -35,13 +35,13 @@ export function AuditTrailTable() {
         <div className="flex flex-wrap items-center gap-2">
           {/* Поиск */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[var(--color-text-subtle)]" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-[var(--color-text-subtle)]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Поиск по записи..."
-              className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] pl-8 pr-3 py-1.5 text-xs text-[var(--color-text)] placeholder-[var(--color-text-subtle)] focus:border-blue-500 focus:outline-none transition-colors"
+              className="rounded-xl border border-slate-300 dark:border-[var(--color-border)] bg-white dark:bg-[var(--color-surface-elevated)] pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-[var(--color-text)] placeholder-slate-400 dark:placeholder-[var(--color-text-subtle)] focus:border-blue-500 focus:outline-none transition-colors shadow-xs"
             />
           </div>
 
@@ -49,7 +49,7 @@ export function AuditTrailTable() {
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-elevated)] px-3 py-1.5 text-xs text-[var(--color-text)] focus:border-blue-500 focus:outline-none transition-colors"
+            className="rounded-xl border border-slate-300 dark:border-[var(--color-border)] bg-white dark:bg-[var(--color-surface-elevated)] px-3 py-1.5 text-xs text-slate-900 dark:text-[var(--color-text)] focus:border-blue-500 focus:outline-none transition-colors shadow-xs"
           >
             <option value="all">Все роли</option>
             <option value="donor">Доноры</option>
@@ -61,14 +61,14 @@ export function AuditTrailTable() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="py-12 text-center text-[var(--color-text-muted)] text-xs">
+        <div className="py-12 text-center text-slate-500 dark:text-[var(--color-text-muted)] text-xs">
           Нет записей, соответствующих критериям поиска.
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-[var(--color-border)] text-[var(--color-text-muted)] uppercase tracking-wider font-mono">
+              <tr className="border-b border-slate-200 dark:border-[var(--color-border)] text-slate-500 dark:text-[var(--color-text-muted)] uppercase tracking-wider font-mono">
                 <th className="pb-3 pl-2">Событие / Текст Memo</th>
                 <th className="pb-3 px-3">Роль</th>
                 <th className="pb-3 px-3">Время (UTC)</th>
@@ -76,11 +76,11 @@ export function AuditTrailTable() {
                 <th className="pb-3 pr-2 text-right">Solana Explorer</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--color-border)]">
+            <tbody className="divide-y divide-slate-100 dark:divide-[var(--color-border)]">
               {filtered.map((record) => (
                 <tr
                   key={record.id}
-                  className="group hover:bg-[var(--color-surface-hover)] transition-colors"
+                  className="group hover:bg-slate-50 dark:hover:bg-[var(--color-surface-hover)] transition-colors"
                 >
                   <td className="py-3 pl-2 font-mono text-[var(--color-text)] max-w-md break-words">
                     <span className="font-sans text-xs text-[var(--color-text)]">{record.text}</span>

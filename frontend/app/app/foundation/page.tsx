@@ -231,25 +231,25 @@ export default function FoundationPage() {
         onClose={resetStatus}
       />
 
-      {/* Верхний баннер кабинета Фонда: сдержанный обсидиановый стиль */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#121827] p-6 sm:p-8 shadow-md">
+      {/* Верхний баннер кабинета Фонда: чистый светлый / обсидиановый стиль */}
+      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 sm:p-8 shadow-sm dark:shadow-md transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
               <Building2 className="h-3.5 w-3.5" />
               <span>Панель Организатора : НПО и Фонды</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-display tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight">
               Кабинет Фонда: прозрачные транши и AI-отчётность
             </h1>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-xl">
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
               Создавайте целевые сборы со сметами, загружайте чеки поставщиков для автоматической сверки AI-оракулом и получайте транши без бюрократии.
             </p>
           </div>
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-white text-slate-950 px-4 py-2.5 text-xs font-bold hover:bg-slate-100 active:scale-[0.98] transition shadow-sm shrink-0"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 px-4 py-2.5 text-xs font-bold active:scale-[0.98] transition shadow-sm shrink-0"
           >
             <Plus className="h-4 w-4" />
             <span>Создать целевой сбор</span>
@@ -260,10 +260,10 @@ export default function FoundationPage() {
       {/* Управление кампаниями фонда */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-lg font-bold text-white font-display tracking-tight">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white font-display tracking-tight">
             Ваши кампании и этапы отчётности
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Управляйте этапами сборов и прикрепляйте фискальные документы для разблокировки траншей
           </p>
         </div>
@@ -272,24 +272,24 @@ export default function FoundationPage() {
           {campaigns.map((camp) => (
             <div
               key={camp.id}
-              className="rounded-2xl border border-white/[0.08] bg-[#121827] p-6 space-y-6 shadow-md"
+              className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 space-y-6 shadow-sm dark:shadow-md transition-colors"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/70 dark:border-white/[0.06]">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-white/[0.04] border border-white/[0.1] px-2.5 py-0.5 text-[10px] font-mono text-slate-300">
+                    <span className="rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.1] px-2.5 py-0.5 text-[10px] font-mono text-slate-700 dark:text-slate-300">
                       {camp.category}
                     </span>
-                    <span className="text-xs text-slate-400 font-mono">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                       Цель: {camp.targetAmountSol} SOL (Собрано: {camp.collectedAmountSol} SOL)
                     </span>
                   </div>
-                  <h3 className="text-base sm:text-lg font-bold text-white font-display mt-1">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-display mt-1">
                     {camp.title}
                   </h3>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                <div className="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
                   <Calendar className="h-3.5 w-3.5" />
                   <span>Дедлайн: {camp.deadline}</span>
                 </div>
@@ -300,22 +300,22 @@ export default function FoundationPage() {
                 {camp.milestones.map((m) => (
                   <div
                     key={m.id}
-                    className="flex flex-col justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs space-y-3"
+                    className="flex flex-col justify-between rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-4 text-xs space-y-3 transition-colors"
                   >
                     <div>
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-emerald-400 font-bold">
+                        <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                           Этап #{m.order}
                         </span>
                         <span
                           className={`rounded px-2 py-0.5 text-[10px] font-mono ${
                             m.status === "approved"
-                              ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
                               : m.status === "submitted"
-                              ? "bg-sky-500/15 text-sky-300 border border-sky-500/30"
+                              ? "bg-sky-500/15 text-sky-600 dark:text-sky-300 border border-sky-500/30"
                               : m.status === "rejected"
-                              ? "bg-rose-500/15 text-rose-300 border border-rose-500/30"
-                              : "bg-white/[0.05] text-slate-400"
+                              ? "bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30"
+                              : "bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-transparent"
                           }`}
                         >
                           {m.status === "approved"
@@ -328,20 +328,20 @@ export default function FoundationPage() {
                         </span>
                       </div>
 
-                      <h4 className="font-semibold text-white mt-1.5">{m.title}</h4>
-                      <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                      <h4 className="font-semibold text-slate-900 dark:text-white mt-1.5">{m.title}</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                         Сумма: {m.amountSol} SOL ({m.percent}%)
                       </p>
 
                       {/* Смета */}
-                      <div className="mt-3 rounded-lg bg-black/40 p-2.5 space-y-1 border border-white/[0.04]">
-                        <div className="text-[10px] text-slate-400 uppercase font-mono">
+                      <div className="mt-3 rounded-lg bg-white dark:bg-black/40 p-2.5 space-y-1 border border-slate-200/80 dark:border-white/[0.04] shadow-xs">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono">
                           Плановые позиции:
                         </div>
                         {m.budgetItems.map((b) => (
-                          <div key={b.id} className="flex justify-between text-[10px] text-slate-300">
+                          <div key={b.id} className="flex justify-between text-[10px] text-slate-600 dark:text-slate-300">
                             <span>{b.name}</span>
-                            <span className="font-mono text-slate-200">
+                            <span className="font-mono text-slate-900 dark:text-slate-200 font-medium">
                               {(b.qty * b.priceSol).toFixed(2)} SOL
                             </span>
                           </div>
@@ -350,12 +350,12 @@ export default function FoundationPage() {
 
                       {/* Информация о чеке */}
                       {m.receiptName && (
-                        <div className="mt-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/[0.05] p-2 text-[10px] space-y-1">
-                          <div className="text-slate-300">
-                            Чек: <span className="text-white font-mono">{m.receiptName}</span>
+                        <div className="mt-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] p-2 text-[10px] space-y-1">
+                          <div className="text-slate-700 dark:text-slate-300">
+                            Чек: <span className="text-slate-900 dark:text-white font-mono font-medium">{m.receiptName}</span>
                           </div>
                           {m.confidenceScore && (
-                            <div className="text-emerald-400 font-mono font-medium flex items-center gap-1">
+                            <div className="text-emerald-600 dark:text-emerald-400 font-mono font-medium flex items-center gap-1">
                               <CheckCircle className="h-3 w-3" />
                               AI Confidence: {m.confidenceScore}% (Верифицирован)
                             </div>
@@ -365,13 +365,13 @@ export default function FoundationPage() {
                     </div>
 
                     {/* Кнопки действия по этапу */}
-                    <div className="pt-2 border-t border-white/[0.06]">
+                    <div className="pt-2 border-t border-slate-200/70 dark:border-white/[0.06]">
                       {m.status === "pending" && (
                         <button
                           onClick={() => setSelectedMilestone({ campaignId: camp.id, milestone: m })}
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-white/[0.1] bg-white/[0.04] py-2 px-3 text-xs font-semibold text-slate-200 hover:bg-white/[0.08] active:scale-[0.98] transition shadow-sm"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.04] py-2 px-3 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.08] active:scale-[0.98] transition shadow-xs"
                         >
-                          <UploadCloud className="h-3.5 w-3.5 text-emerald-400" />
+                          <UploadCloud className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                           <span>Загрузить чек (AI)</span>
                         </button>
                       )}
@@ -380,7 +380,7 @@ export default function FoundationPage() {
                         <button
                           onClick={() => handleRequestTrancheRelease(camp, m)}
                           disabled={isWriting && activeProcessingMilestoneId === m.id}
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500 text-slate-950 py-2 px-3 text-xs font-bold hover:bg-emerald-400 active:scale-[0.98] transition shadow-sm disabled:opacity-50"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 py-2 px-3 text-xs font-bold hover:bg-emerald-700 dark:hover:bg-emerald-400 active:scale-[0.98] transition shadow-sm disabled:opacity-50"
                         >
                           {isWriting && activeProcessingMilestoneId === m.id ? (
                             <>
@@ -397,7 +397,7 @@ export default function FoundationPage() {
                       )}
 
                       {m.status === "approved" && (
-                        <div className="flex items-center gap-1.5 text-emerald-400 text-[11px] font-medium justify-center py-1">
+                        <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-[11px] font-medium justify-center py-1">
                           <CheckCircle className="h-3.5 w-3.5" />
                           <span>Средства разблокированы</span>
                         </div>
@@ -406,7 +406,7 @@ export default function FoundationPage() {
                       {m.status === "rejected" && (
                         <button
                           onClick={() => setSelectedMilestone({ campaignId: camp.id, milestone: m })}
-                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 py-2 px-3 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 active:scale-[0.98] transition"
+                          className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 py-2 px-3 text-xs font-semibold text-rose-600 dark:text-rose-300 hover:bg-rose-500/20 active:scale-[0.98] transition"
                         >
                           <UploadCloud className="h-3.5 w-3.5" />
                           <span>Загрузить исправленный чек</span>
@@ -428,20 +428,20 @@ export default function FoundationPage() {
 
       {/* Модалка загрузки чека и AI-валидации */}
       {selectedMilestone && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="relative w-full max-w-lg rounded-2xl border border-white/[0.1] bg-[#0e131f]/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#0e131f]/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl transition-colors">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
+                <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">
                   Отчётность и AI-валидация
                 </span>
-                <h3 className="text-lg font-bold text-white font-display mt-0.5">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display mt-0.5">
                   {selectedMilestone.milestone.title}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedMilestone(null)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-white/[0.05] hover:text-white transition"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
               >
                 ✕
               </button>
@@ -464,14 +464,14 @@ export default function FoundationPage() {
                 className={`rounded-xl border border-dashed p-6 text-center transition ${
                   isDragging
                     ? "border-emerald-500 bg-emerald-500/10"
-                    : "border-white/[0.15] bg-white/[0.02] hover:border-emerald-500/40"
+                    : "border-slate-300 dark:border-white/[0.15] bg-slate-50/70 dark:bg-white/[0.02] hover:border-emerald-500/50"
                 }`}
               >
-                <UploadCloud className="h-7 w-7 text-emerald-400 mx-auto mb-2" />
-                <p className="text-xs font-medium text-white mb-1">
+                <UploadCloud className="h-7 w-7 text-emerald-500 dark:text-emerald-400 mx-auto mb-2" />
+                <p className="text-xs font-medium text-slate-900 dark:text-white mb-1">
                   Перетащите фото фискального чека или накладной
                 </p>
-                <p className="text-[11px] text-slate-400 mb-3">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
                   JPG, PNG, PDF. Хэш SHA-256 вычисляется мгновенно в браузере.
                 </p>
 
@@ -485,7 +485,7 @@ export default function FoundationPage() {
                   />
                   <label
                     htmlFor="receipt-file-input"
-                    className="inline-flex cursor-pointer rounded-lg bg-white/[0.08] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-white/[0.15] active:scale-[0.98] transition"
+                    className="inline-flex cursor-pointer rounded-lg bg-slate-900 text-white dark:bg-white/[0.08] dark:text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-slate-800 dark:hover:bg-white/[0.15] active:scale-[0.98] transition shadow-xs"
                   >
                     Выбрать файл
                   </label>
@@ -493,7 +493,7 @@ export default function FoundationPage() {
                   <button
                     type="button"
                     onClick={handleUseDemoReceipt}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20 active:scale-[0.98] transition"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/20 active:scale-[0.98] transition"
                   >
                     <Zap className="h-3.5 w-3.5" />
                     <span>Тестовый чек (1 клик)</span>
@@ -503,12 +503,12 @@ export default function FoundationPage() {
 
               {/* Отображение вычисленного SHA-256 хэша */}
               {computedSha256 && (
-                <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3 text-xs space-y-1">
-                  <div className="flex justify-between text-slate-300 text-[11px]">
+                <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.03] p-3 text-xs space-y-1">
+                  <div className="flex justify-between text-slate-600 dark:text-slate-300 text-[11px]">
                     <span>Файл: {uploadFileName}</span>
-                    <span className="text-emerald-400 font-semibold">Хэш SHA-256 вычислен ✓</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Хэш SHA-256 вычислен ✓</span>
                   </div>
-                  <div className="font-mono text-[10px] text-emerald-400 break-all">
+                  <div className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 break-all">
                     {computedSha256}
                   </div>
                 </div>
@@ -517,8 +517,8 @@ export default function FoundationPage() {
               {/* Индикатор AI-анализа */}
               {isAiAnalyzing && (
                 <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4 text-center space-y-2">
-                  <div className="h-5 w-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
-                  <p className="text-xs font-semibold text-emerald-400">
+                  <div className="h-5 w-5 border-2 border-emerald-500 dark:border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
+                  <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                     AI-оракул считывает фискальные реквизиты и сверяет со сметой...
                   </p>
                 </div>
@@ -528,35 +528,35 @@ export default function FoundationPage() {
               {aiVerdict && (
                 <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-emerald-400 flex items-center gap-1.5">
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
                       <CheckCircle className="h-4 w-4" />
                       Чек успешно верифицирован оракулом
                     </span>
-                    <span className="font-mono font-bold text-slate-950 bg-emerald-400 px-2 py-0.5 rounded text-[10px]">
+                    <span className="font-mono font-bold text-emerald-950 dark:text-slate-950 bg-emerald-400 px-2 py-0.5 rounded text-[10px]">
                       Score: {aiVerdict.confidenceScore}%
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-emerald-500/20 text-[11px] text-slate-200">
-                    <div>Продавец: <span className="font-semibold text-white">{aiVerdict.vendorName}</span></div>
-                    <div>БИН: <span className="font-mono text-white">{aiVerdict.vendorBin}</span></div>
-                    <div>Сумма чека: <span className="font-mono font-bold text-emerald-400">{aiVerdict.ocrTotal} SOL</span></div>
-                    <div>Соответствие смете: <span className="text-emerald-400 font-bold">100% совпадение</span></div>
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-emerald-500/20 text-[11px] text-slate-700 dark:text-slate-200">
+                    <div>Продавец: <span className="font-semibold text-slate-900 dark:text-white">{aiVerdict.vendorName}</span></div>
+                    <div>БИН: <span className="font-mono text-slate-900 dark:text-white">{aiVerdict.vendorBin}</span></div>
+                    <div>Сумма чека: <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">{aiVerdict.ocrTotal} SOL</span></div>
+                    <div>Соответствие смете: <span className="text-emerald-600 dark:text-emerald-400 font-bold">100% совпадение</span></div>
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-white/[0.06] flex gap-3">
+            <div className="mt-6 pt-4 border-t border-slate-200 dark:border-white/[0.06] flex gap-3">
               <button
                 onClick={handleConfirmReceipt}
                 disabled={!aiVerdict}
-                className="flex-1 rounded-xl bg-white text-slate-950 py-2.5 px-4 text-xs font-bold hover:bg-slate-100 active:scale-[0.98] disabled:opacity-40 transition shadow-sm"
+                className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-40 transition shadow-sm"
               >
                 Сохранить отчёт и отправить на выплату
               </button>
               <button
                 onClick={() => setSelectedMilestone(null)}
-                className="rounded-xl border border-white/[0.08] bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-400 hover:bg-white/[0.08] hover:text-white transition"
+                className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
               >
                 Отмена
               </button>
@@ -567,20 +567,20 @@ export default function FoundationPage() {
 
       {/* Модалка создания сбора */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="relative w-full max-w-lg rounded-2xl border border-white/[0.1] bg-[#0e131f]/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#0e131f]/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl transition-colors">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
+                <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">
                   Новая кампания
                 </span>
-                <h3 className="text-lg font-bold text-white font-display mt-0.5">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display mt-0.5">
                   Создать целевой сбор в эскроу
                 </h3>
               </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-white/[0.05] hover:text-white transition"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.05] hover:text-slate-700 dark:hover:text-white transition"
               >
                 ✕
               </button>
@@ -588,7 +588,7 @@ export default function FoundationPage() {
 
             <form onSubmit={handleCreateCampaignSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   Название сбора:
                 </label>
                 <input
@@ -597,12 +597,12 @@ export default function FoundationPage() {
                   placeholder="Например: Покупка медицинского оборудования"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                   Описание и цель:
                 </label>
                 <textarea
@@ -611,13 +611,13 @@ export default function FoundationPage() {
                   placeholder="Опишите, кому и как будет оказана помощь..."
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                     Сумма цели (SOL Devnet):
                   </label>
                   <input
@@ -627,12 +627,12 @@ export default function FoundationPage() {
                     required
                     value={newTargetSol}
                     onChange={(e) => setNewTargetSol(e.target.value)}
-                    className="w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs font-mono text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs font-mono text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                     Дедлайн:
                   </label>
                   <input
@@ -640,23 +640,23 @@ export default function FoundationPage() {
                     required
                     value={newDeadline}
                     onChange={(e) => setNewDeadline(e.target.value)}
-                    className="w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05] p-3 text-[11px] text-slate-300">
-                <span className="font-semibold text-emerald-400">Поэтапный график траншей:</span>
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] p-3 text-[11px] text-slate-700 dark:text-slate-300">
+                <span className="font-semibold text-emerald-600 dark:text-emerald-400">Поэтапный график траншей:</span>
                 <p className="mt-1">
                   20% аванс ({(+newTargetSol * 0.2).toFixed(1)} SOL) → 40% транш №1 ({(+newTargetSol * 0.4).toFixed(1)} SOL) по чеку → 40% транш №2 ({(+newTargetSol * 0.4).toFixed(1)} SOL) по приёмке.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-white/[0.06] flex gap-3">
+              <div className="pt-4 border-t border-slate-200 dark:border-white/[0.06] flex gap-3">
                 <button
                   type="submit"
                   disabled={isWriting}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-white text-slate-950 py-2.5 px-4 text-xs font-bold hover:bg-slate-100 active:scale-[0.98] disabled:opacity-50 transition shadow-sm"
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 py-2.5 px-4 text-xs font-bold active:scale-[0.98] disabled:opacity-50 transition shadow-sm"
                 >
                   {isWriting ? (
                     <>
@@ -670,7 +670,7 @@ export default function FoundationPage() {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="rounded-xl border border-white/[0.08] bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-400 hover:bg-white/[0.08] hover:text-white transition"
+                  className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] py-2.5 px-4 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
                 >
                   Отмена
                 </button>

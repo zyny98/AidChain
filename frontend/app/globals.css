@@ -79,8 +79,8 @@
     /* 60% — Базовые / Нейтральные поверхности */
     --color-bg: #f8fafc;
     --color-surface: #ffffff;
-    --color-surface-elevated: #f1f5f9;
-    --color-surface-hover: #e2e8f0;
+    --color-surface-elevated: #ffffff;
+    --color-surface-hover: #f1f5f9;
     --color-border: #e2e8f0;
     --color-border-hover: #cbd5e1;
     --color-text: #0f172a;
@@ -121,7 +121,7 @@
 
     --color-focus-ring: #2563eb;
     --color-disabled: #94a3b8;
-    --color-disabled-bg: #e2e8f0;
+    --color-disabled-bg: #f1f5f9;
 
     /* Backward compatibility mapping */
     --background: var(--color-bg);
@@ -160,46 +160,82 @@
     color-scheme: dark;
   }
 
+  /* Чистые поверхности в светлой теме: никаких грязных серых коробок */
   [data-theme="light"] .bg-\[\#090d16\],
   .light .bg-\[\#090d16\] {
     background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
   }
 
   [data-theme="light"] .bg-\[\#090d16\]\/95,
   .light .bg-\[\#090d16\]\/95 {
-    background-color: rgba(248, 250, 252, 0.95) !important;
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
   }
 
   [data-theme="light"] .bg-\[\#121827\],
   .light .bg-\[\#121827\] {
     background-color: #ffffff !important;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
   }
 
   [data-theme="light"] .bg-\[\#161e30\],
   .light .bg-\[\#161e30\] {
-    background-color: #f1f5f9 !important;
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+  }
+
+  [data-theme="light"] .bg-\[\#0e131f\],
+  [data-theme="light"] .bg-\[\#0e131f\]\/95,
+  [data-theme="light"] .bg-\[\#0e131f\]\/80,
+  [data-theme="light"] .bg-\[\#0e131f\]\/70,
+  [data-theme="light"] .bg-\[\#0e131f\]\/50,
+  .light .bg-\[\#0e131f\],
+  .light .bg-\[\#0e131f\]\/95,
+  .light .bg-\[\#0e131f\]\/80,
+  .light .bg-\[\#0e131f\]\/70,
+  .light .bg-\[\#0e131f\]\/50 {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+  }
+
+  [data-theme="light"] .bg-\[\#080b11\],
+  .light .bg-\[\#080b11\] {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
   }
 
   [data-theme="light"] .border-white\/\[0\.08\],
   [data-theme="light"] .border-white\/\[0\.1\],
   [data-theme="light"] .border-white\/\[0\.06\],
+  [data-theme="light"] .border-white\/\[0\.04\],
+  [data-theme="light"] .border-white\/\[0\.12\],
+  [data-theme="light"] .border-white\/\[0\.15\],
   .light .border-white\/\[0\.08\],
   .light .border-white\/\[0\.1\],
-  .light .border-white\/\[0\.06\] {
+  .light .border-white\/\[0\.06\],
+  .light .border-white\/\[0\.04\],
+  .light .border-white\/\[0\.12\],
+  .light .border-white\/\[0\.15\] {
     border-color: #e2e8f0 !important;
   }
 
   [data-theme="light"] .hover\:border-white\/\[0\.2\]:hover,
-  .light .hover\:border-white\/\[0\.2\]:hover {
+  [data-theme="light"] .hover\:border-white\/\[0\.15\]:hover,
+  .light .hover\:border-white\/\[0\.2\]:hover,
+  .light .hover\:border-white\/\[0\.15\]:hover {
     border-color: #cbd5e1 !important;
   }
 
   [data-theme="light"] .hover\:bg-white\/\[0\.06\]:hover,
   [data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover,
+  [data-theme="light"] .hover\:bg-white\/\[0\.08\]:hover,
   .light .hover\:bg-white\/\[0\.06\]:hover,
-  .light .hover\:bg-white\/\[0\.04\]:hover {
-    background-color: #f1f5f9 !important;
+  .light .hover\:bg-white\/\[0\.04\]:hover,
+  .light .hover\:bg-white\/\[0\.08\]:hover {
+    background-color: #f8fafc !important;
   }
 
   [data-theme="light"] .text-white,
@@ -221,20 +257,30 @@
     color: #64748b !important;
   }
 
+  /* Внутренние подблоки: свежий чистый тон вместо серого монолита */
   [data-theme="light"] .bg-white\/\[0\.04\],
   [data-theme="light"] .bg-white\/\[0\.03\],
   [data-theme="light"] .bg-white\/\[0\.02\],
+  [data-theme="light"] .bg-white\/\[0\.05\],
   .light .bg-white\/\[0\.04\],
   .light .bg-white\/\[0\.03\],
-  .light .bg-white\/\[0\.02\] {
-    background-color: #f1f5f9 !important;
+  .light .bg-white\/\[0\.02\],
+  .light .bg-white\/\[0\.05\] {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
   }
 
   [data-theme="light"] .bg-black\/40,
   [data-theme="light"] .bg-black\/50,
+  [data-theme="light"] .bg-black\/30,
+  [data-theme="light"] .bg-black\/20,
   .light .bg-black\/40,
-  .light .bg-black\/50 {
-    background-color: rgba(15, 23, 42, 0.4) !important;
+  .light .bg-black\/50,
+  .light .bg-black\/30,
+  .light .bg-black\/20 {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #0f172a !important;
   }
 
   [data-theme="light"] input,
@@ -246,6 +292,7 @@
     background-color: #ffffff !important;
     color: #0f172a !important;
     border-color: #cbd5e1 !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
   }
 
   [data-theme="light"] input::placeholder,

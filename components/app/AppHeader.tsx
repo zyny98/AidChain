@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { PhantomMissingModal } from "@/components/app/PhantomMissingModal";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 import {
   Wallet,
   ArrowUpRight,
@@ -99,30 +100,8 @@ export function AppHeader() {
 
           {/* Правая часть: Переключатель темы и Phantom Wallet */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Кнопка переключения темы: Светлая / Тёмная */}
-            <button
-              type="button"
-              onClick={toggleTheme}
-              title={theme === "dark" ? "Переключить на светлую тему" : "Переключить на тёмную тему"}
-              aria-label="Переключение темы оформления"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-text)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-surface-hover)] transition-all active:scale-[0.98] shadow-sm cursor-pointer"
-            >
-              {theme === "dark" ? (
-                <>
-                  <Sun className="h-4 w-4 text-amber-400" />
-                  <span className="hidden sm:inline text-[11px] font-medium text-[var(--color-text-muted)]">
-                    Светлая
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Moon className="h-4 w-4 text-indigo-600" />
-                  <span className="hidden sm:inline text-[11px] font-medium text-[var(--color-text-muted)]">
-                    Тёмная
-                  </span>
-                </>
-              )}
-            </button>
+            {/* Переключатель темы (Pill Switcher точно как на картинке пользователя) */}
+            <ThemeToggle />
 
             {!isConnected ? (
               <button

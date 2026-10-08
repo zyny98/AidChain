@@ -90,42 +90,42 @@ export default function AdminPage() {
         onClose={resetStatus}
       />
 
-      {/* Верхний баннер Администратора: сдержанный обсидиановый стиль */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#121827] p-6 sm:p-8 shadow-md">
+      {/* Верхний баннер Администратора: чистый светлый / обсидиановый стиль */}
+      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-6 sm:p-8 shadow-sm dark:shadow-md transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-300">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-600 dark:text-amber-300">
               <ShieldAlert className="h-3.5 w-3.5" />
               <span>HITL Модуль: Human-in-the-Loop</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-display tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight">
               Панель Администратора и Оракул-валидатор
             </h1>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-xl">
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
               Ручной арбитраж спорных чеков с низким AI Confidence Score (&lt; 80%), предотвращение фрода, аккредитация поставщиков и запись вердиктов в блокчейн Solana.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 shrink-0">
-            <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 text-center backdrop-blur-md">
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 font-mono">
+            <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/70 dark:bg-white/[0.03] p-4 text-center transition-colors">
+              <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono">
                 Очередь HITL
               </span>
-              <div className="mt-1 font-display text-2xl font-bold text-amber-400">
+              <div className="mt-1 font-display text-2xl font-bold text-amber-500 dark:text-amber-400">
                 {pendingHitlItems.length}
               </div>
-              <span className="text-[10px] text-slate-400 block mt-0.5">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">
                 Требуют решения
               </span>
             </div>
-            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.05] p-4 text-center backdrop-blur-md">
-              <span className="text-[11px] uppercase tracking-wider text-emerald-400/80 font-mono">
+            <div className="rounded-xl border border-emerald-500/20 bg-slate-50/70 dark:bg-emerald-500/[0.05] p-4 text-center transition-colors">
+              <span className="text-[11px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400/80 font-mono">
                 Точность AI
               </span>
-              <div className="mt-1 font-display text-2xl font-bold text-emerald-400">
+              <div className="mt-1 font-display text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                 98.4%
               </div>
-              <span className="text-[10px] text-emerald-400/70 block mt-0.5">
+              <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/70 block mt-0.5">
                 Метрика модели
               </span>
             </div>
@@ -137,20 +137,20 @@ export default function AdminPage() {
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <FileSearch className="h-4 w-4 text-amber-400" />
-            <h2 className="text-lg font-bold text-white font-display tracking-tight">
+            <FileSearch className="h-4 w-4 text-amber-500 dark:text-amber-400" />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white font-display tracking-tight">
               Очередь спорных чеков (HITL Арбитраж)
             </h2>
           </div>
 
           {/* Вкладки: Требуют внимания / Решенные */}
-          <div className="flex items-center rounded-xl border border-white/[0.08] bg-white/[0.03] p-1 text-xs">
+          <div className="flex items-center rounded-xl border border-slate-200 dark:border-white/[0.08] bg-slate-100/70 dark:bg-white/[0.03] p-1 text-xs">
             <button
               onClick={() => setActiveTab("pending")}
               className={`rounded-lg px-3 py-1.5 font-medium transition ${
                 activeTab === "pending"
-                  ? "bg-white/[0.1] text-white font-bold border border-white/[0.12]"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-xs dark:bg-white/[0.1] dark:text-white dark:border-white/[0.12]"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
               К рассмотрению ({pendingHitlItems.length})
@@ -159,8 +159,8 @@ export default function AdminPage() {
               onClick={() => setActiveTab("resolved")}
               className={`rounded-lg px-3 py-1.5 font-medium transition ${
                 activeTab === "resolved"
-                  ? "bg-white/[0.1] text-white font-bold border border-white/[0.12]"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-white text-slate-900 font-bold border border-slate-200 shadow-xs dark:bg-white/[0.1] dark:text-white dark:border-white/[0.12]"
+                  : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
               }`}
             >
               История решений ({resolvedHitlItems.length})
@@ -170,10 +170,10 @@ export default function AdminPage() {
 
         {activeTab === "pending" ? (
           pendingHitlItems.length === 0 ? (
-            <div className="rounded-2xl border border-white/[0.08] bg-[#0e131f]/50 p-10 text-center space-y-2">
-              <ShieldCheck className="h-9 w-9 text-emerald-400 mx-auto opacity-70" />
-              <h4 className="text-sm font-bold text-white">Очередь HITL пуста</h4>
-              <p className="text-xs text-slate-400 max-w-md mx-auto">
+            <div className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#0e131f]/50 p-10 text-center space-y-2 shadow-sm">
+              <ShieldCheck className="h-9 w-9 text-emerald-500 dark:text-emerald-400 mx-auto opacity-70" />
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Очередь HITL пуста</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
                 Все загруженные чеки прошли автоматическую верификацию AI-оракулом с высоким показателем уверенности.
               </p>
             </div>
@@ -185,29 +185,29 @@ export default function AdminPage() {
                 return (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-amber-500/30 bg-[#121827] p-6 space-y-5 shadow-md"
+                    className="rounded-2xl border border-amber-500/30 bg-white dark:bg-[#121827] p-6 space-y-5 shadow-sm dark:shadow-md transition-colors"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/70 dark:border-white/[0.06]">
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="rounded bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-mono text-amber-300">
+                          <span className="rounded bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-mono text-amber-600 dark:text-amber-300 font-semibold">
                             Confidence: {item.confidenceScore}% (Ниже порога 80%)
                           </span>
-                          <span className="text-xs text-slate-400 font-mono">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                             {item.createdAt}
                           </span>
                         </div>
-                        <h3 className="text-base font-bold text-white font-display mt-1">
+                        <h3 className="text-base font-bold text-slate-900 dark:text-white font-display mt-1">
                           {item.campaignTitle}
                         </h3>
-                        <p className="text-xs text-slate-300">{item.milestoneTitle}</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-300">{item.milestoneTitle}</p>
                       </div>
 
                       <div className="text-right">
-                        <span className="text-xs text-slate-400 block">Заявлено к выплате:</span>
-                        <span className="font-mono text-base sm:text-lg font-bold text-white">
+                        <span className="text-xs text-slate-500 dark:text-slate-400 block">Заявлено к выплате:</span>
+                        <span className="font-mono text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                           {item.claimedAmountSol} SOL{" "}
-                          <span className="text-xs text-slate-400 font-normal">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                             (по смете: {item.budgetAmountSol} SOL)
                           </span>
                         </span>
@@ -216,11 +216,11 @@ export default function AdminPage() {
 
                     {/* Флаги предупреждений антифрода */}
                     <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.06] p-4 space-y-2">
-                      <div className="flex items-center gap-2 text-xs font-bold text-amber-300">
+                      <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-300">
                         <AlertTriangle className="h-4 w-4 shrink-0" />
                         <span>Флаги антифрод-системы:</span>
                       </div>
-                      <ul className="space-y-1 text-xs text-slate-200 list-disc list-inside">
+                      <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-200 list-disc list-inside">
                         {item.flags.map((flag, idx) => (
                           <li key={idx}>{flag}</li>
                         ))}
@@ -229,26 +229,26 @@ export default function AdminPage() {
 
                     {/* Распознанные позиции vs Документ */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-2">
-                        <span className="text-[11px] uppercase tracking-wider text-slate-400 font-mono block">
+                      <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2 transition-colors">
+                        <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono block">
                           Реквизиты продавца:
                         </span>
-                        <div className="text-white font-semibold">{item.vendorName}</div>
-                        <div className="text-slate-400 font-mono">БИН: {item.vendorBin}</div>
-                        <div className="text-slate-400 font-mono">Файл: {item.fileName}</div>
-                        <div className="text-[10px] font-mono text-emerald-400 break-all">
+                        <div className="text-slate-900 dark:text-white font-semibold">{item.vendorName}</div>
+                        <div className="text-slate-600 dark:text-slate-400 font-mono">БИН: {item.vendorBin}</div>
+                        <div className="text-slate-600 dark:text-slate-400 font-mono">Файл: {item.fileName}</div>
+                        <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 break-all">
                           SHA-256: {item.fileHashSha256}
                         </div>
                       </div>
 
-                      <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-2">
-                        <span className="text-[11px] uppercase tracking-wider text-slate-400 font-mono block">
+                      <div className="rounded-xl border border-slate-200/80 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.02] p-4 space-y-2 transition-colors">
+                        <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono block">
                           Товарные позиции в чеке:
                         </span>
                         {item.ocrItems.map((ocrItem, i) => (
-                          <div key={i} className="flex justify-between text-slate-300">
+                          <div key={i} className="flex justify-between text-slate-700 dark:text-slate-300">
                             <span>{ocrItem.name} ({ocrItem.qty} шт)</span>
-                            <span className="font-mono text-white font-semibold">
+                            <span className="font-mono text-slate-900 dark:text-white font-semibold">
                               {(ocrItem.qty * ocrItem.priceSol).toFixed(2)} SOL
                             </span>
                           </div>
@@ -257,11 +257,11 @@ export default function AdminPage() {
                     </div>
 
                     {/* Кнопки арбитража */}
-                    <div className="pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row gap-3">
+                    <div className="pt-4 border-t border-slate-200/70 dark:border-white/[0.06] flex flex-col sm:flex-row gap-3">
                       <button
                         onClick={() => handleApproveHitl(item)}
                         disabled={isWriting}
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 text-slate-950 hover:bg-emerald-400 active:scale-[0.98] py-2.5 px-4 text-xs font-bold transition shadow-sm disabled:opacity-50"
+                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 hover:bg-emerald-700 dark:hover:bg-emerald-400 active:scale-[0.98] py-2.5 px-4 text-xs font-bold transition shadow-sm disabled:opacity-50"
                       >
                         {isProcessing ? (
                           <>
@@ -282,7 +282,7 @@ export default function AdminPage() {
                           setShowRejectModal(true);
                         }}
                         disabled={isWriting}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 py-2.5 px-5 text-xs font-bold text-rose-300 hover:bg-rose-500/20 active:scale-[0.98] transition disabled:opacity-50"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 py-2.5 px-5 text-xs font-bold text-rose-600 dark:text-rose-300 hover:bg-rose-500/20 active:scale-[0.98] transition disabled:opacity-50"
                       >
                         <XCircle className="h-4 w-4" />
                         <span>Отклонить отчёт</span>
@@ -298,22 +298,22 @@ export default function AdminPage() {
             {resolvedHitlItems.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-white/[0.08] bg-[#0e131f]/70 p-4 text-xs flex items-center justify-between gap-4"
+                className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#0e131f]/70 p-4 text-xs flex items-center justify-between gap-4 shadow-sm"
               >
                 <div>
                   <div className="flex items-center gap-2">
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         item.status === "approved"
-                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                          : "bg-rose-500/15 text-rose-300 border border-rose-500/30"
+                          ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                          : "bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30"
                       }`}
                     >
                       {item.status === "approved" ? "Одобрено вручную" : "Отклонено"}
                     </span>
-                    <span className="font-semibold text-white">{item.campaignTitle}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">{item.campaignTitle}</span>
                   </div>
-                  <p className="text-slate-400 mt-1">
+                  <p className="text-slate-500 dark:text-slate-400 mt-1">
                     {item.milestoneTitle} : Чек: {item.fileName} ({item.claimedAmountSol} SOL)
                   </p>
                 </div>
@@ -330,20 +330,20 @@ export default function AdminPage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Building className="h-4 w-4 text-emerald-400" />
-            <h2 className="text-lg font-bold text-white font-display tracking-tight">
+            <Building className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white font-display tracking-tight">
               Реестр аккредитованных поставщиков (Whitelist)
             </h2>
           </div>
-          <span className="text-xs font-mono text-slate-400">
+          <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
             Аккредитовано: {vendors.filter((v) => v.status === "whitelisted").length} / {vendors.length}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-white/[0.08] bg-[#121827] p-5 overflow-x-auto shadow-md">
+        <div className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121827] p-5 overflow-x-auto shadow-sm dark:shadow-md transition-colors">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-white/[0.06] text-slate-400 uppercase tracking-wider font-mono">
+              <tr className="border-b border-slate-200/70 dark:border-white/[0.06] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono">
                 <th className="pb-3 pl-2">Организация / Поставщик</th>
                 <th className="pb-3 px-3">БИН</th>
                 <th className="pb-3 px-3">Категория</th>
@@ -351,24 +351,24 @@ export default function AdminPage() {
                 <th className="pb-3 pr-2 text-right">Действие</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.04]">
+            <tbody className="divide-y divide-slate-200/60 dark:divide-white/[0.04]">
               {vendors.map((vendor) => (
-                <tr key={vendor.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-3 pl-2 font-medium text-white">
+                <tr key={vendor.id} className="hover:bg-slate-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 pl-2 font-medium text-slate-900 dark:text-white">
                     {vendor.name}
                   </td>
-                  <td className="py-3 px-3 font-mono text-slate-300">
+                  <td className="py-3 px-3 font-mono text-slate-700 dark:text-slate-300">
                     {vendor.bin}
                   </td>
-                  <td className="py-3 px-3 text-slate-400">
+                  <td className="py-3 px-3 text-slate-600 dark:text-slate-400">
                     {vendor.category}
                   </td>
                   <td className="py-3 px-3">
                     <span
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold ${
                         vendor.status === "whitelisted"
-                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                          : "bg-white/[0.05] text-slate-400"
+                          ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                          : "bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400"
                       }`}
                     >
                       {vendor.status === "whitelisted" ? "Аккредитован ✓" : "На проверке"}
@@ -379,8 +379,8 @@ export default function AdminPage() {
                       onClick={() => toggleVendorWhitelist(vendor.id)}
                       className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition active:scale-[0.98] ${
                         vendor.status === "whitelisted"
-                          ? "border border-rose-500/30 text-rose-300 hover:bg-rose-500/10"
-                          : "border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                          ? "border border-rose-500/30 text-rose-600 dark:text-rose-300 hover:bg-rose-500/10"
+                          : "border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10"
                       }`}
                     >
                       {vendor.status === "whitelisted" ? "Исключить" : "Аккредитовать"}
@@ -400,12 +400,12 @@ export default function AdminPage() {
 
       {/* Модалка отклонения отчета */}
       {showRejectModal && selectedHitl && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="relative w-full max-w-md rounded-2xl border border-white/[0.1] bg-[#0e131f]/95 p-6 shadow-2xl backdrop-blur-2xl">
-            <h3 className="text-lg font-bold text-white font-display mb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-[#0e131f]/95 p-6 shadow-2xl backdrop-blur-2xl transition-colors">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-display mb-2">
               Отклонение отчёта по чеку
             </h3>
-            <p className="text-xs text-slate-400 mb-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
               Укажите причину отклонения для фиксации в блокчейне и запуска возврата донорам:
             </p>
 
@@ -416,7 +416,7 @@ export default function AdminPage() {
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="Например: Несоответствие товарных позиций смете, нечитаемый QR-код ОФД..."
-                className="w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-rose-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-300 dark:border-white/[0.12] bg-white dark:bg-white/[0.04] px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:border-rose-500 focus:outline-none transition-colors"
               />
 
               <div className="flex gap-3">
@@ -437,7 +437,7 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setShowRejectModal(false)}
-                  className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-xs font-medium text-slate-400 hover:bg-white/[0.08] hover:text-white transition"
+                  className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] px-4 py-2.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition"
                 >
                   Отмена
                 </button>
