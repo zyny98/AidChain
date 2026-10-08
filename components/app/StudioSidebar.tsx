@@ -13,6 +13,8 @@ import {
   IconShieldCheck,
   IconClock,
   IconChevronDown,
+  IconArrowLeft,
+  IconExternalLink,
 } from "@tabler/icons-react";
 
 interface StudioSidebarProps {
@@ -206,6 +208,24 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Кнопка возврата на лендинг */}
+        <div className="pt-2 mt-auto border-t border-slate-200/60 dark:border-white/10 shrink-0">
+          <Link
+            href="/"
+            className="group flex items-center justify-between rounded-xl px-2.5 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+            title="Вернуться на главный сайт"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <IconArrowLeft
+                className="h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:-translate-x-0.5 transition-transform"
+                stroke={1.8}
+              />
+              <span className="truncate text-xs font-medium">Вернуться в лендинг</span>
+            </div>
+            <IconExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-60 transition-opacity text-slate-400" stroke={1.8} />
+          </Link>
         </div>
       </div>
     </motion.aside>
