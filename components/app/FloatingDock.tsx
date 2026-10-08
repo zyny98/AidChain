@@ -37,14 +37,14 @@ export function FloatingDock({ onToggleSidebar, isSidebarOpen }: FloatingDockPro
           {/* 1. Верхний логотип: Наш официальный логотип AidChain */}
           <Link
             href="/app/donor"
-            className="flex h-7 w-7 items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition group rounded-lg overflow-hidden p-0.5"
+            className="flex h-9 w-9 items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition group rounded-xl overflow-hidden p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
             title="AidChain Protocol"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/aidchain-icon.png"
               alt="AidChain Logo"
-              className="h-5 w-5 object-contain transition-transform group-hover:scale-110"
+              className="h-7 w-7 object-contain transition-transform duration-200 group-hover:scale-110 drop-shadow-xs"
             />
           </Link>
 

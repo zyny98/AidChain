@@ -63,7 +63,7 @@ export default function VendorPage() {
       <div className="relative overflow-hidden rounded-[26px] glass-card p-6 sm:p-8 transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
               <Truck className="h-3.5 w-3.5" />
               <span>B2B Панель аккредитованного поставщика</span>
             </div>
@@ -116,7 +116,7 @@ export default function VendorPage() {
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white font-display">
                   {currentVendor.name}
                 </h3>
-                <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                   Whitelist ✓
                 </span>
               </div>

@@ -39,7 +39,7 @@ function BrandMark() {
         src="/brand/aidchain-icon.png"
         alt="AidChain"
         draggable={false}
-        className="h-7 w-auto select-none shrink-0"
+        className="h-8 w-auto select-none shrink-0"
       />
       {!collapsed && (
         <span className="font-display font-medium text-sm tracking-tight text-[var(--color-text)] truncate">

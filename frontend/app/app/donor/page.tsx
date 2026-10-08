@@ -158,7 +158,7 @@ export default function DonorDashboardPage() {
               <span className="text-4xl sm:text-5xl font-light tracking-tight text-slate-800 dark:text-white font-sans">
                 340
               </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-500/25 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
                 <TrendingUp className="h-3 w-3" />
                 <span>↑ 204%</span>
               </span>
@@ -178,15 +178,9 @@ export default function DonorDashboardPage() {
         {/* Карточка 2: Защищено в смарт-контракте эскроу */}
         <div className="glass-card relative overflow-hidden rounded-[26px] p-6 flex flex-col justify-between transition-all duration-300 hover:scale-[1.01]">
           <div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 font-sans">
-                Защищено в эскроу
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 border border-blue-500/20 px-2 py-0.2 text-[10px] font-mono text-blue-600 dark:text-blue-300">
-                <Lock className="h-2.5 w-2.5" />
-                Non-custodial
-              </span>
-            </div>
+            <span className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 block font-sans">
+              Защищено в эскроу
+            </span>
 
             <div className="flex items-baseline gap-2 my-2.5">
               <span className="text-3xl sm:text-4xl font-light tracking-tight text-slate-800 dark:text-white font-mono">
@@ -377,7 +371,7 @@ export default function DonorDashboardPage() {
                       {/* Шапка карточки кампании */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <span className="inline-block rounded-full bg-white/60 dark:bg-white/10 border border-white/70 dark:border-white/10 px-2.5 py-0.5 text-[10px] font-mono text-slate-700 dark:text-slate-300">
+                          <span className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">
                             {camp.category}
                           </span>
                           <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans">

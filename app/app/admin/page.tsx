@@ -93,7 +93,7 @@ export default function AdminPage() {
       <div className="relative overflow-hidden rounded-[26px] glass-card p-6 sm:p-8 transition-colors">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-600 dark:text-amber-300">
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
               <ShieldAlert className="h-3.5 w-3.5" />
               <span>HITL Модуль: Human-in-the-Loop</span>
             </div>
