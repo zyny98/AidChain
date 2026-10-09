@@ -28,6 +28,9 @@ interface WalletWindowProps {
   refreshBalance: () => void;
   disconnect: () => void;
   roleName?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  containerRef?: React.Ref<HTMLDivElement>;
 }
 
 export function WalletWindow({
@@ -41,6 +44,9 @@ export function WalletWindow({
   refreshBalance,
   disconnect,
   roleName = "AidChain Donor",
+  className,
+  style,
+  containerRef,
 }: WalletWindowProps) {
   const { language, t } = useLanguage();
   const [isBalanceHidden, setIsBalanceHidden] = useState(false);
@@ -63,11 +69,16 @@ export function WalletWindow({
   return (
     <AnimatePresence>
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, y: -10, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10, scale: 0.96 }}
         transition={{ type: "spring", stiffness: 380, damping: 28 }}
-        className="absolute right-0 mt-2.5 w-[350px] sm:w-[390px] rounded-[28px] p-5 bg-white/95 dark:bg-[#070b16]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.12),0_8px_25px_rgba(6,182,212,0.08)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.65),0_10px_30px_rgba(6,182,212,0.1)] text-slate-900 dark:text-white font-sans select-none z-50 overflow-hidden"
+        style={style}
+        className={
+          className ||
+          "absolute right-0 mt-2.5 w-[350px] sm:w-[390px] rounded-[28px] p-5 bg-white/95 dark:bg-[#070b16]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.12),0_8px_25px_rgba(6,182,212,0.08)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.65),0_10px_30px_rgba(6,182,212,0.1)] text-slate-900 dark:text-white font-sans select-none z-50 overflow-hidden"
+        }
       >
         {/* Неоновый градиентный фон (Refraction Blur) */}
         <div className="absolute -top-24 -left-20 w-48 h-48 rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[60px] pointer-events-none" />

@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAppStore } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { WalletWindow } from "@/components/app/WalletWindow";
+import { PhantomMissingModal } from "@/components/app/PhantomMissingModal";
 import {
   IconHeartHandshake,
   IconTruckDelivery,
@@ -16,6 +19,10 @@ import {
   IconChevronDown,
   IconArrowLeft,
   IconExternalLink,
+  IconWallet,
+  IconX,
+  IconBolt,
+  IconSearch,
 } from "@tabler/icons-react";
 
 interface StudioSidebarProps {
@@ -27,7 +34,31 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
   const pathname = usePathname();
   const { language, t } = useLanguage();
   const { hitlQueue, campaigns, auditRecords } = useAppStore();
-  const { formattedAddress, isConnected } = usePhantomWallet();
+  const {
+    isConnected,
+    isConnecting,
+    isPhantomInstalled,
+    formattedAddress,
+    walletAddress,
+    balanceSol,
+    isRefreshing,
+    refreshSuccess,
+    connect,
+    disconnect,
+    refreshBalance,
+  } = usePhantomWallet();
+
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [showMissingModal, setShowMissingModal] = useState(false);
+  const [popoverCoords, setPopoverCoords] = useState<{ top: number; left: number }>({ top: 80, left: 20 });
+  const [mounted, setMounted] = useState(false);
+
+  const profileCardRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const pendingHitlCount = hitlQueue.filter((h) => h.status === "pending").length;
 
@@ -64,7 +95,77 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
 
   const roleProfile = getRoleProfile();
 
-  // Чистые токены для активных/неактивных пунктов в стиле Apple macOS Sequoia
+  const updateCoords = () => {
+    if (profileCardRef.current) {
+      const rect = profileCardRef.current.getBoundingClientRect();
+      const top = rect.bottom + 8;
+      const maxLeft = typeof window !== "undefined" ? window.innerWidth - 380 : 16;
+      const left = Math.max(12, Math.min(rect.left, maxLeft));
+      setPopoverCoords({ top, left });
+    }
+  };
+
+  const handleToggleWallet = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isWalletOpen) {
+      updateCoords();
+    }
+    setIsWalletOpen((prev) => !prev);
+  };
+
+  const handleConnectClick = async () => {
+    if (!isPhantomInstalled) {
+      setIsWalletOpen(false);
+      setShowMissingModal(true);
+      return;
+    }
+    const success = await connect();
+    if (!success && !isPhantomInstalled) {
+      setIsWalletOpen(false);
+      setShowMissingModal(true);
+    }
+  };
+
+  // Слушатель клика вне элемента и Escape для закрытия выпадающего окна кошелька
+  useEffect(() => {
+    if (!isWalletOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        profileCardRef.current &&
+        !profileCardRef.current.contains(target) &&
+        popoverRef.current &&
+        !popoverRef.current.contains(target)
+      ) {
+        setIsWalletOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsWalletOpen(false);
+      }
+    };
+
+    const handleWindowChange = () => {
+      updateCoords();
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleWindowChange);
+    window.addEventListener("scroll", handleWindowChange, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleWindowChange);
+      window.removeEventListener("scroll", handleWindowChange, true);
+    };
+  }, [isWalletOpen]);
+
+  // Токены для активных/неактивных пунктов в стиле Apple macOS Sequoia
   const getNavClass = (path: string) => {
     const isActive = pathname === path;
     if (isActive) {
@@ -82,154 +183,309 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
   };
 
   return (
-    <motion.aside
-      initial={false}
-      animate={{
-        width: isCollapsed ? 0 : 260,
-        opacity: isCollapsed ? 0 : 1,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 350,
-        damping: 32,
-        mass: 0.8,
-      }}
-      aria-label="Внутренняя навигация"
-      className="h-full overflow-hidden shrink-0 select-none border-r border-slate-200/80 dark:border-white/[0.08] bg-white/80 dark:bg-[#0c1220]/85 backdrop-blur-3xl shadow-[inset_-1px_0_1px_rgba(255,255,255,0.8),2px_0_16px_rgba(0,0,0,0.02)] dark:shadow-[inset_1px_0_1px_rgba(255,255,255,0.08),10px_0_30px_rgba(0,0,0,0.35)]"
-    >
-      {/* Жестко фиксированный контейнер 260px предотвращает перенос строк и дергание при анимации ширины */}
-      <div className="w-[260px] h-full flex flex-col p-3.5">
-        {/* 1. Верхний бар сайдбара: 3 кругляшка macOS (Traffic Lights) */}
-        <div className="flex items-center justify-between pb-3 pt-1 px-1">
-          <div className="flex items-center gap-2">
-            <span
-              className="h-3 w-3 rounded-full bg-[#ff5f57] border border-[#e0443e] shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_1px_2px_rgba(255,95,87,0.3)] cursor-pointer hover:opacity-85 transition"
-              title="Закрыть"
-            />
-            <span
-              className="h-3 w-3 rounded-full bg-[#febc2e] border border-[#d89e24] shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_1px_2px_rgba(254,188,46,0.3)] cursor-pointer hover:opacity-85 transition"
-              title="Свернуть"
-            />
-            <span
-              className="h-3 w-3 rounded-full bg-[#28c840] border border-[#1aab29] shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_1px_2px_rgba(40,200,64,0.3)] cursor-pointer hover:opacity-85 transition"
-              title="Развернуть"
-            />
-          </div>
-        </div>
-
-        {/* 2. Профиль пользователя с аватаром */}
-        <div className="flex items-center gap-3 px-2 py-2 mb-2 rounded-xl border border-transparent hover:border-slate-200/60 dark:hover:border-white/5 hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition cursor-pointer">
-          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200/90 dark:bg-[#181f2f] text-slate-700 dark:text-white overflow-hidden shadow-xs border border-slate-300/80 dark:border-white/10">
-            <svg className="h-7 w-7 text-slate-700 dark:text-slate-200" viewBox="0 0 40 40" fill="none">
-              <circle cx="20" cy="16" r="8" fill="#cbd5e1" stroke="#334155" strokeWidth="1.5" />
-              <circle cx="17" cy="16" r="3" stroke="#334155" strokeWidth="1.5" fill="#ffffff" />
-              <circle cx="23" cy="16" r="3" stroke="#334155" strokeWidth="1.5" fill="#ffffff" />
-              <line x1="20" y1="16" x2="20" y2="16" stroke="#334155" strokeWidth="1.5" />
-              <path d="M12 14c2-5 12-6 16-2" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
-              <path d="M8 36c2-8 7-11 12-11s10 3 12 11" fill="#64748b" />
-            </svg>
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1">
-              <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
-                {roleProfile.name}
-              </span>
-              <IconChevronDown className="h-3 w-3 text-slate-400 shrink-0" stroke={2} />
-            </div>
-            <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate block">
-              {roleProfile.label}
-            </span>
-          </div>
-        </div>
-
-        {/* Скроллируемая область навигации */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-4 pr-0.5 text-xs scrollbar-thin">
-          {/* Секция: Кабинеты (Строго 4 профиля в едином порядке) */}
-          <div>
-            <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
-              {t("sidebarWorkspaces")}
-            </span>
-            <nav className="space-y-1">
-              {/* 1. Донор */}
-              <Link href="/app/donor" className={getNavClass("/app/donor")}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <IconHeartHandshake className={getIconClass("/app/donor")} stroke={1.9} />
-                  <span className="truncate">{t("sidebarDonor")}</span>
-                </div>
-              </Link>
-
-              {/* 2. Перевозчик (Поставщик) */}
-              <Link href="/app/vendor" className={getNavClass("/app/vendor")}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <IconTruckDelivery className={getIconClass("/app/vendor")} stroke={1.9} />
-                  <span className="truncate">{t("sidebarVendor")}</span>
-                </div>
-              </Link>
-
-              {/* 3. Фонд */}
-              <Link href="/app/foundation" className={getNavClass("/app/foundation")}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <IconBuildingBank className={getIconClass("/app/foundation")} stroke={1.9} />
-                  <span className="truncate">{t("sidebarFoundation")}</span>
-                </div>
-                <span className="rounded-full bg-slate-200/70 dark:bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-slate-600 dark:text-slate-300">
-                  {campaigns.length}
-                </span>
-              </Link>
-
-              {/* 4. Админ */}
-              <Link href="/app/admin" className={getNavClass("/app/admin")}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <IconShieldCheck className={getIconClass("/app/admin")} stroke={1.9} />
-                  <span className="truncate">{t("sidebarAdmin")}</span>
-                </div>
-                {pendingHitlCount > 0 && (
-                  <span className="rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 px-1.5 py-0.2 text-[10px] font-mono font-bold">
-                    {pendingHitlCount}
-                  </span>
-                )}
-              </Link>
-            </nav>
-          </div>
-
-          {/* Секция: Блокчейн (История транзакций со всеми блокчейн-записями) */}
-          <div>
-            <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
-              {t("sidebarBlockchain")}
-            </span>
-            <div className="space-y-1">
-              <Link href="/app/history" className={getNavClass("/app/history")}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <IconClock className={getIconClass("/app/history")} stroke={1.8} />
-                  <span className="truncate">{t("sidebarHistory")}</span>
-                </div>
-                <span className="rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.2 text-[10px] font-mono font-bold">
-                  {auditRecords.length}
-                </span>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Кнопка возврата на лендинг */}
-        <div className="pt-2 mt-auto border-t border-slate-200/60 dark:border-white/10 shrink-0">
-          <Link
-            href="/"
-            className="group flex items-center justify-between rounded-xl px-2.5 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
-            title={language === "ru" ? "Вернуться на главный сайт" : "Back to Landing Page"}
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <IconArrowLeft
-                className="h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:-translate-x-0.5 transition-transform"
-                stroke={1.8}
+    <>
+      <motion.aside
+        initial={false}
+        animate={{
+          width: isCollapsed ? 0 : 260,
+          opacity: isCollapsed ? 0 : 1,
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 350,
+          damping: 32,
+          mass: 0.8,
+        }}
+        aria-label="Внутренняя навигация"
+        className="h-full overflow-hidden shrink-0 select-none border-r border-slate-200/80 dark:border-white/[0.08] bg-white/80 dark:bg-[#0c1220]/85 backdrop-blur-3xl shadow-[inset_-1px_0_1px_rgba(255,255,255,0.8),2px_0_16px_rgba(0,0,0,0.02)] dark:shadow-[inset_1px_0_1px_rgba(255,255,255,0.08),10px_0_30px_rgba(0,0,0,0.35)]"
+      >
+        {/* Жестко фиксированный контейнер 260px предотвращает перенос строк и дергание при анимации ширины */}
+        <div className="w-[260px] h-full flex flex-col p-3.5">
+          {/* 1. Верхний бар сайдбара: 3 кругляшка macOS (Traffic Lights) */}
+          <div className="flex items-center justify-between pb-3 pt-1 px-1">
+            <div className="flex items-center gap-2">
+              <span
+                className="h-3 w-3 rounded-full bg-[#ff5f57] border border-[#e0443e] shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_1px_2px_rgba(255,95,87,0.3)] cursor-pointer hover:opacity-85 transition"
+                title="Закрыть"
               />
-              <span className="truncate text-xs font-medium">{t("sidebarReturnLanding")}</span>
+              <span
+                className="h-3 w-3 rounded-full bg-[#febc2e] border border-[#d89e24] shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_1px_2px_rgba(254,188,46,0.3)] cursor-pointer hover:opacity-85 transition"
+                title="Свернуть"
+              />
+              <span
+                className="h-3 w-3 rounded-full bg-[#28c840] border border-[#1aab29] shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_1px_2px_rgba(40,200,64,0.3)] cursor-pointer hover:opacity-85 transition"
+                title="Развернуть"
+              />
             </div>
-            <IconExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-60 transition-opacity text-slate-400" stroke={1.8} />
-          </Link>
+          </div>
+
+          {/* 2. Профиль пользователя с аватаром (интерактивный блок с выпадающим окном кошелька) */}
+          <div
+            ref={profileCardRef}
+            onClick={handleToggleWallet}
+            role="button"
+            tabIndex={0}
+            aria-expanded={isWalletOpen}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleToggleWallet(e as unknown as React.MouseEvent);
+              }
+            }}
+            className={`group flex items-center gap-3 px-2 py-2 mb-2 rounded-xl border transition-all duration-150 cursor-pointer select-none ${
+              isWalletOpen
+                ? "border-blue-500/40 bg-blue-50/70 dark:bg-white/[0.08] shadow-xs ring-1 ring-blue-500/20"
+                : "border-transparent hover:border-slate-200/60 dark:hover:border-white/5 hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
+            }`}
+            title={
+              isConnected
+                ? (language === "ru" ? "Реквизиты кошелька" : "Wallet Credentials")
+                : (language === "ru" ? "Привязать кошелёк" : "Connect Wallet")
+            }
+          >
+            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200/90 dark:bg-[#181f2f] text-slate-700 dark:text-white overflow-hidden shadow-xs border border-slate-300/80 dark:border-white/10 group-hover:scale-105 transition-transform">
+              <svg className="h-7 w-7 text-slate-700 dark:text-slate-200" viewBox="0 0 40 40" fill="none">
+                <circle cx="20" cy="16" r="8" fill="#cbd5e1" stroke="#334155" strokeWidth="1.5" />
+                <circle cx="17" cy="16" r="3" stroke="#334155" strokeWidth="1.5" fill="#ffffff" />
+                <circle cx="23" cy="16" r="3" stroke="#334155" strokeWidth="1.5" fill="#ffffff" />
+                <line x1="20" y1="16" x2="20" y2="16" stroke="#334155" strokeWidth="1.5" />
+                <path d="M12 14c2-5 12-6 16-2" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
+                <path d="M8 36c2-8 7-11 12-11s10 3 12 11" fill="#64748b" />
+              </svg>
+              {isConnected && (
+                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0c1220]" />
+              )}
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                  {roleProfile.name}
+                </span>
+                <IconChevronDown
+                  className={`h-3 w-3 shrink-0 transition-transform duration-200 ${
+                    isWalletOpen
+                      ? "rotate-180 text-blue-600 dark:text-blue-400"
+                      : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200"
+                  }`}
+                  stroke={2.2}
+                />
+              </div>
+              <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate block">
+                {roleProfile.label}
+              </span>
+            </div>
+          </div>
+
+          {/* Скроллируемая область навигации */}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-4 pr-0.5 text-xs scrollbar-thin">
+            {/* Секция: Кабинеты (Строго 4 профиля в едином порядке) */}
+            <div>
+              <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
+                {t("sidebarWorkspaces")}
+              </span>
+              <nav className="space-y-1">
+                {/* 1. Донор */}
+                <Link href="/app/donor" className={getNavClass("/app/donor")}>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <IconHeartHandshake className={getIconClass("/app/donor")} stroke={1.9} />
+                    <span className="truncate">{t("sidebarDonor")}</span>
+                  </div>
+                </Link>
+
+                {/* 2. Перевозчик (Поставщик) */}
+                <Link href="/app/vendor" className={getNavClass("/app/vendor")}>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <IconTruckDelivery className={getIconClass("/app/vendor")} stroke={1.9} />
+                    <span className="truncate">{t("sidebarVendor")}</span>
+                  </div>
+                </Link>
+
+                {/* 3. Фонд */}
+                <Link href="/app/foundation" className={getNavClass("/app/foundation")}>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <IconBuildingBank className={getIconClass("/app/foundation")} stroke={1.9} />
+                    <span className="truncate">{t("sidebarFoundation")}</span>
+                  </div>
+                  <span className="rounded-full bg-slate-200/70 dark:bg-white/10 px-1.5 py-0.2 text-[10px] font-mono text-slate-600 dark:text-slate-300">
+                    {campaigns.length}
+                  </span>
+                </Link>
+
+                {/* 4. Админ */}
+                <Link href="/app/admin" className={getNavClass("/app/admin")}>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <IconShieldCheck className={getIconClass("/app/admin")} stroke={1.9} />
+                    <span className="truncate">{t("sidebarAdmin")}</span>
+                  </div>
+                  {pendingHitlCount > 0 && (
+                    <span className="rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 px-1.5 py-0.2 text-[10px] font-mono font-bold">
+                      {pendingHitlCount}
+                    </span>
+                  )}
+                </Link>
+              </nav>
+            </div>
+
+            {/* Секция: Блокчейн (История транзакций со всеми блокчейн-записями) */}
+            <div>
+              <span className="text-[10px] font-semibold tracking-wider uppercase text-slate-400 dark:text-slate-500 px-2 block mb-1">
+                {t("sidebarBlockchain")}
+              </span>
+              <div className="space-y-1">
+                <Link href="/app/history" className={getNavClass("/app/history")}>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <IconClock className={getIconClass("/app/history")} stroke={1.8} />
+                    <span className="truncate">{t("sidebarHistory")}</span>
+                  </div>
+                  <span className="rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.2 text-[10px] font-mono font-bold">
+                    {auditRecords.length}
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Кнопка возврата на лендинг */}
+          <div className="pt-2 mt-auto border-t border-slate-200/60 dark:border-white/10 shrink-0">
+            <Link
+              href="/"
+              className="group flex items-center justify-between rounded-xl px-2.5 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
+              title={language === "ru" ? "Вернуться на главный сайт" : "Back to Landing Page"}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <IconArrowLeft
+                  className="h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:-translate-x-0.5 transition-transform"
+                  stroke={1.8}
+                />
+                <span className="truncate text-xs font-medium">{t("sidebarReturnLanding")}</span>
+              </div>
+              <IconExternalLink className="h-3.5 w-3.5 opacity-0 group-hover:opacity-60 transition-opacity text-slate-400" stroke={1.8} />
+            </Link>
+          </div>
         </div>
-      </div>
-    </motion.aside>
+      </motion.aside>
+
+      {/* Выпадающее окно кошелька (Portal в document.body): привязанные реквизиты либо сообщение о привязке */}
+      {mounted &&
+        isWalletOpen &&
+        createPortal(
+          isConnected ? (
+            <WalletWindow
+              isOpen={isWalletOpen}
+              onClose={() => setIsWalletOpen(false)}
+              walletAddress={walletAddress}
+              formattedAddress={formattedAddress}
+              balanceSol={balanceSol}
+              isRefreshing={isRefreshing}
+              refreshSuccess={refreshSuccess}
+              refreshBalance={refreshBalance}
+              disconnect={disconnect}
+              roleName={roleProfile.name}
+              containerRef={popoverRef}
+              style={{
+                top: `${popoverCoords.top}px`,
+                left: `${popoverCoords.left}px`,
+              }}
+              className="fixed w-[350px] sm:w-[380px] max-w-[calc(100vw-24px)] rounded-[28px] p-5 bg-white/95 dark:bg-[#070b16]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18),0_8px_25px_rgba(6,182,212,0.1)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_10px_30px_rgba(6,182,212,0.15)] text-slate-900 dark:text-white font-sans select-none z-[100] overflow-hidden"
+            />
+          ) : (
+            <div
+              ref={popoverRef}
+              style={{
+                top: `${popoverCoords.top}px`,
+                left: `${popoverCoords.left}px`,
+              }}
+              className="fixed w-[340px] sm:w-[370px] max-w-[calc(100vw-24px)] rounded-[26px] p-5 bg-white/95 dark:bg-[#070b16]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.16),0_8px_25px_rgba(6,182,212,0.08)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_10px_30px_rgba(6,182,212,0.12)] text-slate-900 dark:text-white font-sans select-none z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+            >
+              {/* Неоновый градиентный фон */}
+              <div className="absolute -top-24 -left-20 w-48 h-48 rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[60px] pointer-events-none" />
+              <div className="absolute -bottom-24 -right-20 w-48 h-48 rounded-full bg-blue-500/10 dark:bg-blue-600/15 blur-[60px] pointer-events-none" />
+
+              {/* 1. Верхний бар окна */}
+              <div className="relative z-10 flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="text-[11px] font-mono font-medium text-slate-600 dark:text-slate-300">
+                    Solana Network
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-[10px] font-semibold">
+                  <span>●</span>
+                  <span>{t("walletNotLinkedBadge", "Не привязан")}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsWalletOpen(false)}
+                  className="rounded-full h-7 w-7 flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition"
+                  title={language === "ru" ? "Закрыть" : "Close"}
+                >
+                  <IconX className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* 2. Сообщение: кошелёк не привязан */}
+              <div className="relative z-10 mt-4 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/15 via-blue-500/15 to-cyan-500/15 border border-amber-500/30 text-amber-500 dark:text-amber-400 shadow-sm">
+                  <IconWallet className="h-7 w-7" stroke={1.8} />
+                </div>
+
+                <h3 className="mt-3 text-base font-bold text-slate-900 dark:text-white tracking-tight font-display">
+                  {t("walletNotConnectedTitle", "Кошелёк не привязан")}
+                </h3>
+
+                <p className="mt-1.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-[290px] mx-auto">
+                  {t(
+                    "walletNotConnectedDesc",
+                    "Привяжите кошелёк Phantom для доступа к ончейн-траншам, эскроу и управлению балансом."
+                  )}
+                </p>
+              </div>
+
+              {/* 3. Преимущества ончейн-протокола */}
+              <div className="relative z-10 mt-4 space-y-2 rounded-xl p-3 bg-slate-50/80 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/5 text-[11px]">
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                  <IconShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" stroke={2} />
+                  <span>{t("walletBenefitEscrow", "Ончейн-эскроу гарантии")}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                  <IconBolt className="h-4 w-4 text-amber-500 shrink-0" stroke={2} />
+                  <span>{t("walletBenefitInstant", "Мгновенное подписание траншей")}</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                  <IconSearch className="h-4 w-4 text-blue-500 shrink-0" stroke={2} />
+                  <span>{t("walletBenefitAudit", "Прозрачный блокчейн-аудит")}</span>
+                </div>
+              </div>
+
+              {/* 4. Кнопка "Привязать кошелёк" */}
+              <div className="relative z-10 mt-4">
+                <button
+                  type="button"
+                  onClick={handleConnectClick}
+                  disabled={isConnecting}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 text-xs shadow-[0_4px_14px_rgba(37,99,235,0.35)] active:scale-[0.98] transition disabled:opacity-50 cursor-pointer"
+                >
+                  <IconWallet className="h-4 w-4" stroke={2} />
+                  <span>
+                    {isConnecting
+                      ? t("walletConnecting", "Подключение...")
+                      : t("walletConnectAction", "Привязать кошелёк")}
+                  </span>
+                </button>
+              </div>
+            </div>
+          ),
+          document.body
+        )}
+
+      {/* Модальное окно при отсутствии установленного расширения Phantom */}
+      <PhantomMissingModal
+        isOpen={showMissingModal}
+        onClose={() => setShowMissingModal(false)}
+      />
+    </>
   );
 }
