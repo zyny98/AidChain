@@ -23,37 +23,53 @@ export function ScrollSnap() {
   const safetyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTriggerTimeRef = useRef<number>(0);
   const touchStartYRef = useRef<number>(0);
+  const stageCoordsRef = useRef<number[]>([0, 0, 0, 0, 0, 0, 0]);
 
   useEffect(() => {
-    // Exact target scroll Y for each stage index
-    const getStageTargetY = (index: number): number => {
-      if (index <= 0) return 0;
-      if (index >= 1 && index <= 5) {
-        const stage = SNAP_STAGES[index];
+    // Pre-calculate exact target scroll Y coordinates so wheel events NEVER cause layout reflows
+    const measureStages = () => {
+      const currentScroll = window.scrollY || window.pageYOffset || 0;
+      const halfWin = window.innerHeight / 2;
+      const coords = [0]; // index 0: Hero = 0
+
+      for (let i = 1; i <= 5; i++) {
+        const stage = SNAP_STAGES[i];
         const el = document.getElementById(stage.id);
-        if (!el) return 0;
-        const rect = el.getBoundingClientRect();
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-        return Math.round(rect.top + scrollY + rect.height / 2 - window.innerHeight / 2);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const targetY = Math.round(rect.top + currentScroll + rect.height / 2 - halfWin);
+          coords.push(Math.max(0, targetY));
+        } else {
+          coords.push(i * window.innerHeight);
+        }
       }
-      // Index 6: First section below stages (Audience)
+
+      // Index 6: Audience section (first section below stages)
       const aud = document.getElementById('audience') || document.getElementById('simulation');
       if (aud) {
         const rect = aud.getBoundingClientRect();
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-        return Math.round(rect.top + scrollY - 60);
+        coords.push(Math.round(rect.top + currentScroll - 60));
+      } else {
+        coords.push(6 * window.innerHeight);
       }
-      return 0;
+
+      stageCoordsRef.current = coords;
     };
 
-    // Find the closest stage index among 0..5
+    measureStages();
+    const t1 = setTimeout(measureStages, 120);
+    const t2 = setTimeout(measureStages, 600);
+    const t3 = setTimeout(measureStages, 1500);
+    window.addEventListener('resize', measureStages);
+
+    // Instant O(1) lookup of closest stage
     const getClosestStageIndex = (): number => {
       const currentY = window.scrollY || window.pageYOffset || 0;
+      const coords = stageCoordsRef.current;
       let closest = 0;
       let minDiff = Infinity;
       for (let i = 0; i <= 5; i++) {
-        const targetY = getStageTargetY(i);
-        const diff = Math.abs(currentY - targetY);
+        const diff = Math.abs(currentY - coords[i]);
         if (diff < minDiff) {
           minDiff = diff;
           closest = i;
@@ -62,10 +78,10 @@ export function ScrollSnap() {
       return closest;
     };
 
-    // Smooth TikTok glide to target scroll Y
+    // Ultra-crisp TikTok snap glide with zero latency
     const glideTo = (targetY: number, onDone?: () => void) => {
       isAnimatingRef.current = true;
-      lastTriggerTimeRef.current = Date.now();
+      lastTriggerTimeRef.current = performance.now();
 
       if (tweenRef.current) {
         tweenRef.current.kill();
@@ -77,30 +93,29 @@ export function ScrollSnap() {
       // Safety failsafe: never stay locked if animation is interrupted
       safetyTimerRef.current = setTimeout(() => {
         isAnimatingRef.current = false;
-      }, 750);
+      }, 550);
 
       const scrollObj = { y: window.scrollY || window.pageYOffset || 0 };
 
+      // Power3.out delivers high initial velocity for instantaneous reaction, then soft settle
       tweenRef.current = gsap.to(scrollObj, {
         y: targetY,
-        duration: 0.6,
-        ease: 'power2.out',
+        duration: 0.38,
+        ease: 'power3.out',
         onUpdate: () => {
           window.scrollTo(0, scrollObj.y);
         },
         onComplete: () => {
           if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-          setTimeout(() => {
-            isAnimatingRef.current = false;
-            onDone?.();
-          }, 50);
+          isAnimatingRef.current = false;
+          onDone?.();
         },
       });
     };
 
     const goToIndex = (targetIdx: number) => {
       const clampedIdx = Math.max(0, Math.min(6, targetIdx));
-      const targetY = getStageTargetY(clampedIdx);
+      const targetY = stageCoordsRef.current[clampedIdx] ?? 0;
       glideTo(targetY);
     };
 
@@ -110,7 +125,7 @@ export function ScrollSnap() {
         if (closestIdx < 5) {
           goToIndex(closestIdx + 1);
         } else {
-          // At Beneficiary (Stage 5) -> transition smoothly to Audience section
+          // At Beneficiary (Stage 5) -> glide into Audience section
           goToIndex(6);
         }
       } else {
@@ -122,31 +137,32 @@ export function ScrollSnap() {
       }
     };
 
-    // Mouse Wheel / Trackpad Handler
+    // Mouse Wheel / Trackpad Handler: Instantaneous reaction without input lag
     const onWheel = (e: WheelEvent) => {
       const currentY = window.scrollY || window.pageYOffset || 0;
-      const audienceY = getStageTargetY(6);
-      const now = Date.now();
+      const coords = stageCoordsRef.current;
+      const audienceY = coords[6] || 6000;
+      const now = performance.now();
 
-      // Zone below stages: Natural browser scrolling is 100% free!
-      if (currentY >= audienceY - 20) {
+      // Zone below stages: 100% natural browser scroll!
+      if (currentY >= audienceY - 25) {
         // Only if user reaches top of Audience and scrolls UP -> snap back to Beneficiary
         if (e.deltaY < -15 && currentY <= audienceY + 30) {
           e.preventDefault();
-          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 450) {
+          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 300) {
             goToIndex(5);
           }
         }
         return;
       }
 
-      // Inside snap stages: ignore micro-jitters
-      if (Math.abs(e.deltaY) < 8) return;
+      // Inside snap zone: ignore sub-pixel tremor
+      if (Math.abs(e.deltaY) < 5) return;
 
       e.preventDefault();
 
-      // Debounce & lock during glide
-      if (isAnimatingRef.current || now - lastTriggerTimeRef.current < 450) {
+      // Fast cooldown (300ms) matches the snappy 0.38s animation
+      if (isAnimatingRef.current || now - lastTriggerTimeRef.current < 300) {
         return;
       }
 
@@ -154,7 +170,7 @@ export function ScrollSnap() {
       handleTransition(dir);
     };
 
-    // Touch Event Handlers for Mobile (TikTok style vertical swipes)
+    // Touch Event Handlers for Mobile (TikTok style vertical swipe)
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         touchStartYRef.current = e.touches[0].clientY;
@@ -164,10 +180,11 @@ export function ScrollSnap() {
     const onTouchEnd = (e: TouchEvent) => {
       if (e.changedTouches.length === 0) return;
       const currentY = window.scrollY || window.pageYOffset || 0;
-      const audienceY = getStageTargetY(6);
+      const coords = stageCoordsRef.current;
+      const audienceY = coords[6] || 6000;
       const diffY = touchStartYRef.current - e.changedTouches[0].clientY;
 
-      if (currentY >= audienceY - 20) {
+      if (currentY >= audienceY - 25) {
         if (diffY < -40 && currentY <= audienceY + 30) {
           if (!isAnimatingRef.current) {
             goToIndex(5);
@@ -176,7 +193,7 @@ export function ScrollSnap() {
         return;
       }
 
-      if (Math.abs(diffY) > 35) {
+      if (Math.abs(diffY) > 30) {
         const dir = diffY > 0 ? 1 : -1;
         if (!isAnimatingRef.current) {
           handleTransition(dir);
@@ -190,7 +207,8 @@ export function ScrollSnap() {
       if (tag === 'input' || tag === 'textarea') return;
 
       const currentY = window.scrollY || window.pageYOffset || 0;
-      const audienceY = getStageTargetY(6);
+      const coords = stageCoordsRef.current;
+      const audienceY = coords[6] || 6000;
 
       if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
         if (currentY < audienceY - 40) {
@@ -252,7 +270,11 @@ export function ScrollSnap() {
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('resize', measureStages);
       document.removeEventListener('click', handleAnchorClick);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
       if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
       if (tweenRef.current) tweenRef.current.kill();
     };

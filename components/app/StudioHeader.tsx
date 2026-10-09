@@ -10,7 +10,6 @@ import {
   Wallet,
   ChevronDown,
   Menu,
-  Globe,
 } from "lucide-react";
 
 interface StudioHeaderProps {
@@ -131,18 +130,8 @@ export function StudioHeader({ onToggleMobileMenu }: StudioHeaderProps) {
           </div>
         </div>
 
-        {/* Правая часть: Переключатель языков + Phantom Wallet */}
+        {/* Правая часть: Phantom Wallet */}
         <div className="flex items-center gap-2.5 self-end sm:self-auto shrink-0">
-          {/* Кнопка смены языка */}
-          <button
-            type="button"
-            onClick={toggleLanguage}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-xs transition active:scale-95"
-            title={language === "ru" ? "Switch to English" : "Переключить на русский"}
-          >
-            <Globe className="h-3.5 w-3.5 text-blue-500" />
-            <span className="font-mono text-[11px] uppercase tracking-wider">{language === "ru" ? "EN" : "RU"}</span>
-          </button>
 
           {!isConnected ? (
             <button

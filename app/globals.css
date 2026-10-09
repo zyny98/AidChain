@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   /* overscroll behavior is isolated to dashboard panels, never blocking root window scrolling */

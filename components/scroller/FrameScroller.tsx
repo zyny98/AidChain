@@ -282,8 +282,8 @@ export default function FrameScroller() {
         }
       }
 
-      // Smooth LERP glide: 0.16 gives liquid responsiveness
-      smoothFrameRef.current += (rawTargetFrame - smoothFrameRef.current) * 0.16;
+      // Instantaneous responsive LERP glide: follows scroll with zero trailing lag
+      smoothFrameRef.current += (rawTargetFrame - smoothFrameRef.current) * 0.42;
 
       const targetFrame = Math.min(
         TOTAL_FRAMES - 1,
@@ -318,7 +318,7 @@ export default function FrameScroller() {
       }
 
       // Smooth opacity interpolation to eliminate any sudden jumps or hard cuts
-      smoothOpacityRef.current += (targetOpacity - smoothOpacityRef.current) * 0.14;
+      smoothOpacityRef.current += (targetOpacity - smoothOpacityRef.current) * 0.35;
       if (containerRef.current) {
         containerRef.current.style.opacity = smoothOpacityRef.current.toFixed(3);
         containerRef.current.style.visibility = smoothOpacityRef.current <= 0.005 ? 'hidden' : 'visible';
