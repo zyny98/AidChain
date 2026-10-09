@@ -215,6 +215,13 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
         <div className="pt-2 mt-auto border-t border-slate-200/60 dark:border-white/10 shrink-0">
           <Link
             href="/"
+            onClick={() => {
+              if (typeof document !== "undefined") {
+                document.documentElement.setAttribute("data-theme", "dark");
+                document.documentElement.classList.remove("light");
+                document.documentElement.classList.add("dark");
+              }
+            }}
             className="group flex items-center justify-between rounded-xl px-2.5 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors"
             title={language === "ru" ? "Вернуться на главный сайт" : "Back to Landing Page"}
           >

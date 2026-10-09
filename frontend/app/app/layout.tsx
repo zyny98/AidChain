@@ -73,7 +73,7 @@ export default function AppLayout({
       <LanguageProvider>
         <AppStoreProvider>
         {/* Внешний холст: строго фиксированный fixed inset-0 с мягким атмосферным градиентом */}
-        <div className="fixed inset-0 h-screen w-screen overflow-hidden overscroll-none select-none bg-gradient-to-br from-[#e1e6ef] via-[#d6dde8] to-[#e4e9f2] dark:from-[#060912] dark:via-[#090e1c] dark:to-[#05070e] text-slate-900 dark:text-slate-100 p-2 sm:p-3 lg:p-4 flex items-center justify-center transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-300 font-sans">
+        <div className="dashboard-workspace fixed inset-0 h-screen w-screen overflow-hidden overscroll-none select-none bg-gradient-to-br from-[#e1e6ef] via-[#d6dde8] to-[#e4e9f2] dark:from-[#060912] dark:via-[#090e1c] dark:to-[#05070e] text-slate-900 dark:text-slate-100 p-2 sm:p-3 lg:p-4 flex items-center justify-center transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-300 font-sans">
           {/* Рассеянные сферы света для реалистичного преломления матового стекла (Apple VisionOS эффект) */}
           <div className="absolute -top-20 left-10 w-[600px] h-[500px] rounded-full bg-blue-500/10 dark:bg-blue-600/15 blur-[140px] pointer-events-none" />
           <div className="absolute -bottom-20 right-10 w-[650px] h-[550px] rounded-full bg-emerald-500/10 dark:bg-emerald-600/12 blur-[150px] pointer-events-none" />

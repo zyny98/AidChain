@@ -31,6 +31,16 @@ export default function HomePage() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   useEffect(() => {
+    // Landing page is strictly dark mode
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      root.setAttribute('data-theme', 'dark');
+      root.classList.remove('light');
+      root.classList.add('dark');
+    }
+  }, []);
+
+  useEffect(() => {
     let animId: number;
     const updateHeroOpacity = () => {
       if (heroBgRef.current) {
@@ -67,7 +77,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-ink">
+    <div className="landing-page relative min-h-screen bg-ink">
       {/* 3D Frame Scroller canvas responding smoothly to native window scroll */}
       <FrameScroller />
 
@@ -106,48 +116,61 @@ export default function HomePage() {
           <NavbarLogo text="AidChain" href="#stage-intro" />
           <NavItems items={navItems} />
 
-          <div className="relative z-20 shrink-0 flex items-center gap-3">
-            {/* Animated Smooth Language Switcher (RU / EN) */}
-            <div className="relative flex items-center p-0.5 rounded-xl border border-white/[0.12] bg-white/[0.04] backdrop-blur-md">
+          <div className="relative z-20 shrink-0 flex items-center justify-end gap-3 w-[252px]">
+            {/* Animated Smooth Capsule Toggle (RU ⇄ EN) */}
+            <div
+              role="radiogroup"
+              aria-label="Language selector"
+              onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}
+              className="relative flex items-center w-[74px] h-[32px] p-0.5 rounded-full border border-white/15 bg-slate-900/90 shadow-[inset_0_1px_2px_rgba(255,255,255,0.06)] backdrop-blur-md cursor-pointer select-none"
+            >
+              {/* Sliding pill indicator */}
+              <motion.div
+                className="absolute top-0.5 bottom-0.5 w-[33px] rounded-full bg-white/20 border border-white/25 shadow-xs pointer-events-none"
+                animate={{
+                  x: language === 'ru' ? 1 : 36,
+                }}
+                transition={{ type: 'spring', stiffness: 480, damping: 32 }}
+              />
+
+              {/* RU option */}
               <button
                 type="button"
-                onClick={() => setLanguage('ru')}
-                className={`relative px-2.5 py-1 text-[11px] font-mono font-semibold rounded-lg transition-colors z-10 ${
+                role="radio"
+                aria-checked={language === 'ru'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLanguage('ru');
+                }}
+                className={`relative z-10 w-[33px] h-full flex items-center justify-center text-[11px] font-mono font-bold rounded-full transition-colors ${
                   language === 'ru' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
                 }`}
                 title="Русский язык"
               >
-                {language === 'ru' && (
-                  <motion.div
-                    layoutId="landing-lang-indicator"
-                    className="absolute inset-0 rounded-lg bg-white/[0.16] border border-white/20 shadow-xs"
-                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
-                  />
-                )}
-                <span className="relative z-10">RU</span>
+                RU
               </button>
+
+              {/* EN option */}
               <button
                 type="button"
-                onClick={() => setLanguage('en')}
-                className={`relative px-2.5 py-1 text-[11px] font-mono font-semibold rounded-lg transition-colors z-10 ${
+                role="radio"
+                aria-checked={language === 'en'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLanguage('en');
+                }}
+                className={`relative z-10 w-[33px] h-full flex items-center justify-center text-[11px] font-mono font-bold rounded-full transition-colors ${
                   language === 'en' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
                 }`}
                 title="English language"
               >
-                {language === 'en' && (
-                  <motion.div
-                    layoutId="landing-lang-indicator"
-                    className="absolute inset-0 rounded-lg bg-white/[0.16] border border-white/20 shadow-xs"
-                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
-                  />
-                )}
-                <span className="relative z-10">EN</span>
+                EN
               </button>
             </div>
 
             <Link
               href="/app"
-              className="rounded-xl border border-cyan/40 bg-cyan/10 px-3.5 py-1.5 text-[12px] font-semibold text-cyan hover:bg-cyan/20 transition-all shadow-sm shadow-cyan/10 whitespace-nowrap"
+              className="w-[158px] shrink-0 flex items-center justify-center rounded-xl border border-cyan/40 bg-cyan/10 px-3 py-1.5 text-[12px] font-semibold text-cyan hover:bg-cyan/20 transition-all shadow-sm shadow-cyan/10 whitespace-nowrap text-center"
             >
               {language === 'ru' ? 'Личные кабинеты →' : 'Workspaces →'}
             </Link>
@@ -159,22 +182,40 @@ export default function HomePage() {
           <MobileNavHeader>
             <NavbarLogo text="AidChain" href="#stage-intro" />
             <div className="flex items-center gap-2">
-              {/* Mobile Smooth Language Switcher */}
-              <div className="flex items-center p-0.5 rounded-lg border border-white/[0.12] bg-white/[0.04]">
+              {/* Mobile Smooth Capsule Switcher */}
+              <div
+                role="radiogroup"
+                aria-label="Language selector"
+                onClick={() => setLanguage(language === 'ru' ? 'en' : 'ru')}
+                className="relative flex items-center w-[66px] h-[28px] p-0.5 rounded-full border border-white/15 bg-slate-900/90 cursor-pointer select-none"
+              >
+                <motion.div
+                  className="absolute top-0.5 bottom-0.5 w-[29px] rounded-full bg-white/20 border border-white/25 pointer-events-none"
+                  animate={{
+                    x: language === 'ru' ? 1 : 32,
+                  }}
+                  transition={{ type: 'spring', stiffness: 480, damping: 32 }}
+                />
                 <button
                   type="button"
-                  onClick={() => setLanguage('ru')}
-                  className={`px-2 py-0.5 text-[10px] font-mono font-semibold rounded transition-colors ${
-                    language === 'ru' ? 'bg-white/20 text-white' : 'text-slate-400'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLanguage('ru');
+                  }}
+                  className={`relative z-10 w-[29px] h-full flex items-center justify-center text-[10px] font-mono font-bold rounded-full transition-colors ${
+                    language === 'ru' ? 'text-white' : 'text-slate-400'
                   }`}
                 >
                   RU
                 </button>
                 <button
                   type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`px-2 py-0.5 text-[10px] font-mono font-semibold rounded transition-colors ${
-                    language === 'en' ? 'bg-white/20 text-white' : 'text-slate-400'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLanguage('en');
+                  }}
+                  className={`relative z-10 w-[29px] h-full flex items-center justify-center text-[10px] font-mono font-bold rounded-full transition-colors ${
+                    language === 'en' ? 'text-white' : 'text-slate-400'
                   }`}
                 >
                   EN
@@ -219,10 +260,10 @@ export default function HomePage() {
         {/* Hero Section */}
         <section
           id="stage-intro"
-          className="relative flex min-h-[100svh] flex-col justify-end px-6 pb-12 sm:px-10 sm:pb-16 lg:px-16"
+          className="relative flex min-h-[100svh] flex-col justify-center px-6 pt-24 pb-16 sm:px-10 lg:px-16"
         >
           <div className="mx-auto w-full max-w-7xl">
-            <div className="max-w-3xl">
+            <div className="max-w-3xl min-h-[380px] flex flex-col justify-center">
               <RevealText
                 key={`hero-title-${language}`}
                 as="h1"

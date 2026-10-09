@@ -136,7 +136,15 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
             />
           )}
-          <span className="relative z-20">{item.name}</span>
+          <motion.span
+            key={item.name}
+            initial={{ opacity: 0.6 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18 }}
+            className="relative z-20 block"
+          >
+            {item.name}
+          </motion.span>
         </a>
       ))}
     </motion.div>

@@ -227,13 +227,13 @@ export function PuzzleStageBlock({ stage }: { stage: PuzzleStageData }) {
     <section
       ref={sectionRef}
       id={stage.id}
-      className="relative flex min-h-[100svh] items-center px-6 sm:px-10 lg:px-16 pointer-events-none"
+      className="relative flex min-h-[100svh] items-center px-6 sm:px-10 lg:px-16"
     >
       <div className="relative mx-auto w-full max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div
             className={cn(
-              'pointer-events-auto relative w-full transition-all duration-300',
+              'relative w-full transition-all duration-300 min-h-[220px]',
               // Desktop: Col 1-5 (left) or Col 8-12 (right), leaving center strictly open for the cube (>48px clearance)
               isRight
                 ? 'lg:col-span-5 lg:col-start-8 lg:text-right pr-2 sm:pr-4 lg:pr-14'
