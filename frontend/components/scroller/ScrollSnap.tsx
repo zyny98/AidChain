@@ -24,6 +24,7 @@ export function ScrollSnap() {
   const lastTriggerTimeRef = useRef<number>(0);
   const touchStartYRef = useRef<number>(0);
   const stageCoordsRef = useRef<number[]>([0, 0, 0, 0, 0, 0, 0]);
+  const currentStageRef = useRef<number>(0);
 
   useEffect(() => {
     // Pre-calculate exact target scroll Y coordinates so wheel events NEVER cause layout reflows
@@ -62,7 +63,7 @@ export function ScrollSnap() {
     const t3 = setTimeout(measureStages, 1500);
     window.addEventListener('resize', measureStages);
 
-    // Instant O(1) lookup of closest stage
+    // Instant lookup of closest stage
     const getClosestStageIndex = (): number => {
       const currentY = window.scrollY || window.pageYOffset || 0;
       const coords = stageCoordsRef.current;
@@ -93,51 +94,51 @@ export function ScrollSnap() {
       // Safety failsafe: never stay locked if animation is interrupted
       safetyTimerRef.current = setTimeout(() => {
         isAnimatingRef.current = false;
-      }, 550);
+      }, 650);
 
       const scrollObj = { y: window.scrollY || window.pageYOffset || 0 };
 
       // Power3.out delivers high initial velocity for instantaneous reaction, then soft settle
       tweenRef.current = gsap.to(scrollObj, {
         y: targetY,
-        duration: 0.38,
+        duration: 0.42,
         ease: 'power3.out',
         onUpdate: () => {
           window.scrollTo(0, scrollObj.y);
         },
         onComplete: () => {
-          if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
-          isAnimatingRef.current = false;
-          onDone?.();
+          // Absorb residual mouse wheel/trackpad momentum (total 580ms lock)
+          const elapsed = performance.now() - lastTriggerTimeRef.current;
+          const remaining = Math.max(60, 580 - elapsed);
+          setTimeout(() => {
+            if (safetyTimerRef.current) clearTimeout(safetyTimerRef.current);
+            isAnimatingRef.current = false;
+            onDone?.();
+          }, remaining);
         },
       });
     };
 
     const goToIndex = (targetIdx: number) => {
       const clampedIdx = Math.max(0, Math.min(6, targetIdx));
+      currentStageRef.current = clampedIdx;
       const targetY = stageCoordsRef.current[clampedIdx] ?? 0;
       glideTo(targetY);
     };
 
+    // Strict 1-by-1 stage progression: exactly ONE stage per flick
     const handleTransition = (direction: number) => {
-      const closestIdx = getClosestStageIndex();
+      const baseIdx = isAnimatingRef.current ? currentStageRef.current : getClosestStageIndex();
+      let targetIdx = baseIdx;
       if (direction > 0) {
-        if (closestIdx < 5) {
-          goToIndex(closestIdx + 1);
-        } else {
-          // At Beneficiary (Stage 5) -> glide into Audience section
-          goToIndex(6);
-        }
+        targetIdx = Math.min(6, baseIdx + 1);
       } else {
-        if (closestIdx > 0) {
-          goToIndex(closestIdx - 1);
-        } else {
-          goToIndex(0);
-        }
+        targetIdx = Math.max(0, baseIdx - 1);
       }
+      goToIndex(targetIdx);
     };
 
-    // Mouse Wheel / Trackpad Handler: Instantaneous reaction without input lag
+    // Mouse Wheel / Trackpad Handler: Instant reaction, strictly 1 stage per flick
     const onWheel = (e: WheelEvent) => {
       const currentY = window.scrollY || window.pageYOffset || 0;
       const coords = stageCoordsRef.current;
@@ -149,7 +150,7 @@ export function ScrollSnap() {
         // Only if user reaches top of Audience and scrolls UP -> snap back to Beneficiary
         if (e.deltaY < -15 && currentY <= audienceY + 30) {
           e.preventDefault();
-          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 300) {
+          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 550) {
             goToIndex(5);
           }
         }
@@ -157,12 +158,12 @@ export function ScrollSnap() {
       }
 
       // Inside snap zone: ignore sub-pixel tremor
-      if (Math.abs(e.deltaY) < 5) return;
+      if (Math.abs(e.deltaY) < 6) return;
 
       e.preventDefault();
 
-      // Fast cooldown (300ms) matches the snappy 0.38s animation
-      if (isAnimatingRef.current || now - lastTriggerTimeRef.current < 300) {
+      // One flick = strictly ONE stage! Absorbs all trailing momentum events for 580ms
+      if (isAnimatingRef.current || now - lastTriggerTimeRef.current < 580) {
         return;
       }
 
@@ -183,10 +184,11 @@ export function ScrollSnap() {
       const coords = stageCoordsRef.current;
       const audienceY = coords[6] || 6000;
       const diffY = touchStartYRef.current - e.changedTouches[0].clientY;
+      const now = performance.now();
 
       if (currentY >= audienceY - 25) {
         if (diffY < -40 && currentY <= audienceY + 30) {
-          if (!isAnimatingRef.current) {
+          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 550) {
             goToIndex(5);
           }
         }
@@ -194,10 +196,11 @@ export function ScrollSnap() {
       }
 
       if (Math.abs(diffY) > 30) {
-        const dir = diffY > 0 ? 1 : -1;
-        if (!isAnimatingRef.current) {
-          handleTransition(dir);
+        if (!isAnimatingRef.current && now - lastTriggerTimeRef.current < 580) {
+          return;
         }
+        const dir = diffY > 0 ? 1 : -1;
+        handleTransition(dir);
       }
     };
 
@@ -209,16 +212,21 @@ export function ScrollSnap() {
       const currentY = window.scrollY || window.pageYOffset || 0;
       const coords = stageCoordsRef.current;
       const audienceY = coords[6] || 6000;
+      const now = performance.now();
 
       if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
         if (currentY < audienceY - 40) {
           e.preventDefault();
-          if (!isAnimatingRef.current) handleTransition(1);
+          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 450) {
+            handleTransition(1);
+          }
         }
       } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
         if (currentY < audienceY - 40) {
           e.preventDefault();
-          if (!isAnimatingRef.current) handleTransition(-1);
+          if (!isAnimatingRef.current && now - lastTriggerTimeRef.current > 450) {
+            handleTransition(-1);
+          }
         }
       }
     };
