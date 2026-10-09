@@ -1,35 +1,49 @@
 'use client';
 
 import React from 'react';
-
-const SIDE_PILLARS = [
-  {
-    title: 'Гарантированный возврат (Timelock)',
-    desc: 'Если поставщик не привёз товар или попытался завысить цену, неиспользованный баланс автоматически возвращается донору.',
-  },
-  {
-    title: 'Криптографическая верификация',
-    desc: 'Каждый чек и акт приёмки хэшируется (SHA-256) и записывается в блокчейн. Подделать задним числом невозможно.',
-  },
-  {
-    title: 'ZK-приватность получателей',
-    desc: 'Нуждающиеся подтверждают факт получения криптографическим доказательством с нулевым разглашением. Личные данные не светятся в сети.',
-  },
-];
+import { useLanguage } from '@/components/providers/LanguageProvider';
 
 export function SecurityBlock() {
+  const { language } = useLanguage();
+
+  const sidePillars = [
+    {
+      title: language === 'ru' ? 'Гарантированный возврат (Timelock)' : 'Guaranteed Refund (Timelock)',
+      desc:
+        language === 'ru'
+          ? 'Если поставщик не привёз товар или попытался завысить цену, неиспользованный баланс автоматически возвращается донору.'
+          : 'If the vendor fails to deliver or attempts price gouging, the unused escrow balance automatically returns to the donor.',
+    },
+    {
+      title: language === 'ru' ? 'Криптографическая верификация' : 'Cryptographic Verification',
+      desc:
+        language === 'ru'
+          ? 'Каждый чек и акт приёмки хэшируется (SHA-256) и записывается в блокчейн. Подделать задним числом невозможно.'
+          : 'Every fiscal receipt and acceptance act is hashed (SHA-256) onto the blockchain. Retroactive alterations are mathematically impossible.',
+    },
+    {
+      title: language === 'ru' ? 'ZK-приватность получателей' : 'ZK Recipient Privacy',
+      desc:
+        language === 'ru'
+          ? 'Нуждающиеся подтверждают факт получения криптографическим доказательством с нулевым разглашением. Личные данные не светятся в сети.'
+          : 'Beneficiaries verify aid delivery with zero-knowledge cryptographic proofs. Identity remains strictly private off-chain.',
+    },
+  ];
+
   return (
     <section id="security" className="relative z-10 py-24 sm:py-28 bg-[#080b11] border-t border-white/[0.06] font-sans">
       <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-16">
         <div className="mb-14 max-w-2xl">
           <p className="text-[12px] font-mono uppercase tracking-widest text-emerald-400 mb-3">
-            Архитектура безопасности
+            {language === 'ru' ? 'Архитектура безопасности' : 'Security Architecture'}
           </p>
           <h2 className="font-display text-[clamp(1.75rem,3.2vw,2.75rem)] font-light leading-[1.12] text-white mb-4 tracking-tight">
-            Почему смарт-контракту можно доверять
+            {language === 'ru' ? 'Почему смарт-контракту можно доверять' : 'Why the Smart Contract Is Trustworthy'}
           </h2>
           <p className="font-sans text-[16px] text-slate-300 leading-[1.6]">
-            В традиционной благотворительности всё держится на честном слове управляющего. В AidChain правила прописаны в открытом коде.
+            {language === 'ru'
+              ? 'В традиционной благотворительности всё держится на честном слове управляющего. В AidChain правила прописаны в открытом коде.'
+              : 'In traditional charity, everything rests on the manager’s word. In AidChain, rules are enforced in open-source immutable code.'}
           </p>
         </div>
 
@@ -45,18 +59,20 @@ export function SecurityBlock() {
               </div>
 
               <h3 className="font-display text-[24px] sm:text-[28px] font-medium text-white leading-tight mb-4 tracking-tight">
-                Non-custodial эскроу
+                {language === 'ru' ? 'Non-custodial эскроу' : 'Non-custodial Escrow'}
               </h3>
             </div>
 
             <p className="font-sans text-[15px] sm:text-[16px] text-slate-300 leading-[1.65]">
-              Фонд не имеет приватных ключей для снятия всей суммы. Деньги выдаются смарт-контрактом строго транш за траншем после подтверждения отчётов.
+              {language === 'ru'
+                ? 'Фонд не имеет приватных ключей для снятия всей суммы. Деньги выдаются смарт-контрактом строго транш за траншем после подтверждения отчётов.'
+                : 'The foundation holds no private keys to drain the pool. Funds release strictly tranche-by-tranche upon verified Oracle reports.'}
             </p>
           </div>
 
           {/* Remaining 3 blocks: Stacked cleanly on the right side */}
           <div className="lg:col-span-7 flex flex-col justify-between gap-4">
-            {SIDE_PILLARS.map((p) => (
+            {sidePillars.map((p) => (
               <div
                 key={p.title}
                 className="rounded-2xl border border-white/[0.08] bg-[#121827] p-6 sm:p-7 flex flex-col justify-center transition-all duration-300 hover:border-white/[0.15]"

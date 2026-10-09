@@ -1,8 +1,7 @@
-'use client';
-
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/components/providers/LanguageProvider';
 
 interface PuzzleCharItemProps {
   char: string;
@@ -153,6 +152,9 @@ export interface PuzzleStageData {
   title: string;
   subtitle: string;
   rule: string;
+  titleEn?: string;
+  subtitleEn?: string;
+  ruleEn?: string;
   side: 'left' | 'right';
 }
 
@@ -162,6 +164,9 @@ export const PUZZLE_STAGES: PuzzleStageData[] = [
     title: 'Деньги сразу в коде',
     subtitle: 'А не на личном счёте',
     rule: 'Сумма блокируется контрактом в первую же секунду. Снять её на личные нужды фонда физически невозможно.',
+    titleEn: 'Funds Locked in Code',
+    subtitleEn: 'Not in Personal Bank Accounts',
+    ruleEn: 'The amount is locked in the smart contract from the very first second. Withdrawing it for unauthorized NGO needs is physically impossible.',
     side: 'left',
   },
   {
@@ -169,6 +174,9 @@ export const PUZZLE_STAGES: PuzzleStageData[] = [
     title: 'Всю сумму разом не снять',
     subtitle: 'Деньги выдаются частями',
     rule: 'Сначала на закупку, потом на бензин, в конце за раздачу. Если на первом шаге соврали, остаток возвращается донору.',
+    titleEn: 'No Lump-Sum Withdrawals',
+    subtitleEn: 'Funds Released in Milestones',
+    ruleEn: 'First for procurement, then for fuel, lastly for distribution. If false reporting occurs on step one, remaining funds return to the donor.',
     side: 'right',
   },
   {
@@ -176,6 +184,9 @@ export const PUZZLE_STAGES: PuzzleStageData[] = [
     title: 'Накрутить чеки не выйдет',
     subtitle: 'Сверка с оптовыми базами',
     rule: 'Нарисовали накладную в фотошопе или купили муку втрое дороже рынка: система сразу блокирует следующий платёж.',
+    titleEn: 'Inflated Invoices Rejected',
+    subtitleEn: 'Cross-Checked with Wholesale Data',
+    ruleEn: 'Submitting a photoshopped receipt or buying goods at inflated prices automatically triggers an instant freeze on the next tranche.',
     side: 'left',
   },
   {
@@ -183,6 +194,9 @@ export const PUZZLE_STAGES: PuzzleStageData[] = [
     title: 'Водитель ждёт разгрузки',
     subtitle: 'Расчёт строго у склада',
     rule: 'Деньги за рейс уходят только после того, как кладовщик на месте принял коробки и приложил цифровой ключ.',
+    titleEn: 'Carrier Awaits Unloading',
+    subtitleEn: 'Settlement Strictly at Warehouse',
+    ruleEn: 'Freight payment releases only after the warehouse keeper physically inspects the cargo boxes and applies a digital signature.',
     side: 'right',
   },
   {
@@ -190,17 +204,24 @@ export const PUZZLE_STAGES: PuzzleStageData[] = [
     title: 'Помощь без унижения',
     subtitle: 'Без фотосессий для отчёта',
     rule: 'Криптография подтверждает, что пакет отдали живому человеку, но его паспорт и лицо никто не выкладывает в сеть.',
+    titleEn: 'Aid with Dignity',
+    subtitleEn: 'No Photo Ops for Reporting',
+    ruleEn: 'Zero-knowledge cryptography proves the package reached a verified recipient without exposing their passport or identity online.',
     side: 'left',
   },
 ];
 
 export function PuzzleStageBlock({ stage }: { stage: PuzzleStageData }) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  const { language } = useLanguage();
 
   // In-view trigger: smooth 3D assembly once reached
   const isInView = useInView(sectionRef, { amount: 0.35, once: true });
 
   const isRight = stage.side === 'right';
+  const displayTitle = language === 'en' && stage.titleEn ? stage.titleEn : stage.title;
+  const displaySubtitle = language === 'en' && stage.subtitleEn ? stage.subtitleEn : stage.subtitle;
+  const displayRule = language === 'en' && stage.ruleEn ? stage.ruleEn : stage.rule;
 
   return (
     <section
@@ -225,7 +246,7 @@ export function PuzzleStageBlock({ stage }: { stage: PuzzleStageData }) {
             {/* Main Title: crisp 3D puzzle assembly with magnetic snap */}
             <h2 className="leading-[1.14]">
               <PuzzleText
-                text={stage.title}
+                text={displayTitle}
                 isInView={isInView}
                 baseDelay={0.03}
                 spread={20}
@@ -237,7 +258,7 @@ export function PuzzleStageBlock({ stage }: { stage: PuzzleStageData }) {
             {/* Subtitle: assembled puzzle piece by piece */}
             <div className="mt-3.5 leading-[1.3]">
               <PuzzleText
-                text={stage.subtitle}
+                text={displaySubtitle}
                 isInView={isInView}
                 baseDelay={0.2}
                 spread={14}
@@ -256,7 +277,7 @@ export function PuzzleStageBlock({ stage }: { stage: PuzzleStageData }) {
                 isRight && 'lg:ml-auto'
               )}
             >
-              {stage.rule}
+              {displayRule}
             </motion.p>
           </div>
         </div>

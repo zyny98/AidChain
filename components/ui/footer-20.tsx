@@ -4,6 +4,7 @@ import React from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { NewTwitterIcon, TelegramIcon, GithubIcon } from '@hugeicons/core-free-icons';
 import { motion, type Variants } from 'framer-motion';
+import { useLanguage } from '@/components/providers/LanguageProvider';
 
 const staggerContainer: Variants = {
   hidden: { opacity: 0 },
@@ -61,33 +62,40 @@ function BrandLogo({ className = '' }: { className?: string }) {
 
 export default function Footer20({
   brandName = 'AidChain',
-  description = 'Протокол целевой гуманитарной помощи. Деньги лежат в смарт-контракте и выходят только по проверенному чеку.',
-  columns = [
-    {
-      title: 'Путь перевода',
-      links: [
-        { label: 'Донор', href: '#stage-donor' },
-        { label: 'Эскроу', href: '#stage-escrow' },
-        { label: 'AI-оракул', href: '#stage-oracle' },
-        { label: 'Доставка', href: '#stage-logistics' },
-      ],
-    },
-    {
-      title: 'Протокол',
-      links: [
-        { label: 'Симуляция', href: '#simulation' },
-        { label: 'Безопасность', href: '#security' },
-        { label: 'Частые вопросы', href: '#faq' },
-        { label: 'Solana Explorer', href: 'https://explorer.solana.com/?cluster=devnet' },
-      ],
-    },
-  ],
   socials = [
     { label: 'Telegram', href: '#', icon: <HugeiconsIcon icon={TelegramIcon} size={18} /> },
     { label: 'X', href: '#', icon: <HugeiconsIcon icon={NewTwitterIcon} size={18} /> },
     { label: 'GitHub', href: 'https://github.com', icon: <HugeiconsIcon icon={GithubIcon} size={18} /> },
   ],
 }: Footer20Props) {
+  const { language } = useLanguage();
+
+  const description =
+    language === 'ru'
+      ? 'Протокол целевой гуманитарной помощи. Деньги лежат в смарт-контракте и выходят только по проверенному чеку.'
+      : 'Milestone-based humanitarian aid protocol. Funds remain in smart contract escrow and release only upon verified receipts.';
+
+  const columns = [
+    {
+      title: language === 'ru' ? 'Путь перевода' : 'Aid Flow',
+      links: [
+        { label: language === 'ru' ? 'Донор' : 'Donor', href: '#stage-donor' },
+        { label: language === 'ru' ? 'Эскроу' : 'Escrow', href: '#stage-escrow' },
+        { label: language === 'ru' ? 'AI-оракул' : 'AI Oracle', href: '#stage-oracle' },
+        { label: language === 'ru' ? 'Доставка' : 'Logistics', href: '#stage-logistics' },
+      ],
+    },
+    {
+      title: language === 'ru' ? 'Протокол' : 'Protocol',
+      links: [
+        { label: language === 'ru' ? 'Симуляция' : 'Simulation', href: '#simulation' },
+        { label: language === 'ru' ? 'Безопасность' : 'Security', href: '#security' },
+        { label: language === 'ru' ? 'Частые вопросы' : 'FAQ', href: '#faq' },
+        { label: 'Solana Explorer', href: 'https://explorer.solana.com/?cluster=devnet' },
+      ],
+    },
+  ];
+
   return (
     <motion.footer
       id="footer"
@@ -140,7 +148,9 @@ export default function Footer20({
             ))}
 
             <motion.div variants={riseItem} className="col-span-2 flex flex-col gap-5 lg:col-span-1">
-              <h4 className="text-[14px] font-medium text-paper font-sans">Статус протокола</h4>
+              <h4 className="text-[14px] font-medium text-paper font-sans">
+                {language === 'ru' ? 'Статус протокола' : 'Protocol Status'}
+              </h4>
               <div className="flex items-center gap-2.5 text-[14px] text-emerald-400 font-sans font-mono text-[13px]">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -149,7 +159,9 @@ export default function Footer20({
                 Solana Network (1.18)
               </div>
               <p className="text-[12px] text-paper/40 leading-relaxed font-sans">
-                Смарт-контракты эскроу и SPL Memo оракула развернуты в сети Solana.
+                {language === 'ru'
+                  ? 'Смарт-контракты эскроу и SPL Memo оракула развернуты в сети Solana.'
+                  : 'Escrow smart contracts and SPL Memo oracle logic deployed on Solana.'}
               </p>
             </motion.div>
           </div>
@@ -161,7 +173,11 @@ export default function Footer20({
           className="flex flex-col gap-2 border-t border-dashed border-paper/10 py-6 text-[13px] text-paper/40 sm:flex-row sm:justify-between"
         >
           <span>© 2026 {brandName}</span>
-          <span>Демонстрация: суммы и хэши в симуляции условные.</span>
+          <span>
+            {language === 'ru'
+              ? 'Демонстрация: суммы и хэши в симуляции условные.'
+              : 'Demonstration: simulation amounts and hashes are illustrative.'}
+          </span>
         </motion.div>
 
         {/* giant wordmark — perfectly scaled SVG vector text that NEVER clips on any screen size */}
