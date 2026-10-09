@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import FrameScroller from '../components/scroller/FrameScroller';
+import { ScrollSnap } from '../components/scroller/ScrollSnap';
 import { PuzzleStageBlock, PUZZLE_STAGES } from '../components/site/PuzzleStage';
 import { RevealText } from '../components/site/Reveal';
 import { StageRail } from '../components/site/StageRail';
@@ -78,6 +79,9 @@ export default function HomePage() {
 
   return (
     <div className="landing-page relative min-h-screen bg-ink">
+      {/* TikTok style snap controller for 3D stages */}
+      <ScrollSnap />
+
       {/* 3D Frame Scroller canvas responding smoothly to native window scroll */}
       <FrameScroller />
 
