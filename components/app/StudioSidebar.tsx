@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { useAppStore } from "@/lib/store/app-store";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { WalletWindow } from "@/components/app/WalletWindow";
 import { PhantomMissingModal } from "@/components/app/PhantomMissingModal";
 import {
   IconHeartHandshake,
@@ -20,9 +19,8 @@ import {
   IconArrowLeft,
   IconExternalLink,
   IconWallet,
-  IconX,
-  IconBolt,
-  IconSearch,
+  IconCopy,
+  IconCheck,
 } from "@tabler/icons-react";
 
 interface StudioSidebarProps {
@@ -40,17 +38,18 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
     isPhantomInstalled,
     formattedAddress,
     walletAddress,
-    balanceSol,
-    isRefreshing,
-    refreshSuccess,
     connect,
     disconnect,
-    refreshBalance,
   } = usePhantomWallet();
 
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [showMissingModal, setShowMissingModal] = useState(false);
-  const [popoverCoords, setPopoverCoords] = useState<{ top: number; left: number }>({ top: 80, left: 20 });
+  const [popoverCoords, setPopoverCoords] = useState<{ top: number; left: number; width: number }>({
+    top: 80,
+    left: 20,
+    width: 232,
+  });
   const [mounted, setMounted] = useState(false);
 
   const profileCardRef = useRef<HTMLDivElement>(null);
@@ -98,10 +97,11 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
   const updateCoords = () => {
     if (profileCardRef.current) {
       const rect = profileCardRef.current.getBoundingClientRect();
-      const top = rect.bottom + 8;
-      const maxLeft = typeof window !== "undefined" ? window.innerWidth - 380 : 16;
-      const left = Math.max(12, Math.min(rect.left, maxLeft));
-      setPopoverCoords({ top, left });
+      setPopoverCoords({
+        top: rect.bottom + 6,
+        left: rect.left,
+        width: rect.width,
+      });
     }
   };
 
@@ -111,6 +111,16 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
       updateCoords();
     }
     setIsWalletOpen((prev) => !prev);
+  };
+
+  const handleCopyAddress = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const addr = walletAddress || "tuYqmXb5m3iFkY7R2m3n9P8qVz4S";
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(addr);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleConnectClick = async () => {
@@ -126,7 +136,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
     }
   };
 
-  // Слушатель клика вне элемента и Escape для закрытия выпадающего окна кошелька
+  // Слушатель клика вне элемента и Escape для закрытия всплывающего окна
   useEffect(() => {
     if (!isWalletOpen) return;
 
@@ -219,7 +229,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
             </div>
           </div>
 
-          {/* 2. Профиль пользователя с аватаром (интерактивный блок с выпадающим окном кошелька) */}
+          {/* 2. Профиль пользователя с аватаром (интерактивный блок с выпадающим адресом кошелька) */}
           <div
             ref={profileCardRef}
             onClick={handleToggleWallet}
@@ -239,7 +249,7 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
             }`}
             title={
               isConnected
-                ? (language === "ru" ? "Реквизиты кошелька" : "Wallet Credentials")
+                ? (language === "ru" ? "Адрес кошелька" : "Wallet Address")
                 : (language === "ru" ? "Привязать кошелёк" : "Connect Wallet")
             }
           >
@@ -366,118 +376,97 @@ export function StudioSidebar({ isCollapsed }: StudioSidebarProps) {
         </div>
       </motion.aside>
 
-      {/* Выпадающее окно кошелька (Portal в document.body): привязанные реквизиты либо сообщение о привязке */}
+      {/* Компактное выпадающее меню адреса кошелька под профилем */}
       {mounted &&
         isWalletOpen &&
         createPortal(
-          isConnected ? (
-            <WalletWindow
-              isOpen={isWalletOpen}
-              onClose={() => setIsWalletOpen(false)}
-              walletAddress={walletAddress}
-              formattedAddress={formattedAddress}
-              balanceSol={balanceSol}
-              isRefreshing={isRefreshing}
-              refreshSuccess={refreshSuccess}
-              refreshBalance={refreshBalance}
-              disconnect={disconnect}
-              roleName={roleProfile.name}
-              containerRef={popoverRef}
-              style={{
-                top: `${popoverCoords.top}px`,
-                left: `${popoverCoords.left}px`,
-              }}
-              className="fixed w-[350px] sm:w-[380px] max-w-[calc(100vw-24px)] rounded-[28px] p-5 bg-white/95 dark:bg-[#070b16]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18),0_8px_25px_rgba(6,182,212,0.1)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_10px_30px_rgba(6,182,212,0.15)] text-slate-900 dark:text-white font-sans select-none z-[100] overflow-hidden"
-            />
-          ) : (
-            <div
-              ref={popoverRef}
-              style={{
-                top: `${popoverCoords.top}px`,
-                left: `${popoverCoords.left}px`,
-              }}
-              className="fixed w-[340px] sm:w-[370px] max-w-[calc(100vw-24px)] rounded-[26px] p-5 bg-white/95 dark:bg-[#070b16]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.16),0_8px_25px_rgba(6,182,212,0.08)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.7),0_10px_30px_rgba(6,182,212,0.12)] text-slate-900 dark:text-white font-sans select-none z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-            >
-              {/* Неоновый градиентный фон */}
-              <div className="absolute -top-24 -left-20 w-48 h-48 rounded-full bg-cyan-500/10 dark:bg-cyan-500/15 blur-[60px] pointer-events-none" />
-              <div className="absolute -bottom-24 -right-20 w-48 h-48 rounded-full bg-blue-500/10 dark:bg-blue-600/15 blur-[60px] pointer-events-none" />
-
-              {/* 1. Верхний бар окна */}
-              <div className="relative z-10 flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/[0.08]">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                  <span className="text-[11px] font-mono font-medium text-slate-600 dark:text-slate-300">
-                    Solana Network
+          <div
+            ref={popoverRef}
+            style={{
+              top: `${popoverCoords.top}px`,
+              left: `${popoverCoords.left}px`,
+              width: `${popoverCoords.width || 232}px`,
+            }}
+            className="fixed rounded-2xl p-3 bg-white/95 dark:bg-[#0c1220]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.15)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.55)] z-[100] text-slate-900 dark:text-white select-none animate-in fade-in zoom-in-95 duration-150"
+          >
+            {isConnected ? (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-semibold text-slate-600 dark:text-slate-300">
+                    {language === "ru" ? "Адрес кошелька:" : "Wallet Address:"}
                   </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyAddress}
+                    className="inline-flex items-center gap-1 font-mono text-[10px] text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                    title={language === "ru" ? "Скопировать адрес" : "Copy address"}
+                  >
+                    {copied ? (
+                      <>
+                        <IconCheck className="h-3 w-3 text-emerald-500" stroke={2.5} />
+                        <span className="text-emerald-500 font-medium">
+                          {language === "ru" ? "Скопировано" : "Copied"}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <IconCopy className="h-3 w-3" stroke={2} />
+                        <span>{language === "ru" ? "Копировать" : "Copy"}</span>
+                      </>
+                    )}
+                  </button>
                 </div>
 
-                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 text-[10px] font-semibold">
-                  <span>●</span>
-                  <span>{t("walletNotLinkedBadge", "Не привязан")}</span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsWalletOpen(false)}
-                  className="rounded-full h-7 w-7 flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition"
-                  title={language === "ru" ? "Закрыть" : "Close"}
+                <div
+                  onClick={handleCopyAddress}
+                  title={language === "ru" ? "Нажмите, чтобы скопировать адрес" : "Click to copy address"}
+                  className="group p-2.5 rounded-xl bg-slate-100/90 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/10 hover:border-blue-400/60 dark:hover:border-blue-400/40 transition-colors cursor-pointer"
                 >
-                  <IconX className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* 2. Сообщение: кошелёк не привязан */}
-              <div className="relative z-10 mt-4 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/15 via-blue-500/15 to-cyan-500/15 border border-amber-500/30 text-amber-500 dark:text-amber-400 shadow-sm">
-                  <IconWallet className="h-7 w-7" stroke={1.8} />
+                  <p className="font-mono text-[11px] leading-relaxed text-slate-800 dark:text-slate-200 break-all select-all font-medium">
+                    {walletAddress || "tuYqmXb5m3iFkY7R2m3n9P8qVz4S"}
+                  </p>
                 </div>
 
-                <h3 className="mt-3 text-base font-bold text-slate-900 dark:text-white tracking-tight font-display">
-                  {t("walletNotConnectedTitle", "Кошелёк не привязан")}
-                </h3>
-
-                <p className="mt-1.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-[290px] mx-auto">
-                  {t(
-                    "walletNotConnectedDesc",
-                    "Привяжите кошелёк Phantom для доступа к ончейн-траншам, эскроу и управлению балансом."
-                  )}
+                <div className="pt-1 flex items-center justify-between text-[10px] border-t border-slate-200/60 dark:border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      disconnect();
+                      setIsWalletOpen(false);
+                    }}
+                    className="text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 transition font-medium"
+                  >
+                    {language === "ru" ? "Отключить" : "Disconnect"}
+                  </button>
+                  <span className="font-mono text-slate-400 text-[9px]">Solana Network</span>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 py-1 text-center">
+                <div className="text-xs font-semibold text-slate-800 dark:text-white">
+                  {language === "ru" ? "Кошелёк не привязан" : "Wallet Not Connected"}
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
+                  {language === "ru"
+                    ? "Привяжите кошелёк Phantom для подписи траншей"
+                    : "Link Phantom wallet to sign tranches"}
                 </p>
-              </div>
-
-              {/* 3. Преимущества ончейн-протокола */}
-              <div className="relative z-10 mt-4 space-y-2 rounded-xl p-3 bg-slate-50/80 dark:bg-white/[0.03] border border-slate-200/70 dark:border-white/5 text-[11px]">
-                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <IconShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" stroke={2} />
-                  <span>{t("walletBenefitEscrow", "Ончейн-эскроу гарантии")}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <IconBolt className="h-4 w-4 text-amber-500 shrink-0" stroke={2} />
-                  <span>{t("walletBenefitInstant", "Мгновенное подписание траншей")}</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                  <IconSearch className="h-4 w-4 text-blue-500 shrink-0" stroke={2} />
-                  <span>{t("walletBenefitAudit", "Прозрачный блокчейн-аудит")}</span>
-                </div>
-              </div>
-
-              {/* 4. Кнопка "Привязать кошелёк" */}
-              <div className="relative z-10 mt-4">
                 <button
                   type="button"
                   onClick={handleConnectClick}
                   disabled={isConnecting}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 text-xs shadow-[0_4px_14px_rgba(37,99,235,0.35)] active:scale-[0.98] transition disabled:opacity-50 cursor-pointer"
+                  className="w-full py-1.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
                 >
-                  <IconWallet className="h-4 w-4" stroke={2} />
+                  <IconWallet className="h-3.5 w-3.5" stroke={2} />
                   <span>
                     {isConnecting
-                      ? t("walletConnecting", "Подключение...")
-                      : t("walletConnectAction", "Привязать кошелёк")}
+                      ? (language === "ru" ? "Подключение..." : "Connecting...")
+                      : (language === "ru" ? "Привязать кошелёк" : "Connect Wallet")}
                   </span>
                 </button>
               </div>
-            </div>
-          ),
+            )}
+          </div>,
           document.body
         )}
 
