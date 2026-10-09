@@ -5,7 +5,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 const TOTAL_FRAMES = 591;
 const FRAME_PREFIX = '/frames_hd/frame_';
 /** How many frames ahead (in scroll direction) to pre-decode so drawImage never decodes synchronously */
-const DECODE_AHEAD = 10;
+const DECODE_AHEAD = 12;
 
 interface KeyframePoint {
   id?: string;
@@ -22,6 +22,9 @@ const STAGE_KEYFRAMES: KeyframePoint[] = [
   { id: 'stage-beneficiary', frame: 590 }, // Node 05: Final Shield / Completion
 ];
 
+// Key anchor frames loaded first so stage positions are instantly sharp
+const PRIORITY_KEYFRAME_INDICES = [0, 182, 305, 437, 590];
+
 function targetFrameClamp(i: number): number {
   return Math.min(TOTAL_FRAMES - 1, Math.max(0, i));
 }
@@ -30,10 +33,95 @@ function padFrame(index: number): string {
   return String(index + 1).padStart(4, '0');
 }
 
-// Persistent global image cache across client navigations
+// ─── Module-Level Persistent Image Cache & Background Preloader ───
+// These persist across client navigation (e.g. landing -> /app/* -> landing)
 const GLOBAL_IMAGE_CACHE: (HTMLImageElement | null)[] = new Array(TOTAL_FRAMES).fill(null);
 let globalLoadedCount = 0;
 let globalPreloadStarted = false;
+const progressListeners = new Set<(count: number) => void>();
+
+function notifyProgress() {
+  const count = globalLoadedCount;
+  progressListeners.forEach((listener) => {
+    try {
+      listener(count);
+    } catch {
+      // ignore
+    }
+  });
+}
+
+function loadSingleFrame(index: number): Promise<HTMLImageElement | null> {
+  return new Promise((resolve) => {
+    const existing = GLOBAL_IMAGE_CACHE[index];
+    if (existing && existing.complete && existing.naturalWidth > 0) {
+      resolve(existing);
+      return;
+    }
+
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = `${FRAME_PREFIX}${padFrame(index)}.jpg`;
+
+    img.onload = () => {
+      if (!GLOBAL_IMAGE_CACHE[index]) {
+        GLOBAL_IMAGE_CACHE[index] = img;
+        globalLoadedCount++;
+        notifyProgress();
+      }
+      resolve(img);
+    };
+
+    img.onerror = () => {
+      // In case of network glitch, register slot so UI progress doesn't stall
+      if (!GLOBAL_IMAGE_CACHE[index]) {
+        GLOBAL_IMAGE_CACHE[index] = img;
+        globalLoadedCount++;
+        notifyProgress();
+      }
+      resolve(img);
+    };
+  });
+}
+
+function startGlobalPreloader() {
+  if (globalPreloadStarted) return;
+  globalPreloadStarted = true;
+
+  // 1. Immediately load Frame 0 for instant initial hero display
+  loadSingleFrame(0).then(() => {
+    // 2. Concurrently load all keyframe anchors (0, 182, 305, 437, 590)
+    Promise.all(PRIORITY_KEYFRAME_INDICES.map((k) => loadSingleFrame(k))).then(() => {
+      // 3. Queue all remaining frames in sequential batches
+      const remaining: number[] = [];
+      for (let i = 0; i < TOTAL_FRAMES; i++) {
+        if (!GLOBAL_IMAGE_CACHE[i] || !GLOBAL_IMAGE_CACHE[i]?.complete) {
+          remaining.push(i);
+        }
+      }
+
+      // 8 concurrent workers stream remaining frames uninterrupted in the background
+      const CONCURRENCY = 8;
+      const runWorker = async () => {
+        while (remaining.length > 0) {
+          const nextIdx = remaining.shift();
+          if (nextIdx !== undefined) {
+            await loadSingleFrame(nextIdx);
+          }
+        }
+      };
+
+      for (let c = 0; c < CONCURRENCY; c++) {
+        runWorker();
+      }
+    });
+  });
+}
+
+// Start background preload immediately when module loads in browser
+if (typeof window !== 'undefined') {
+  startGlobalPreloader();
+}
 
 export default function FrameScroller() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,6 +133,8 @@ export default function FrameScroller() {
   const smoothOpacityRef = useRef<number>(0);
   const pointsRef = useRef<{ scrollY: number; frame: number }[]>([]);
   const hudCounterRef = useRef<HTMLSpanElement>(null);
+
+  // Initialize with current global progress count (never resets to 0 on return!)
   const [loadedCount, setLoadedCount] = useState<number>(globalLoadedCount);
   const [isInitialReady, setIsInitialReady] = useState<boolean>(
     GLOBAL_IMAGE_CACHE[0] !== null && Boolean(GLOBAL_IMAGE_CACHE[0]?.complete)
@@ -59,7 +149,7 @@ export default function FrameScroller() {
   }, []);
 
   // ─── Paint a frame to canvas ────────────────────────────────────
-  const paintFrameToCanvas = (img: HTMLImageElement, frameIndex: number) => {
+  const paintFrameToCanvas = useCallback((img: HTMLImageElement, frameIndex: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
@@ -86,7 +176,7 @@ export default function FrameScroller() {
     if (hudCounterRef.current) {
       hudCounterRef.current.textContent = `F:${String(frameIndex + 1).padStart(3, '0')}/591`;
     }
-  };
+  }, []);
 
   // ─── Measure Element Centers for Exact Keyframe Sync ────────────
   const measureKeyframes = useCallback(() => {
@@ -116,82 +206,39 @@ export default function FrameScroller() {
     }
   }, []);
 
-  // ─── Preload frames cleanly with async decoding ──────────────────
+  // ─── Connect to persistent global preloader ───────────────────────
   useEffect(() => {
-    let isCancelled = false;
+    // Immediately sync current count on mount
+    setLoadedCount(globalLoadedCount);
 
-    // If frame 0 is already loaded from previous page view, paint it immediately
     const frame0 = GLOBAL_IMAGE_CACHE[0];
-    if (frame0 && frame0.complete && currentFrameRef.current === -1) {
-      paintFrameToCanvas(frame0, 0);
+    if (frame0 && frame0.complete && frame0.naturalWidth > 0) {
       setIsInitialReady(true);
+      if (currentFrameRef.current === -1) {
+        paintFrameToCanvas(frame0, 0);
+      }
     }
 
-    // If all frames already buffered in this session, nothing left to load
-    if (globalLoadedCount >= TOTAL_FRAMES) {
-      setLoadedCount(TOTAL_FRAMES);
-      setIsInitialReady(true);
-      return;
-    }
-
-    if (globalPreloadStarted) {
-      return;
-    }
-    globalPreloadStarted = true;
-
-    const loadSingleFrame = (index: number): Promise<HTMLImageElement> => {
-      return new Promise((resolve) => {
-        if (GLOBAL_IMAGE_CACHE[index]?.complete) {
-          resolve(GLOBAL_IMAGE_CACHE[index]!);
-          return;
-        }
-
-        const img = new Image();
-        img.decoding = 'async';
-        img.src = `${FRAME_PREFIX}${padFrame(index)}.jpg`;
-        img.onload = () => {
-          if (isCancelled) return;
-          GLOBAL_IMAGE_CACHE[index] = img;
-          globalLoadedCount++;
-          setLoadedCount(globalLoadedCount);
-
-          if (index === 0 && currentFrameRef.current === -1) {
-            paintFrameToCanvas(img, 0);
-            setIsInitialReady(true);
+    const handleProgress = (count: number) => {
+      setLoadedCount(count);
+      if (count > 0 && !isInitialReady) {
+        const f0 = GLOBAL_IMAGE_CACHE[0];
+        if (f0 && f0.complete) {
+          setIsInitialReady(true);
+          if (currentFrameRef.current === -1) {
+            paintFrameToCanvas(f0, 0);
           }
-          resolve(img);
-        };
-        img.onerror = () => {
-          resolve(img);
-        };
-      });
+        }
+      }
     };
 
-    // Load frame 0 immediately
-    loadSingleFrame(0).then(() => {
-      if (isCancelled) return;
-
-      const queue = Array.from({ length: TOTAL_FRAMES - 1 }, (_, i) => i + 1);
-      const CONCURRENCY = 10;
-
-      const runWorker = async () => {
-        while (queue.length > 0 && !isCancelled) {
-          const nextIndex = queue.shift();
-          if (nextIndex !== undefined) {
-            await loadSingleFrame(nextIndex);
-          }
-        }
-      };
-
-      for (let c = 0; c < CONCURRENCY; c++) {
-        runWorker();
-      }
-    });
+    progressListeners.add(handleProgress);
+    startGlobalPreloader(); // Safe / idempotent
 
     return () => {
-      isCancelled = true;
+      progressListeners.delete(handleProgress);
     };
-  }, []);
+  }, [isInitialReady, paintFrameToCanvas]);
 
   // ─── Canvas size & Keyframe Measurement ─────────────────────────
   useEffect(() => {
@@ -208,13 +255,14 @@ export default function FrameScroller() {
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
 
+      measureKeyframes();
+
+      // Immediate paint on resize / mount
       const curIdx = currentFrameRef.current >= 0 ? currentFrameRef.current : 0;
-      const curImg = imagesRef.current[curIdx];
+      const curImg = imagesRef.current[curIdx] || imagesRef.current[0];
       if (curImg && curImg.complete && curImg.naturalWidth > 0) {
         paintFrameToCanvas(curImg, curIdx);
       }
-
-      measureKeyframes();
     };
 
     handleResize();
@@ -228,11 +276,12 @@ export default function FrameScroller() {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [measureKeyframes]);
+  }, [measureKeyframes, paintFrameToCanvas]);
 
   // ─── Single, uninterrupted RAF loop with synchronized LERP & smooth opacity ──
   useEffect(() => {
     let animId: number;
+    let isFirstTick = true;
 
     const tick = () => {
       const scrollY = window.scrollY || window.pageYOffset || 0;
@@ -282,14 +331,6 @@ export default function FrameScroller() {
         }
       }
 
-      // Instantaneous responsive LERP glide: follows scroll with zero trailing lag
-      smoothFrameRef.current += (rawTargetFrame - smoothFrameRef.current) * 0.42;
-
-      const targetFrame = Math.min(
-        TOTAL_FRAMES - 1,
-        Math.max(0, Math.round(smoothFrameRef.current))
-      );
-
       // 2. Opacity calculation:
       // In Hero: 0 opacity so original cosmic horizon is purely visible. Fades in smoothly into Stage 1.
       let targetOpacity = 0;
@@ -317,8 +358,22 @@ export default function FrameScroller() {
         }
       }
 
-      // Smooth opacity interpolation to eliminate any sudden jumps or hard cuts
-      smoothOpacityRef.current += (targetOpacity - smoothOpacityRef.current) * 0.35;
+      // On first tick after mounting (e.g. returning to landing page), sync directly without lerp lag
+      if (isFirstTick) {
+        smoothFrameRef.current = rawTargetFrame;
+        smoothOpacityRef.current = targetOpacity;
+        isFirstTick = false;
+      } else {
+        // Instantaneous responsive LERP glide: follows scroll with zero trailing lag
+        smoothFrameRef.current += (rawTargetFrame - smoothFrameRef.current) * 0.42;
+        smoothOpacityRef.current += (targetOpacity - smoothOpacityRef.current) * 0.35;
+      }
+
+      const targetFrame = Math.min(
+        TOTAL_FRAMES - 1,
+        Math.max(0, Math.round(smoothFrameRef.current))
+      );
+
       if (containerRef.current) {
         containerRef.current.style.opacity = smoothOpacityRef.current.toFixed(3);
         containerRef.current.style.visibility = smoothOpacityRef.current <= 0.005 ? 'hidden' : 'visible';
@@ -346,15 +401,19 @@ export default function FrameScroller() {
         }
       }
 
-      // Only paint if frame index changed and visible
-      if (targetFrame !== currentFrameRef.current && smoothOpacityRef.current > 0.005) {
+      // Only paint if frame index changed and visible (or initial paint needed)
+      if (
+        (targetFrame !== currentFrameRef.current || currentFrameRef.current === -1) &&
+        (smoothOpacityRef.current > 0.005 || currentFrameRef.current === -1)
+      ) {
         const targetImg = imagesRef.current[targetFrame];
 
         if (targetImg && targetImg.complete && targetImg.naturalWidth > 0) {
           paintFrameToCanvas(targetImg, targetFrame);
         } else {
-          const lastIdx = currentFrameRef.current;
-          const direction = targetFrame > lastIdx ? 1 : -1;
+          // If exact targetFrame isn't ready yet, paint closest loaded frame
+          const lastIdx = currentFrameRef.current >= 0 ? currentFrameRef.current : 0;
+          const direction = targetFrame >= lastIdx ? 1 : -1;
           let bestIdx = -1;
 
           for (
@@ -368,7 +427,7 @@ export default function FrameScroller() {
             }
           }
 
-          if (bestIdx !== -1 && bestIdx !== lastIdx) {
+          if (bestIdx !== -1 && bestIdx !== currentFrameRef.current) {
             const bestImg = imagesRef.current[bestIdx];
             if (bestImg) {
               paintFrameToCanvas(bestImg, bestIdx);
@@ -382,7 +441,7 @@ export default function FrameScroller() {
 
     animId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [paintFrameToCanvas, reducedMotion]);
 
   const loadPercent = Math.round((loadedCount / TOTAL_FRAMES) * 100);
   const isFullyBuffered = loadedCount >= TOTAL_FRAMES;
@@ -414,7 +473,7 @@ export default function FrameScroller() {
         }}
       />
 
-      {/* Thin buffering progress bar */}
+      {/* Thin buffering progress bar - automatically hidden when fully cached */}
       {!isFullyBuffered && (
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-paper/10 z-50">
           <div
